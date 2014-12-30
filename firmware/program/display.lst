@@ -1,0 +1,2881 @@
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 1
+
+
+   1              		.file "/home/phil/Projects/phoenix/firmware/program/display.c"
+   2              		.section	.text,code
+   3              		.file "/home/phil/Projects/phoenix/firmware/program/display.h"
+   4              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/stdbool.h"
+   5              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h"
+   6              		.def	_int8_t
+   7              		.scl	13
+   8              		.type	02
+   9              		.endef
+  10              		.def	_int16_t
+  11              		.scl	13
+  12              		.type	04
+  13              		.endef
+  14              		.def	_int32_t
+  15              		.scl	13
+  16              		.type	05
+  17              		.endef
+  18              		.def	_int64_t
+  19              		.scl	13
+  20              		.type	05
+  21              		.endef
+  22              		.def	_uint8_t
+  23              		.scl	13
+  24              		.type	014
+  25              		.endef
+  26              		.def	_uint16_t
+  27              		.scl	13
+  28              		.type	016
+  29              		.endef
+  30              		.def	_uint32_t
+  31              		.scl	13
+  32              		.type	017
+  33              		.endef
+  34              		.def	_uint64_t
+  35              		.scl	13
+  36              		.type	017
+  37              		.endef
+  38              		.def	_int_least8_t
+  39              		.scl	13
+  40              		.type	02
+  41              		.endef
+  42              		.def	_int_least16_t
+  43              		.scl	13
+  44              		.type	04
+  45              		.endef
+  46              		.def	_int_least24_t
+  47              		.scl	13
+  48              		.type	05
+  49              		.endef
+  50              		.def	_int_least32_t
+  51              		.scl	13
+  52              		.type	05
+  53              		.endef
+  54              		.def	_int_least64_t
+  55              		.scl	13
+  56              		.type	05
+  57              		.endef
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 2
+
+
+  58              		.def	_uint_least8_t
+  59              		.scl	13
+  60              		.type	014
+  61              		.endef
+  62              		.def	_uint_least16_t
+  63              		.scl	13
+  64              		.type	016
+  65              		.endef
+  66              		.def	_uint_least24_t
+  67              		.scl	13
+  68              		.type	05
+  69              		.endef
+  70              		.def	_uint_least32_t
+  71              		.scl	13
+  72              		.type	017
+  73              		.endef
+  74              		.def	_uint_least64_t
+  75              		.scl	13
+  76              		.type	017
+  77              		.endef
+  78              		.def	_int_fast8_t
+  79              		.scl	13
+  80              		.type	04
+  81              		.endef
+  82              		.def	_int_fast16_t
+  83              		.scl	13
+  84              		.type	04
+  85              		.endef
+  86              		.def	_int_fast24_t
+  87              		.scl	13
+  88              		.type	05
+  89              		.endef
+  90              		.def	_int_fast32_t
+  91              		.scl	13
+  92              		.type	05
+  93              		.endef
+  94              		.def	_int_fast64_t
+  95              		.scl	13
+  96              		.type	05
+  97              		.endef
+  98              		.def	_uint_fast8_t
+  99              		.scl	13
+ 100              		.type	016
+ 101              		.endef
+ 102              		.def	_uint_fast16_t
+ 103              		.scl	13
+ 104              		.type	016
+ 105              		.endef
+ 106              		.def	_uint_fast24_t
+ 107              		.scl	13
+ 108              		.type	017
+ 109              		.endef
+ 110              		.def	_uint_fast32_t
+ 111              		.scl	13
+ 112              		.type	017
+ 113              		.endef
+ 114              		.def	_uint_fast64_t
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 3
+
+
+ 115              		.scl	13
+ 116              		.type	017
+ 117              		.endef
+ 118              		.def	_intmax_t
+ 119              		.scl	13
+ 120              		.type	05
+ 121              		.endef
+ 122              		.def	_uintmax_t
+ 123              		.scl	13
+ 124              		.type	017
+ 125              		.endef
+ 126              		.file "/home/phil/Projects/phoenix/firmware/program/font.h"
+ 127              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h"
+ 128              		.def	_GLYPH_DATA
+ 129              		.scl	10
+ 130              		.type	010
+ 131              		.size	4
+ 132              		.endef
+ 133              		.def	_width
+ 134              		.val	0
+ 135              		.scl	8
+ 136              		.type	014
+ 137              		.endef
+ 138              		.def	_pages
+ 139              		.val	1
+ 140              		.scl	8
+ 141              		.type	014
+ 142              		.endef
+ 143              		.def	_index
+ 144              		.val	2
+ 145              		.scl	8
+ 146              		.type	016
+ 147              		.endef
+ 148              		.def	.eos
+ 149              		.val	4
+ 150              		.scl	102
+ 151              		.tag	_GLYPH_DATA
+ 152              		.size	4
+ 153              		.endef
+ 154              		.def	_FONT
+ 155              		.scl	10
+ 156              		.type	010
+ 157              		.size	8
+ 158              		.endef
+ 159              		.def	_advance
+ 160              		.val	0
+ 161              		.scl	8
+ 162              		.type	014
+ 163              		.endef
+ 164              		.def	_max_pages
+ 165              		.val	1
+ 166              		.scl	8
+ 167              		.type	014
+ 168              		.endef
+ 169              		.def	_max_width
+ 170              		.val	2
+ 171              		.scl	8
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 4
+
+
+ 172              		.type	014
+ 173              		.endef
+ 174              		.def	_indices
+ 175              		.val	4
+ 176              		.scl	8
+ 177              		.tag	_GLYPH_DATA
+ 178              		.size	4
+ 179              		.type	030
+ 180              		.endef
+ 181              		.def	_bitmaps
+ 182              		.val	6
+ 183              		.scl	8
+ 184              		.type	022
+ 185              		.endef
+ 186              		.def	.eos
+ 187              		.val	8
+ 188              		.scl	102
+ 189              		.tag	_FONT
+ 190              		.size	8
+ 191              		.endef
+ 192              		.file "/home/phil/Projects/phoenix/firmware/program/i2c_util.h"
+ 193              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h"
+ 194              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../support/generic/h/libpic30.h"
+ 195              		.def	__prog_addressT
+ 196              		.scl	13
+ 197              		.type	017
+ 198              		.endef
+ 199              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/string.h"
+ 200              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/stddef.h"
+ 201              		.def	_ptrdiff_t
+ 202              		.scl	13
+ 203              		.type	04
+ 204              		.endef
+ 205              		.def	_size_t
+ 206              		.scl	13
+ 207              		.type	016
+ 208              		.endef
+ 209              		.def	_wchar_t
+ 210              		.scl	13
+ 211              		.type	015
+ 212              		.endef
+ 213              		.section	.nbss,bss,near
+ 214                 		.global	_buffer
+ 215 0000 00 00 00 00 	_buffer:	.space	1024
+ 215      00 00 00 00 
+ 215      00 00 00 00 
+ 215      00 00 00 00 
+ 215      00 00 00 00 
+ 215      00 00 00 00 
+ 215      00 00 00 00 
+ 215      00 00 00 00 
+ 215      00 00 00 00 
+ 216                 		.global	_top_page	; export
+ 217                 		.align	2
+ 218                 	_top_page:
+ 219 0400 00 00       		.skip	2
+ 220                 		.global	_display_inverted	; export
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 5
+
+
+ 221                 	_display_inverted:
+ 222 0402 00          		.skip	1
+ 223                 		.global	_cur_column	; export
+ 224 0403 00          		.align	2
+ 225                 	_cur_column:
+ 226 0404 00 00       		.skip	2
+ 227                 		.global	_cur_page	; export
+ 228                 		.align	2
+ 229                 	_cur_page:
+ 230 0406 00 00       		.skip	2
+ 231                 		.section	.text,code
+ 232              		.align	2
+ 233              		.def	_send1
+ 234              		.val	_send1
+ 235              		.scl	2
+ 236              		.type	042
+ 237              		.endef
+ 238              		.global	_send1	; export
+ 239              	_send1:
+ 240              		.def	.bf
+ 241              		.val	.
+ 242              		.scl	101
+   1:/home/phil/Projects/phoenix/firmware/program/display.c **** #include "display.h"
+   2:/home/phil/Projects/phoenix/firmware/program/display.c **** #include "i2c_util.h"
+   3:/home/phil/Projects/phoenix/firmware/program/display.c **** #define FCY 16000000
+   4:/home/phil/Projects/phoenix/firmware/program/display.c **** #include <libpic30.h>
+   5:/home/phil/Projects/phoenix/firmware/program/display.c **** #include <string.h>
+   6:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+   7:/home/phil/Projects/phoenix/firmware/program/display.c **** #define SCROLL_RATE 0
+   8:/home/phil/Projects/phoenix/firmware/program/display.c **** #define SWIPE_STEP 8
+   9:/home/phil/Projects/phoenix/firmware/program/display.c **** #define DISPLAY_ADDRESS 0x3c
+  10:/home/phil/Projects/phoenix/firmware/program/display.c **** #define NUM_PAGES 8
+  11:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  12:/home/phil/Projects/phoenix/firmware/program/display.c **** uint8_t buffer[NUM_PAGES][128];
+  13:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  14:/home/phil/Projects/phoenix/firmware/program/display.c **** int top_page = 0;
+  15:/home/phil/Projects/phoenix/firmware/program/display.c **** bool display_inverted = false;
+  16:/home/phil/Projects/phoenix/firmware/program/display.c **** int cur_column = 0;
+  17:/home/phil/Projects/phoenix/firmware/program/display.c **** int cur_page = 0;
+  18:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  19:/home/phil/Projects/phoenix/firmware/program/display.c **** int8_t send1(uint8_t command) {
+ 243              		.line	19
+ 244              		.endef
+ 245              		.def	_command
+ 246              		.val	0
+ 247              		.scl	9
+ 248              		.type	014
+ 249              		.endef
+ 250              		.def	.bb
+ 251              		.val	.
+ 252              		.scl	100
+ 253              		.line	19
+ 254              		.endef
+ 255              		.set ___PA___,1
+ 256 000000  02 00 FA 		lnk	#2
+ 257 000002  00 4F 78 		mov.b	w0,[w14]
+ 258              		.def	___FP
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 6
+
+
+ 259              		.val	14
+ 260              		.scl	4
+ 261              		.type	4
+ 262              		.endef
+  20:/home/phil/Projects/phoenix/firmware/program/display.c **** 	write_i2c_command_block(DISPLAY_ADDRESS,0x00,&command,1);
+ 263              		.ln	20
+ 264 000004  13 C0 B3 		mov.b	#1,w3
+ 265 000006  0E 01 78 		mov	w14,w2
+ 266 000008  80 40 EB 		clr.b	w1
+ 267 00000a  C0 C3 B3 		mov.b	#60,w0
+ 268 00000c  00 00 07 		rcall	_write_i2c_command_block
+  21:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 269              		.ln	21
+ 270 00000e  04 40 78 		mov.b	w4,w0
+ 271 000010  00 80 FA 		ulnk	
+ 272 000012  00 00 06 		return	
+ 273              		.set ___PA___,0
+ 274              		.def	.eb
+ 275              		.val	.
+ 276              		.scl	100
+ 277              		.line	21
+ 278              		.endef
+ 279              		.def	.ef
+ 280              		.val	.
+ 281              		.scl	101
+ 282              		.line	21
+ 283              		.endef
+ 284              		.def	_send1
+ 285              		.val	.
+ 286              		.scl	-1
+ 287              		.endef
+ 288              		.align	2
+ 289              		.def	_send2
+ 290              		.val	_send2
+ 291              		.scl	2
+ 292              		.type	042
+ 293              		.endef
+ 294              		.global	_send2	; export
+ 295              	_send2:
+ 296              		.def	.bf
+ 297              		.val	.
+ 298              		.scl	101
+  22:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  23:/home/phil/Projects/phoenix/firmware/program/display.c **** int8_t send2(uint8_t command, uint8_t data) {
+ 299              		.line	23
+ 300              		.endef
+ 301              		.def	_command
+ 302              		.val	2
+ 303              		.scl	9
+ 304              		.type	014
+ 305              		.endef
+ 306              		.def	_data
+ 307              		.val	3
+ 308              		.scl	9
+ 309              		.type	014
+ 310              		.endef
+ 311              		.def	.bb
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 7
+
+
+ 312              		.val	.
+ 313              		.scl	100
+ 314              		.line	23
+ 315              		.endef
+ 316              		.def	_both_bytes
+ 317              		.val	0
+ 318              		.scl	1
+ 319              		.dim	2
+ 320              		.size	2
+ 321              		.type	074
+ 322              		.endef
+ 323              		.set ___PA___,1
+ 324 000014  04 00 FA 		lnk	#4
+ 325 000016  20 47 98 		mov.b	w0,[w14+2]
+ 326 000018  31 47 98 		mov.b	w1,[w14+3]
+ 327              		.def	___FP
+ 328              		.val	14
+ 329              		.scl	4
+ 330              		.type	4
+ 331              		.endef
+  24:/home/phil/Projects/phoenix/firmware/program/display.c **** 	uint8_t both_bytes[2];
+  25:/home/phil/Projects/phoenix/firmware/program/display.c **** 	both_bytes[0] = command;
+ 332              		.ln	25
+ 333 00001a  2E 42 90 		mov.b	[w14+2],w4
+ 334 00001c  04 4F 78 		mov.b	w4,[w14]
+  26:/home/phil/Projects/phoenix/firmware/program/display.c **** 	both_bytes[1] = data;
+ 335              		.ln	26
+ 336 00001e  3E 42 90 		mov.b	[w14+3],w4
+ 337 000020  14 47 98 		mov.b	w4,[w14+1]
+  27:/home/phil/Projects/phoenix/firmware/program/display.c **** 	return write_i2c_command_block(DISPLAY_ADDRESS,0x00,both_bytes,2);
+ 338              		.ln	27
+ 339 000022  23 C0 B3 		mov.b	#2,w3
+ 340 000024  0E 01 78 		mov	w14,w2
+ 341 000026  80 40 EB 		clr.b	w1
+ 342 000028  C0 C3 B3 		mov.b	#60,w0
+ 343 00002a  00 00 07 		rcall	_write_i2c_command_block
+ 344 00002c  00 42 78 		mov.b	w0,w4
+  28:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 345              		.ln	28
+ 346 00002e  04 40 78 		mov.b	w4,w0
+ 347 000030  00 80 FA 		ulnk	
+ 348 000032  00 00 06 		return	
+ 349              		.set ___PA___,0
+ 350              		.def	.eb
+ 351              		.val	.
+ 352              		.scl	100
+ 353              		.line	28
+ 354              		.endef
+ 355              		.def	.ef
+ 356              		.val	.
+ 357              		.scl	101
+ 358              		.line	28
+ 359              		.endef
+ 360              		.def	_send2
+ 361              		.val	.
+ 362              		.scl	-1
+ 363              		.endef
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 8
+
+
+ 364              		.align	2
+ 365              		.def	_display_init
+ 366              		.val	_display_init
+ 367              		.scl	2
+ 368              		.type	041
+ 369              		.endef
+ 370              		.global	_display_init	; export
+ 371              	_display_init:
+ 372              		.def	.bf
+ 373              		.val	.
+ 374              		.scl	101
+  29:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  30:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_init() {
+ 375              		.line	30
+ 376              		.endef
+ 377              		.def	.bb
+ 378              		.val	.
+ 379              		.scl	100
+ 380              		.line	30
+ 381              		.endef
+ 382              		.set ___PA___,1
+ 383 000034  00 00 FA 		lnk	#0
+ 384              		.def	___FP
+ 385              		.val	14
+ 386              		.scl	4
+ 387              		.type	4
+ 388              		.endef
+  31:/home/phil/Projects/phoenix/firmware/program/display.c **** 	//set up and power up display
+  32:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(0xAD);
+ 389              		.ln	32
+ 390 000036  D0 CA B3 		mov.b	#-83,w0
+ 391 000038  00 00 07 		rcall	_send1
+  33:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(0x8B);
+ 392              		.ln	33
+ 393 00003a  B0 C8 B3 		mov.b	#-117,w0
+ 394 00003c  00 00 07 		rcall	_send1
+  34:/home/phil/Projects/phoenix/firmware/program/display.c **** 	__delay_ms(500);
+ 395              		.ln	34
+ 396 00003e  00 20 21 		mov	#4608,w0
+ 397 000040  A1 07 20 		mov	#122,w1
+ 398 000042  00 00 07 		rcall	___delay32
+  35:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send2(0xA8,0x3F);
+ 399              		.ln	35
+ 400 000044  F1 C3 B3 		mov.b	#63,w1
+ 401 000046  80 CA B3 		mov.b	#-88,w0
+ 402 000048  00 00 07 		rcall	_send2
+  36:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send2(0xD5,0x50);
+ 403              		.ln	36
+ 404 00004a  01 C5 B3 		mov.b	#80,w1
+ 405 00004c  50 CD B3 		mov.b	#-43,w0
+ 406 00004e  00 00 07 		rcall	_send2
+  37:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send2(0xDA,0x12);
+ 407              		.ln	37
+ 408 000050  21 C1 B3 		mov.b	#18,w1
+ 409 000052  A0 CD B3 		mov.b	#-38,w0
+ 410 000054  00 00 07 		rcall	_send2
+  38:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(0xAF);
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 9
+
+
+ 411              		.ln	38
+ 412 000056  F0 CA B3 		mov.b	#-81,w0
+ 413 000058  00 00 07 		rcall	_send1
+  39:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(0xA0);
+ 414              		.ln	39
+ 415 00005a  00 CA B3 		mov.b	#-96,w0
+ 416 00005c  00 00 07 		rcall	_send1
+  40:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(0xC0);
+ 417              		.ln	40
+ 418 00005e  00 CC B3 		mov.b	#-64,w0
+ 419 000060  00 00 07 		rcall	_send1
+  41:/home/phil/Projects/phoenix/firmware/program/display.c **** 	display_set_brightness(0xFF);
+ 420              		.ln	41
+ 421 000062  00 C0 EB 		setm.b	w0
+ 422 000064  00 00 07 		rcall	_display_set_brightness
+  42:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send2(0xD3,0);
+ 423              		.ln	42
+ 424 000066  80 40 EB 		clr.b	w1
+ 425 000068  30 CD B3 		mov.b	#-45,w0
+ 426 00006a  00 00 07 		rcall	_send2
+  43:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(0xA6);
+ 427              		.ln	43
+ 428 00006c  60 CA B3 		mov.b	#-90,w0
+ 429 00006e  00 00 07 		rcall	_send1
+  44:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 430              		.ln	44
+ 431 000070  00 80 FA 		ulnk	
+ 432 000072  00 00 06 		return	
+ 433              		.set ___PA___,0
+ 434              		.def	.eb
+ 435              		.val	.
+ 436              		.scl	100
+ 437              		.line	44
+ 438              		.endef
+ 439              		.def	.ef
+ 440              		.val	.
+ 441              		.scl	101
+ 442              		.line	44
+ 443              		.endef
+ 444              		.def	_display_init
+ 445              		.val	.
+ 446              		.scl	-1
+ 447              		.endef
+ 448              		.align	2
+ 449              		.def	_display_close
+ 450              		.val	_display_close
+ 451              		.scl	2
+ 452              		.type	041
+ 453              		.endef
+ 454              		.global	_display_close	; export
+ 455              	_display_close:
+ 456              		.def	.bf
+ 457              		.val	.
+ 458              		.scl	101
+  45:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  46:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_close() {
+ 459              		.line	46
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 10
+
+
+ 460              		.endef
+ 461              		.def	.bb
+ 462              		.val	.
+ 463              		.scl	100
+ 464              		.line	46
+ 465              		.endef
+ 466              		.set ___PA___,1
+ 467 000074  00 00 FA 		lnk	#0
+ 468              		.def	___FP
+ 469              		.val	14
+ 470              		.scl	4
+ 471              		.type	4
+ 472              		.endef
+  47:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(0xAE);
+ 473              		.ln	47
+ 474 000076  E0 CA B3 		mov.b	#-82,w0
+ 475 000078  00 00 07 		rcall	_send1
+  48:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 476              		.ln	48
+ 477 00007a  00 80 FA 		ulnk	
+ 478 00007c  00 00 06 		return	
+ 479              		.set ___PA___,0
+ 480              		.def	.eb
+ 481              		.val	.
+ 482              		.scl	100
+ 483              		.line	48
+ 484              		.endef
+ 485              		.def	.ef
+ 486              		.val	.
+ 487              		.scl	101
+ 488              		.line	48
+ 489              		.endef
+ 490              		.def	_display_close
+ 491              		.val	.
+ 492              		.scl	-1
+ 493              		.endef
+ 494              		.align	2
+ 495              		.def	_display_send_data
+ 496              		.val	_display_send_data
+ 497              		.scl	2
+ 498              		.type	041
+ 499              		.endef
+ 500              		.global	_display_send_data	; export
+ 501              	_display_send_data:
+ 502              		.def	.bf
+ 503              		.val	.
+ 504              		.scl	101
+  49:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  50:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_send_data(uint8_t *data, uint8_t length) {
+ 505              		.line	50
+ 506              		.endef
+ 507              		.def	_data
+ 508              		.val	0
+ 509              		.scl	9
+ 510              		.type	034
+ 511              		.endef
+ 512              		.def	_length
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 11
+
+
+ 513              		.val	2
+ 514              		.scl	9
+ 515              		.type	014
+ 516              		.endef
+ 517              		.def	.bb
+ 518              		.val	.
+ 519              		.scl	100
+ 520              		.line	50
+ 521              		.endef
+ 522              		.set ___PA___,1
+ 523 00007e  04 00 FA 		lnk	#4
+ 524 000080  00 0F 78 		mov	w0,[w14]
+ 525 000082  21 47 98 		mov.b	w1,[w14+2]
+ 526              		.def	___FP
+ 527              		.val	14
+ 528              		.scl	4
+ 529              		.type	4
+ 530              		.endef
+  51:/home/phil/Projects/phoenix/firmware/program/display.c **** 	memcpy(&(buffer[cur_page][cur_column]),data,length);
+ 531              		.ln	51
+ 532 000084  2E 42 90 		mov.b	[w14+2],w4
+ 533 000086  84 82 FB 		ze	w4,w5
+ 534 000088  04 00 80 		mov	_cur_page,w4
+ 535 00008a  47 23 DD 		sl	w4,#7,w6
+ 536 00008c  04 00 80 		mov	_cur_column,w4
+ 537 00008e  04 03 43 		add	w6,w4,w6
+ 538 000090  04 00 20 		mov	#_buffer,w4
+ 539 000092  04 02 43 		add	w6,w4,w4
+ 540 000094  05 01 78 		mov	w5,w2
+ 541 000096  9E 00 78 		mov	[w14],w1
+ 542 000098  04 00 78 		mov	w4,w0
+ 543 00009a  00 00 07 		rcall	_memcpy
+  52:/home/phil/Projects/phoenix/firmware/program/display.c **** 	write_i2c_command_block(DISPLAY_ADDRESS,0x40,data,length);
+ 544              		.ln	52
+ 545 00009c  AE 41 90 		mov.b	[w14+2],w3
+ 546 00009e  1E 01 78 		mov	[w14],w2
+ 547 0000a0  01 C4 B3 		mov.b	#64,w1
+ 548 0000a2  C0 C3 B3 		mov.b	#60,w0
+ 549 0000a4  00 00 07 		rcall	_write_i2c_command_block
+  53:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 550              		.ln	53
+ 551 0000a6  00 80 FA 		ulnk	
+ 552 0000a8  00 00 06 		return	
+ 553              		.set ___PA___,0
+ 554              		.def	.eb
+ 555              		.val	.
+ 556              		.scl	100
+ 557              		.line	53
+ 558              		.endef
+ 559              		.def	.ef
+ 560              		.val	.
+ 561              		.scl	101
+ 562              		.line	53
+ 563              		.endef
+ 564              		.def	_display_send_data
+ 565              		.val	.
+ 566              		.scl	-1
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 12
+
+
+ 567              		.endef
+ 568              		.align	2
+ 569              		.def	_set_page
+ 570              		.val	_set_page
+ 571              		.scl	2
+ 572              		.type	041
+ 573              		.endef
+ 574              		.global	_set_page	; export
+ 575              	_set_page:
+ 576              		.def	.bf
+ 577              		.val	.
+ 578              		.scl	101
+  54:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  55:/home/phil/Projects/phoenix/firmware/program/display.c **** void set_page(int page) {
+ 579              		.line	55
+ 580              		.endef
+ 581              		.def	_page
+ 582              		.val	0
+ 583              		.scl	9
+ 584              		.type	04
+ 585              		.endef
+ 586              		.def	.bb
+ 587              		.val	.
+ 588              		.scl	100
+ 589              		.line	55
+ 590              		.endef
+ 591              		.set ___PA___,1
+ 592 0000aa  02 00 FA 		lnk	#2
+ 593 0000ac  00 0F 78 		mov	w0,[w14]
+ 594              		.def	___FP
+ 595              		.val	14
+ 596              		.scl	4
+ 597              		.type	4
+ 598              		.endef
+  56:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(page+0xB0);
+ 599              		.ln	56
+ 600 0000ae  1E 02 78 		mov	[w14],w4
+ 601 0000b0  84 42 78 		mov.b	w4,w5
+ 602 0000b2  04 CB B3 		mov.b	#-80,w4
+ 603 0000b4  04 C2 42 		add.b	w5,w4,w4
+ 604 0000b6  04 40 78 		mov.b	w4,w0
+ 605 0000b8  00 00 07 		rcall	_send1
+  57:/home/phil/Projects/phoenix/firmware/program/display.c **** 	cur_page = page;
+ 606              		.ln	57
+ 607 0000ba  1E 02 78 		mov	[w14],w4
+ 608 0000bc  04 00 88 		mov	w4,_cur_page
+  58:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 609              		.ln	58
+ 610 0000be  00 80 FA 		ulnk	
+ 611 0000c0  00 00 06 		return	
+ 612              		.set ___PA___,0
+ 613              		.def	.eb
+ 614              		.val	.
+ 615              		.scl	100
+ 616              		.line	58
+ 617              		.endef
+ 618              		.def	.ef
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 13
+
+
+ 619              		.val	.
+ 620              		.scl	101
+ 621              		.line	58
+ 622              		.endef
+ 623              		.def	_set_page
+ 624              		.val	.
+ 625              		.scl	-1
+ 626              		.endef
+ 627              		.align	2
+ 628              		.def	_set_column
+ 629              		.val	_set_column
+ 630              		.scl	2
+ 631              		.type	041
+ 632              		.endef
+ 633              		.global	_set_column	; export
+ 634              	_set_column:
+ 635              		.def	.bf
+ 636              		.val	.
+ 637              		.scl	101
+  59:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  60:/home/phil/Projects/phoenix/firmware/program/display.c **** void set_column(int column) {
+ 638              		.line	60
+ 639              		.endef
+ 640              		.def	_column
+ 641              		.val	0
+ 642              		.scl	9
+ 643              		.type	04
+ 644              		.endef
+ 645              		.def	.bb
+ 646              		.val	.
+ 647              		.scl	100
+ 648              		.line	60
+ 649              		.endef
+ 650              		.set ___PA___,1
+ 651 0000c2  02 00 FA 		lnk	#2
+ 652 0000c4  00 0F 78 		mov	w0,[w14]
+ 653              		.def	___FP
+ 654              		.val	14
+ 655              		.scl	4
+ 656              		.type	4
+ 657              		.endef
+  61:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1((column+2) % 16);
+ 658              		.ln	61
+ 659 0000c6  9E 82 E8 		inc2	[w14],w5
+ 660 0000c8  04 01 20 		mov	#16,w4
+ 661 0000ca  11 00 09 		repeat	#18-1
+ 662 0000cc  84 02 D8 		div.sw	w5,w4
+ 663 0000ce  01 02 78 		mov	w1,w4
+ 664 0000d0  04 42 78 		mov.b	w4,w4
+ 665 0000d2  04 40 78 		mov.b	w4,w0
+ 666 0000d4  00 00 07 		rcall	_send1
+  62:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send1(16+((column+2)/16));
+ 667              		.ln	62
+ 668 0000d6  9E 82 E8 		inc2	[w14],w5
+ 669 0000d8  04 01 20 		mov	#16,w4
+ 670 0000da  11 00 09 		repeat	#18-1
+ 671 0000dc  84 02 D8 		div.sw	w5,w4
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 14
+
+
+ 672 0000de  00 02 78 		mov	w0,w4
+ 673 0000e0  04 42 78 		mov.b	w4,w4
+ 674 0000e2  70 42 42 		add.b	w4,#16,w4
+ 675 0000e4  04 40 78 		mov.b	w4,w0
+ 676 0000e6  00 00 07 		rcall	_send1
+  63:/home/phil/Projects/phoenix/firmware/program/display.c **** 	cur_column = column;
+ 677              		.ln	63
+ 678 0000e8  1E 02 78 		mov	[w14],w4
+ 679 0000ea  04 00 88 		mov	w4,_cur_column
+  64:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 680              		.ln	64
+ 681 0000ec  00 80 FA 		ulnk	
+ 682 0000ee  00 00 06 		return	
+ 683              		.set ___PA___,0
+ 684              		.def	.eb
+ 685              		.val	.
+ 686              		.scl	100
+ 687              		.line	64
+ 688              		.endef
+ 689              		.def	.ef
+ 690              		.val	.
+ 691              		.scl	101
+ 692              		.line	64
+ 693              		.endef
+ 694              		.def	_set_column
+ 695              		.val	.
+ 696              		.scl	-1
+ 697              		.endef
+ 698              		.align	2
+ 699              		.def	_display_clear_screen
+ 700              		.val	_display_clear_screen
+ 701              		.scl	2
+ 702              		.type	041
+ 703              		.endef
+ 704              		.global	_display_clear_screen	; export
+ 705              	_display_clear_screen:
+ 706              		.def	.bf
+ 707              		.val	.
+ 708              		.scl	101
+  65:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_clear_screen() {
+ 709              		.line	65
+ 710              		.endef
+ 711              		.def	.bb
+ 712              		.val	.
+ 713              		.scl	100
+ 714              		.line	65
+ 715              		.endef
+ 716              		.def	_x
+ 717              		.val	0
+ 718              		.scl	1
+ 719              		.type	04
+ 720              		.endef
+ 721              		.set ___PA___,1
+ 722 0000f0  02 00 FA 		lnk	#2
+ 723              		.def	___FP
+ 724              		.val	14
+ 725              		.scl	4
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 15
+
+
+ 726              		.type	4
+ 727              		.endef
+  66:/home/phil/Projects/phoenix/firmware/program/display.c **** 	int x = 0;
+ 728              		.ln	66
+ 729 0000f2  00 02 EB 		clr	w4
+ 730 0000f4  04 0F 78 		mov	w4,[w14]
+  67:/home/phil/Projects/phoenix/firmware/program/display.c **** 	memset(buffer,0,128*8);
+ 731              		.ln	67
+ 732 0000f6  02 40 20 		mov	#1024,w2
+ 733 0000f8  80 00 EB 		clr	w1
+ 734 0000fa  00 00 20 		mov	#_buffer,w0
+ 735 0000fc  00 00 07 		rcall	_memset
+  68:/home/phil/Projects/phoenix/firmware/program/display.c **** 	for(x=0;x<8;++x) {
+ 736              		.ln	68
+ 737 0000fe  00 02 EB 		clr	w4
+ 738 000100  04 0F 78 		mov	w4,[w14]
+ 739 000102  00 00 37 		bra	.L9
+ 740              	.L10:
+  69:/home/phil/Projects/phoenix/firmware/program/display.c **** 		set_column(0);
+ 741              		.ln	69
+ 742 000104  00 00 EB 		clr	w0
+ 743 000106  00 00 07 		rcall	_set_column
+  70:/home/phil/Projects/phoenix/firmware/program/display.c **** 		set_page(x);
+ 744              		.ln	70
+ 745 000108  1E 00 78 		mov	[w14],w0
+ 746 00010a  00 00 07 		rcall	_set_page
+  71:/home/phil/Projects/phoenix/firmware/program/display.c **** 		write_i2c_command_block(DISPLAY_ADDRESS,0x40,buffer[0],128);
+ 747              		.ln	71
+ 748 00010c  04 00 20 		mov	#_buffer,w4
+ 749 00010e  03 C8 B3 		mov.b	#-128,w3
+ 750 000110  04 01 78 		mov	w4,w2
+ 751 000112  01 C4 B3 		mov.b	#64,w1
+ 752 000114  C0 C3 B3 		mov.b	#60,w0
+ 753 000116  00 00 07 		rcall	_write_i2c_command_block
+ 754              		.ln	68
+ 755 000118  1E 0F E8 		inc	[w14],[w14]
+ 756              	.L9:
+ 757 00011a  1E 02 78 		mov	[w14],w4
+ 758 00011c  E7 0F 52 		sub	w4,#7,[w15]
+ 759              		.set ___BP___,0
+ 760 00011e  00 00 34 		bra	le,.L10
+  72:/home/phil/Projects/phoenix/firmware/program/display.c **** 	}
+  73:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 761              		.ln	73
+ 762 000120  00 80 FA 		ulnk	
+ 763 000122  00 00 06 		return	
+ 764              		.set ___PA___,0
+ 765              		.def	.eb
+ 766              		.val	.
+ 767              		.scl	100
+ 768              		.line	73
+ 769              		.endef
+ 770              		.def	.ef
+ 771              		.val	.
+ 772              		.scl	101
+ 773              		.line	73
+ 774              		.endef
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 16
+
+
+ 775              		.def	_display_clear_screen
+ 776              		.val	.
+ 777              		.scl	-1
+ 778              		.endef
+ 779              		.align	2
+ 780              		.def	_display_write_text
+ 781              		.val	_display_write_text
+ 782              		.scl	2
+ 783              		.type	041
+ 784              		.endef
+ 785              		.global	_display_write_text	; export
+ 786              	_display_write_text:
+ 787              		.def	.bf
+ 788              		.val	.
+ 789              		.scl	101
+  74:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  75:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_write_text(int page, int column, const char* text, const struct FONT *font, bool right
+ 790              		.line	75
+ 791              		.endef
+ 792              		.def	_page
+ 793              		.val	132
+ 794              		.scl	9
+ 795              		.type	04
+ 796              		.endef
+ 797              		.def	_column
+ 798              		.val	134
+ 799              		.scl	9
+ 800              		.type	04
+ 801              		.endef
+ 802              		.def	_text
+ 803              		.val	136
+ 804              		.scl	9
+ 805              		.type	022
+ 806              		.endef
+ 807              		.def	_font
+ 808              		.val	138
+ 809              		.scl	9
+ 810              		.tag	_FONT
+ 811              		.size	8
+ 812              		.type	030
+ 813              		.endef
+ 814              		.def	_right_justify
+ 815              		.val	140
+ 816              		.scl	9
+ 817              		.type	014
+ 818              		.endef
+ 819              		.def	.bb
+ 820              		.val	.
+ 821              		.scl	100
+ 822              		.line	75
+ 823              		.endef
+ 824              		.def	_i
+ 825              		.val	0
+ 826              		.scl	1
+ 827              		.type	04
+ 828              		.endef
+ 829              		.def	_end_col
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 17
+
+
+ 830              		.val	2
+ 831              		.scl	1
+ 832              		.type	04
+ 833              		.endef
+ 834              		.def	_temp_buffer
+ 835              		.val	4
+ 836              		.scl	1
+ 837              		.dim	128
+ 838              		.size	128
+ 839              		.type	074
+ 840              		.endef
+ 841              		.set ___PA___,1
+ 842 000124  8E 00 FA 		lnk	#142
+ 843 000126  20 87 98 		mov	w0,[w14+132]
+ 844 000128  31 87 98 		mov	w1,[w14+134]
+ 845 00012a  42 87 98 		mov	w2,[w14+136]
+ 846 00012c  53 87 98 		mov	w3,[w14+138]
+ 847 00012e  44 4F 99 		mov.b	w4,[w14+140]
+ 848              		.def	___FP
+ 849              		.val	14
+ 850              		.scl	4
+ 851              		.type	4
+ 852              		.endef
+  76:/home/phil/Projects/phoenix/firmware/program/display.c ****     int i = 0;
+ 853              		.ln	76
+ 854 000130  00 02 EB 		clr	w4
+ 855 000132  04 0F 78 		mov	w4,[w14]
+  77:/home/phil/Projects/phoenix/firmware/program/display.c ****     int end_col;
+  78:/home/phil/Projects/phoenix/firmware/program/display.c ****     uint8_t temp_buffer[128];
+  79:/home/phil/Projects/phoenix/firmware/program/display.c ****     while (i<font->max_pages) {
+ 856              		.ln	79
+ 857 000134  00 00 37 		bra	.L12
+ 858              	.L17:
+  80:/home/phil/Projects/phoenix/firmware/program/display.c ****         memset(temp_buffer,0,128);
+ 859              		.ln	80
+ 860 000136  64 02 47 		add	w14,#4,w4
+ 861 000138  02 08 20 		mov	#128,w2
+ 862 00013a  80 00 EB 		clr	w1
+ 863 00013c  04 00 78 		mov	w4,w0
+ 864 00013e  00 00 07 		rcall	_memset
+  81:/home/phil/Projects/phoenix/firmware/program/display.c ****         set_page(page+i);
+ 865              		.ln	81
+ 866 000140  2E 82 90 		mov	[w14+132],w4
+ 867 000142  1E 02 42 		add	w4,[w14],w4
+ 868 000144  04 00 78 		mov	w4,w0
+ 869 000146  00 00 07 		rcall	_set_page
+  82:/home/phil/Projects/phoenix/firmware/program/display.c ****         if (right_justify) {
+ 870              		.ln	82
+ 871 000148  4E 4A 91 		mov.b	[w14+140],w4
+ 872 00014a  E0 4F 52 		sub.b	w4,#0,[w15]
+ 873              		.set ___BP___,0
+ 874 00014c  00 00 32 		bra	z,.L13
+  83:/home/phil/Projects/phoenix/firmware/program/display.c ****             end_col = render_text_to_page(temp_buffer,i,0,text,font);
+ 875              		.ln	83
+ 876 00014e  E4 02 47 		add	w14,#4,w5
+ 877 000150  5E 82 90 		mov	[w14+138],w4
+ 878 000152  CE 81 90 		mov	[w14+136],w3
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 18
+
+
+ 879 000154  00 01 EB 		clr	w2
+ 880 000156  9E 00 78 		mov	[w14],w1
+ 881 000158  05 00 78 		mov	w5,w0
+ 882 00015a  00 00 07 		rcall	_render_text_to_page
+ 883 00015c  00 02 78 		mov	w0,w4
+ 884 00015e  14 07 98 		mov	w4,[w14+2]
+  84:/home/phil/Projects/phoenix/firmware/program/display.c ****             if (end_col > column) {
+ 885              		.ln	84
+ 886 000160  9E 02 90 		mov	[w14+2],w5
+ 887 000162  3E 82 90 		mov	[w14+134],w4
+ 888 000164  84 8F 52 		sub	w5,w4,[w15]
+ 889              		.set ___BP___,0
+ 890 000166  00 00 34 		bra	le,.L14
+  85:/home/phil/Projects/phoenix/firmware/program/display.c ****                 set_column(0);
+ 891              		.ln	85
+ 892 000168  00 00 EB 		clr	w0
+ 893 00016a  00 00 07 		rcall	_set_column
+ 894 00016c  00 00 37 		bra	.L15
+ 895              	.L14:
+  86:/home/phil/Projects/phoenix/firmware/program/display.c ****             } else {
+  87:/home/phil/Projects/phoenix/firmware/program/display.c ****                 set_column(column-end_col);
+ 896              		.ln	87
+ 897 00016e  BE 82 90 		mov	[w14+134],w5
+ 898 000170  1E 02 90 		mov	[w14+2],w4
+ 899 000172  04 82 52 		sub	w5,w4,w4
+ 900 000174  04 00 78 		mov	w4,w0
+ 901 000176  00 00 07 		rcall	_set_column
+ 902              	.L15:
+  88:/home/phil/Projects/phoenix/firmware/program/display.c ****             }
+  89:/home/phil/Projects/phoenix/firmware/program/display.c ****                 display_send_data(temp_buffer,end_col);
+ 903              		.ln	89
+ 904 000178  1E 02 90 		mov	[w14+2],w4
+ 905 00017a  04 42 78 		mov.b	w4,w4
+ 906 00017c  E4 02 47 		add	w14,#4,w5
+ 907 00017e  84 40 78 		mov.b	w4,w1
+ 908 000180  05 00 78 		mov	w5,w0
+ 909 000182  00 00 07 		rcall	_display_send_data
+ 910 000184  00 00 37 		bra	.L16
+ 911              	.L13:
+  90:/home/phil/Projects/phoenix/firmware/program/display.c ****         } else {
+  91:/home/phil/Projects/phoenix/firmware/program/display.c ****             end_col = render_text_to_page(temp_buffer,i,column,text,font);
+ 912              		.ln	91
+ 913 000186  E4 02 47 		add	w14,#4,w5
+ 914 000188  5E 82 90 		mov	[w14+138],w4
+ 915 00018a  CE 81 90 		mov	[w14+136],w3
+ 916 00018c  3E 81 90 		mov	[w14+134],w2
+ 917 00018e  9E 00 78 		mov	[w14],w1
+ 918 000190  05 00 78 		mov	w5,w0
+ 919 000192  00 00 07 		rcall	_render_text_to_page
+ 920 000194  00 02 78 		mov	w0,w4
+ 921 000196  14 07 98 		mov	w4,[w14+2]
+  92:/home/phil/Projects/phoenix/firmware/program/display.c ****             set_column(column);
+ 922              		.ln	92
+ 923 000198  3E 80 90 		mov	[w14+134],w0
+ 924 00019a  00 00 07 		rcall	_set_column
+  93:/home/phil/Projects/phoenix/firmware/program/display.c ****             display_send_data(&temp_buffer[column],end_col-column);
+ 925              		.ln	93
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 19
+
+
+ 926 00019c  1E 02 90 		mov	[w14+2],w4
+ 927 00019e  84 42 78 		mov.b	w4,w5
+ 928 0001a0  3E 82 90 		mov	[w14+134],w4
+ 929 0001a2  04 42 78 		mov.b	w4,w4
+ 930 0001a4  04 C2 52 		sub.b	w5,w4,w4
+ 931 0001a6  BE 82 90 		mov	[w14+134],w5
+ 932 0001a8  64 03 47 		add	w14,#4,w6
+ 933 0001aa  85 02 43 		add	w6,w5,w5
+ 934 0001ac  84 40 78 		mov.b	w4,w1
+ 935 0001ae  05 00 78 		mov	w5,w0
+ 936 0001b0  00 00 07 		rcall	_display_send_data
+ 937              	.L16:
+  94:/home/phil/Projects/phoenix/firmware/program/display.c ****         }
+  95:/home/phil/Projects/phoenix/firmware/program/display.c ****         i++;
+ 938              		.ln	95
+ 939 0001b2  1E 0F E8 		inc	[w14],[w14]
+ 940              	.L12:
+ 941              		.ln	79
+ 942 0001b4  5E 82 90 		mov	[w14+138],w4
+ 943 0001b6  14 42 90 		mov.b	[w4+1],w4
+ 944 0001b8  04 82 FB 		ze	w4,w4
+ 945 0001ba  9E 0F 52 		sub	w4,[w14],[w15]
+ 946              		.set ___BP___,0
+ 947 0001bc  00 00 3C 		bra	gt,.L17
+  96:/home/phil/Projects/phoenix/firmware/program/display.c ****     }
+  97:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 948              		.ln	97
+ 949 0001be  00 80 FA 		ulnk	
+ 950 0001c0  00 00 06 		return	
+ 951              		.set ___PA___,0
+ 952              		.def	.eb
+ 953              		.val	.
+ 954              		.scl	100
+ 955              		.line	97
+ 956              		.endef
+ 957              		.def	.ef
+ 958              		.val	.
+ 959              		.scl	101
+ 960              		.line	97
+ 961              		.endef
+ 962              		.def	_display_write_text
+ 963              		.val	.
+ 964              		.scl	-1
+ 965              		.endef
+ 966              		.align	2
+ 967              		.def	_display_scroll_page
+ 968              		.val	_display_scroll_page
+ 969              		.scl	2
+ 970              		.type	041
+ 971              		.endef
+ 972              		.global	_display_scroll_page	; export
+ 973              	_display_scroll_page:
+ 974              		.def	.bf
+ 975              		.val	.
+ 976              		.scl	101
+  98:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+  99:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 20
+
+
+ 100:/home/phil/Projects/phoenix/firmware/program/display.c **** /* scroll a page of data onto the screen either up or down */
+ 101:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_scroll_page(uint8_t *data,  bool up){
+ 977              		.line	101
+ 978              		.endef
+ 979              		.def	_data
+ 980              		.val	134
+ 981              		.scl	9
+ 982              		.type	034
+ 983              		.endef
+ 984              		.def	_up
+ 985              		.val	136
+ 986              		.scl	9
+ 987              		.type	014
+ 988              		.endef
+ 989              		.def	.bb
+ 990              		.val	.
+ 991              		.scl	100
+ 992              		.line	101
+ 993              		.endef
+ 994              		.def	_i
+ 995              		.val	0
+ 996              		.scl	1
+ 997              		.type	04
+ 998              		.endef
+ 999              		.def	_j
+ 1000              		.val	2
+ 1001              		.scl	1
+ 1002              		.type	04
+ 1003              		.endef
+ 1004              		.def	_mask
+ 1005              		.val	4
+ 1006              		.scl	1
+ 1007              		.type	014
+ 1008              		.endef
+ 1009              		.def	_temp_buffer
+ 1010              		.val	5
+ 1011              		.scl	1
+ 1012              		.dim	128
+ 1013              		.size	128
+ 1014              		.type	074
+ 1015              		.endef
+ 1016              		.set ___PA___,1
+ 1017 0001c2  8A 00 FA 		lnk	#138
+ 1018 0001c4  30 87 98 		mov	w0,[w14+134]
+ 1019 0001c6  01 4F 99 		mov.b	w1,[w14+136]
+ 1020              		.def	___FP
+ 1021              		.val	14
+ 1022              		.scl	4
+ 1023              		.type	4
+ 1024              		.endef
+ 102:/home/phil/Projects/phoenix/firmware/program/display.c **** 	int i,j;
+ 103:/home/phil/Projects/phoenix/firmware/program/display.c **** 	uint8_t mask;
+ 104:/home/phil/Projects/phoenix/firmware/program/display.c **** 	uint8_t temp_buffer[128];
+ 105:/home/phil/Projects/phoenix/firmware/program/display.c ****         //first clear all data
+ 106:/home/phil/Projects/phoenix/firmware/program/display.c **** 	memset(temp_buffer,0,128);
+ 1025              		.ln	106
+ 1026 0001c8  65 02 47 		add	w14,#5,w4
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 21
+
+
+ 1027 0001ca  02 08 20 		mov	#128,w2
+ 1028 0001cc  80 00 EB 		clr	w1
+ 1029 0001ce  04 00 78 		mov	w4,w0
+ 1030 0001d0  00 00 07 		rcall	_memset
+ 107:/home/phil/Projects/phoenix/firmware/program/display.c ****     if (up) {
+ 1031              		.ln	107
+ 1032 0001d2  0E 4A 91 		mov.b	[w14+136],w4
+ 1033 0001d4  E0 4F 52 		sub.b	w4,#0,[w15]
+ 1034              		.set ___BP___,0
+ 1035 0001d6  00 00 32 		bra	z,.L19
+ 108:/home/phil/Projects/phoenix/firmware/program/display.c ****         set_page(top_page);
+ 1036              		.ln	108
+ 1037 0001d8  04 00 80 		mov	_top_page,w4
+ 1038 0001da  04 00 78 		mov	w4,w0
+ 1039 0001dc  00 00 07 		rcall	_set_page
+ 109:/home/phil/Projects/phoenix/firmware/program/display.c ****         set_column(0);
+ 1040              		.ln	109
+ 1041 0001de  00 00 EB 		clr	w0
+ 1042 0001e0  00 00 07 		rcall	_set_column
+ 110:/home/phil/Projects/phoenix/firmware/program/display.c ****         display_send_data(temp_buffer,128);
+ 1043              		.ln	110
+ 1044 0001e2  65 02 47 		add	w14,#5,w4
+ 1045 0001e4  01 C8 B3 		mov.b	#-128,w1
+ 1046 0001e6  04 00 78 		mov	w4,w0
+ 1047 0001e8  00 00 07 		rcall	_display_send_data
+ 111:/home/phil/Projects/phoenix/firmware/program/display.c ****         // now rotate it
+ 112:/home/phil/Projects/phoenix/firmware/program/display.c ****         for(i=0;i<8;++i) {
+ 1048              		.ln	112
+ 1049 0001ea  00 02 EB 		clr	w4
+ 1050 0001ec  04 0F 78 		mov	w4,[w14]
+ 1051 0001ee  00 00 37 		bra	.L20
+ 1052              	.L23:
+ 113:/home/phil/Projects/phoenix/firmware/program/display.c ****             send2(0xD3,(top_page*NUM_PAGES+i+1) % 64);
+ 1053              		.ln	113
+ 1054 0001f0  04 00 80 		mov	_top_page,w4
+ 1055 0001f2  43 22 DD 		sl	w4,#3,w4
+ 1056 0001f4  1E 02 42 		add	w4,[w14],w4
+ 1057 0001f6  84 02 E8 		inc	w4,w5
+ 1058 0001f8  04 04 20 		mov	#64,w4
+ 1059 0001fa  11 00 09 		repeat	#18-1
+ 1060 0001fc  84 02 D8 		div.sw	w5,w4
+ 1061 0001fe  01 02 78 		mov	w1,w4
+ 1062 000200  04 42 78 		mov.b	w4,w4
+ 1063 000202  84 40 78 		mov.b	w4,w1
+ 1064 000204  30 CD B3 		mov.b	#-45,w0
+ 1065 000206  00 00 07 		rcall	_send2
+ 114:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        set_column(0);
+ 1066              		.ln	114
+ 1067 000208  00 00 EB 		clr	w0
+ 1068 00020a  00 00 07 		rcall	_set_column
+ 115:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        mask = ((1<<(i+1))-1);
+ 1069              		.ln	115
+ 1070 00020c  1E 02 E8 		inc	[w14],w4
+ 1071 00020e  15 00 20 		mov	#1,w5
+ 1072 000210  04 2A DD 		sl	w5,w4,w4
+ 1073 000212  04 42 78 		mov.b	w4,w4
+ 1074 000214  04 42 E9 		dec.b	w4,w4
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 22
+
+
+ 1075 000216  44 47 98 		mov.b	w4,[w14+4]
+ 116:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        for(j=0;j<128;++j){
+ 1076              		.ln	116
+ 1077 000218  00 02 EB 		clr	w4
+ 1078 00021a  14 07 98 		mov	w4,[w14+2]
+ 1079 00021c  00 00 37 		bra	.L21
+ 1080              	.L22:
+ 117:/home/phil/Projects/phoenix/firmware/program/display.c **** 		        temp_buffer[i] = data[i] & mask;
+ 1081              		.ln	117
+ 1082 00021e  1E 02 78 		mov	[w14],w4
+ 1083 000220  BE 82 90 		mov	[w14+134],w5
+ 1084 000222  04 82 42 		add	w5,w4,w4
+ 1085 000224  94 42 78 		mov.b	[w4],w5
+ 1086 000226  4E 42 90 		mov.b	[w14+4],w4
+ 1087 000228  04 C2 62 		and.b	w5,w4,w4
+ 1088 00022a  E5 02 47 		add	w14,#5,w5
+ 1089 00022c  9E 82 42 		add	w5,[w14],w5
+ 1090 00022e  84 4A 78 		mov.b	w4,[w5]
+ 1091              		.ln	116
+ 1092 000230  1E 02 90 		mov	[w14+2],w4
+ 1093 000232  04 02 E8 		inc	w4,w4
+ 1094 000234  14 07 98 		mov	w4,[w14+2]
+ 1095              	.L21:
+ 1096 000236  9E 02 90 		mov	[w14+2],w5
+ 1097 000238  F4 07 20 		mov	#127,w4
+ 1098 00023a  84 8F 52 		sub	w5,w4,[w15]
+ 1099              		.set ___BP___,0
+ 1100 00023c  00 00 34 		bra	le,.L22
+ 118:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        }
+ 119:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        display_send_data(temp_buffer,128);
+ 1101              		.ln	119
+ 1102 00023e  65 02 47 		add	w14,#5,w4
+ 1103 000240  01 C8 B3 		mov.b	#-128,w1
+ 1104 000242  04 00 78 		mov	w4,w0
+ 1105 000244  00 00 07 		rcall	_display_send_data
+ 120:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        __delay_ms(SCROLL_RATE);
+ 1106              		.ln	120
+ 1107 000246  60 00 B8 		mul.uu	w0,#0,w0
+ 1108 000248  00 00 07 		rcall	___delay32
+ 1109              		.ln	112
+ 1110 00024a  1E 0F E8 		inc	[w14],[w14]
+ 1111              	.L20:
+ 1112 00024c  1E 02 78 		mov	[w14],w4
+ 1113 00024e  E7 0F 52 		sub	w4,#7,[w15]
+ 1114              		.set ___BP___,0
+ 1115 000250  00 00 34 		bra	le,.L23
+ 121:/home/phil/Projects/phoenix/firmware/program/display.c ****         }
+ 122:/home/phil/Projects/phoenix/firmware/program/display.c ****         top_page = (top_page+1) % NUM_PAGES;
+ 1116              		.ln	122
+ 1117 000252  04 00 80 		mov	_top_page,w4
+ 1118 000254  84 02 E8 		inc	w4,w5
+ 1119 000256  84 00 20 		mov	#8,w4
+ 1120 000258  11 00 09 		repeat	#18-1
+ 1121 00025a  84 02 D8 		div.sw	w5,w4
+ 1122 00025c  01 02 78 		mov	w1,w4
+ 1123 00025e  04 00 88 		mov	w4,_top_page
+ 1124 000260  00 00 37 		bra	.L24
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 23
+
+
+ 1125              	.L19:
+ 123:/home/phil/Projects/phoenix/firmware/program/display.c **** 	} else {
+ 124:/home/phil/Projects/phoenix/firmware/program/display.c ****         set_page((top_page+NUM_PAGES-1)%NUM_PAGES);
+ 1126              		.ln	124
+ 1127 000262  04 00 80 		mov	_top_page,w4
+ 1128 000264  E7 02 42 		add	w4,#7,w5
+ 1129 000266  84 00 20 		mov	#8,w4
+ 1130 000268  11 00 09 		repeat	#18-1
+ 1131 00026a  84 02 D8 		div.sw	w5,w4
+ 1132 00026c  01 02 78 		mov	w1,w4
+ 1133 00026e  04 00 78 		mov	w4,w0
+ 1134 000270  00 00 07 		rcall	_set_page
+ 125:/home/phil/Projects/phoenix/firmware/program/display.c ****         set_column(0);
+ 1135              		.ln	125
+ 1136 000272  00 00 EB 		clr	w0
+ 1137 000274  00 00 07 		rcall	_set_column
+ 126:/home/phil/Projects/phoenix/firmware/program/display.c ****         display_send_data(temp_buffer,128);
+ 1138              		.ln	126
+ 1139 000276  65 02 47 		add	w14,#5,w4
+ 1140 000278  01 C8 B3 		mov.b	#-128,w1
+ 1141 00027a  04 00 78 		mov	w4,w0
+ 1142 00027c  00 00 07 		rcall	_display_send_data
+ 127:/home/phil/Projects/phoenix/firmware/program/display.c ****         // now rotate it
+ 128:/home/phil/Projects/phoenix/firmware/program/display.c **** 	    for(i=0;i<8;++i){
+ 1143              		.ln	128
+ 1144 00027e  00 02 EB 		clr	w4
+ 1145 000280  04 0F 78 		mov	w4,[w14]
+ 1146 000282  00 00 37 		bra	.L25
+ 1147              	.L28:
+ 129:/home/phil/Projects/phoenix/firmware/program/display.c ****             send2(0xD3,(top_page*NUM_PAGES-(i+1)) % 64);
+ 1148              		.ln	129
+ 1149 000284  04 00 80 		mov	_top_page,w4
+ 1150 000286  C3 22 DD 		sl	w4,#3,w5
+ 1151 000288  1E 82 EA 		com	[w14],w4
+ 1152 00028a  84 82 42 		add	w5,w4,w5
+ 1153 00028c  04 04 20 		mov	#64,w4
+ 1154 00028e  11 00 09 		repeat	#18-1
+ 1155 000290  84 02 D8 		div.sw	w5,w4
+ 1156 000292  01 02 78 		mov	w1,w4
+ 1157 000294  04 42 78 		mov.b	w4,w4
+ 1158 000296  84 40 78 		mov.b	w4,w1
+ 1159 000298  30 CD B3 		mov.b	#-45,w0
+ 1160 00029a  00 00 07 		rcall	_send2
+ 130:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        set_column(0);
+ 1161              		.ln	130
+ 1162 00029c  00 00 EB 		clr	w0
+ 1163 00029e  00 00 07 		rcall	_set_column
+ 131:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        mask = (256-(1<<(NUM_PAGES-i)));
+ 1164              		.ln	131
+ 1165 0002a0  85 00 20 		mov	#8,w5
+ 1166 0002a2  1E 82 52 		sub	w5,[w14],w4
+ 1167 0002a4  15 00 20 		mov	#1,w5
+ 1168 0002a6  04 2A DD 		sl	w5,w4,w4
+ 1169 0002a8  04 42 78 		mov.b	w4,w4
+ 1170 0002aa  04 42 EA 		neg.b	w4,w4
+ 1171 0002ac  44 47 98 		mov.b	w4,[w14+4]
+ 132:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        for(j=0;j<128;++j){
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 24
+
+
+ 1172              		.ln	132
+ 1173 0002ae  00 02 EB 		clr	w4
+ 1174 0002b0  14 07 98 		mov	w4,[w14+2]
+ 1175 0002b2  00 00 37 		bra	.L26
+ 1176              	.L27:
+ 133:/home/phil/Projects/phoenix/firmware/program/display.c **** 		        temp_buffer[i] = data[i] & mask;
+ 1177              		.ln	133
+ 1178 0002b4  1E 02 78 		mov	[w14],w4
+ 1179 0002b6  BE 82 90 		mov	[w14+134],w5
+ 1180 0002b8  04 82 42 		add	w5,w4,w4
+ 1181 0002ba  94 42 78 		mov.b	[w4],w5
+ 1182 0002bc  4E 42 90 		mov.b	[w14+4],w4
+ 1183 0002be  04 C2 62 		and.b	w5,w4,w4
+ 1184 0002c0  E5 02 47 		add	w14,#5,w5
+ 1185 0002c2  9E 82 42 		add	w5,[w14],w5
+ 1186 0002c4  84 4A 78 		mov.b	w4,[w5]
+ 1187              		.ln	132
+ 1188 0002c6  1E 02 90 		mov	[w14+2],w4
+ 1189 0002c8  04 02 E8 		inc	w4,w4
+ 1190 0002ca  14 07 98 		mov	w4,[w14+2]
+ 1191              	.L26:
+ 1192 0002cc  9E 02 90 		mov	[w14+2],w5
+ 1193 0002ce  F4 07 20 		mov	#127,w4
+ 1194 0002d0  84 8F 52 		sub	w5,w4,[w15]
+ 1195              		.set ___BP___,0
+ 1196 0002d2  00 00 34 		bra	le,.L27
+ 134:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        }
+ 135:/home/phil/Projects/phoenix/firmware/program/display.c **** 	        display_send_data(temp_buffer,128);
+ 1197              		.ln	135
+ 1198 0002d4  65 02 47 		add	w14,#5,w4
+ 1199 0002d6  01 C8 B3 		mov.b	#-128,w1
+ 1200 0002d8  04 00 78 		mov	w4,w0
+ 1201 0002da  00 00 07 		rcall	_display_send_data
+ 136:/home/phil/Projects/phoenix/firmware/program/display.c ****             __delay_ms(SCROLL_RATE);
+ 1202              		.ln	136
+ 1203 0002dc  60 00 B8 		mul.uu	w0,#0,w0
+ 1204 0002de  00 00 07 		rcall	___delay32
+ 1205              		.ln	128
+ 1206 0002e0  1E 0F E8 		inc	[w14],[w14]
+ 1207              	.L25:
+ 1208 0002e2  1E 02 78 		mov	[w14],w4
+ 1209 0002e4  E7 0F 52 		sub	w4,#7,[w15]
+ 1210              		.set ___BP___,0
+ 1211 0002e6  00 00 34 		bra	le,.L28
+ 137:/home/phil/Projects/phoenix/firmware/program/display.c **** 	    }
+ 138:/home/phil/Projects/phoenix/firmware/program/display.c ****         top_page = (top_page+NUM_PAGES-1) % NUM_PAGES;
+ 1212              		.ln	138
+ 1213 0002e8  04 00 80 		mov	_top_page,w4
+ 1214 0002ea  E7 02 42 		add	w4,#7,w5
+ 1215 0002ec  84 00 20 		mov	#8,w4
+ 1216 0002ee  11 00 09 		repeat	#18-1
+ 1217 0002f0  84 02 D8 		div.sw	w5,w4
+ 1218 0002f2  01 02 78 		mov	w1,w4
+ 1219 0002f4  04 00 88 		mov	w4,_top_page
+ 1220              	.L24:
+ 139:/home/phil/Projects/phoenix/firmware/program/display.c **** 	    }
+ 140:/home/phil/Projects/phoenix/firmware/program/display.c **** 	set_column(0);
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 25
+
+
+ 1221              		.ln	140
+ 1222 0002f6  00 00 EB 		clr	w0
+ 1223 0002f8  00 00 07 		rcall	_set_column
+ 141:/home/phil/Projects/phoenix/firmware/program/display.c **** 	display_send_data(data,128);
+ 1224              		.ln	141
+ 1225 0002fa  01 C8 B3 		mov.b	#-128,w1
+ 1226 0002fc  3E 80 90 		mov	[w14+134],w0
+ 1227 0002fe  00 00 07 		rcall	_display_send_data
+ 142:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 1228              		.ln	142
+ 1229 000300  00 80 FA 		ulnk	
+ 1230 000302  00 00 06 		return	
+ 1231              		.set ___PA___,0
+ 1232              		.def	.eb
+ 1233              		.val	.
+ 1234              		.scl	100
+ 1235              		.line	142
+ 1236              		.endef
+ 1237              		.def	.ef
+ 1238              		.val	.
+ 1239              		.scl	101
+ 1240              		.line	142
+ 1241              		.endef
+ 1242              		.def	_display_scroll_page
+ 1243              		.val	.
+ 1244              		.scl	-1
+ 1245              		.endef
+ 1246              		.align	2
+ 1247              		.def	_render_text_to_page
+ 1248              		.val	_render_text_to_page
+ 1249              		.scl	2
+ 1250              		.type	044
+ 1251              		.endef
+ 1252              		.global	_render_text_to_page	; export
+ 1253              	_render_text_to_page:
+ 1254              		.def	.bf
+ 1255              		.val	.
+ 1256              		.scl	101
+ 143:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+ 144:/home/phil/Projects/phoenix/firmware/program/display.c **** /* render a text string to a buffer */ 
+ 145:/home/phil/Projects/phoenix/firmware/program/display.c **** /* just do one page at a time */
+ 146:/home/phil/Projects/phoenix/firmware/program/display.c **** /* can specify starting column */
+ 147:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+ 148:/home/phil/Projects/phoenix/firmware/program/display.c **** int render_text_to_page(uint8_t *buffer, int page, int column, const char *text, const struct FONT 
+ 1257              		.line	148
+ 1258              		.endef
+ 1259              		.def	_buffer
+ 1260              		.val	4
+ 1261              		.scl	9
+ 1262              		.type	034
+ 1263              		.endef
+ 1264              		.def	_page
+ 1265              		.val	6
+ 1266              		.scl	9
+ 1267              		.type	04
+ 1268              		.endef
+ 1269              		.def	_column
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 26
+
+
+ 1270              		.val	8
+ 1271              		.scl	9
+ 1272              		.type	04
+ 1273              		.endef
+ 1274              		.def	_text
+ 1275              		.val	10
+ 1276              		.scl	9
+ 1277              		.type	022
+ 1278              		.endef
+ 1279              		.def	_font
+ 1280              		.val	12
+ 1281              		.scl	9
+ 1282              		.tag	_FONT
+ 1283              		.size	8
+ 1284              		.type	030
+ 1285              		.endef
+ 1286              		.def	.bb
+ 1287              		.val	.
+ 1288              		.scl	100
+ 1289              		.line	148
+ 1290              		.endef
+ 1291              		.def	_i
+ 1292              		.val	0
+ 1293              		.scl	1
+ 1294              		.type	04
+ 1295              		.endef
+ 1296              		.def	_glyph
+ 1297              		.val	2
+ 1298              		.scl	1
+ 1299              		.tag	_GLYPH_DATA
+ 1300              		.size	4
+ 1301              		.type	030
+ 1302              		.endef
+ 1303              		.set ___PA___,1
+ 1304 000304  0E 00 FA 		lnk	#14
+ 1305 000306  20 07 98 		mov	w0,[w14+4]
+ 1306 000308  31 07 98 		mov	w1,[w14+6]
+ 1307 00030a  42 07 98 		mov	w2,[w14+8]
+ 1308 00030c  53 07 98 		mov	w3,[w14+10]
+ 1309 00030e  64 07 98 		mov	w4,[w14+12]
+ 1310              		.def	___FP
+ 1311              		.val	14
+ 1312              		.scl	4
+ 1313              		.type	4
+ 1314              		.endef
+ 149:/home/phil/Projects/phoenix/firmware/program/display.c ****     int i;
+ 150:/home/phil/Projects/phoenix/firmware/program/display.c ****     const struct GLYPH_DATA *glyph;
+ 151:/home/phil/Projects/phoenix/firmware/program/display.c ****     while (*text) {
+ 1315              		.ln	151
+ 1316 000310  00 00 37 		bra	.L30
+ 1317              	.L35:
+ 152:/home/phil/Projects/phoenix/firmware/program/display.c ****         i = 0;
+ 1318              		.ln	152
+ 1319 000312  00 02 EB 		clr	w4
+ 1320 000314  04 0F 78 		mov	w4,[w14]
+ 153:/home/phil/Projects/phoenix/firmware/program/display.c ****         glyph = get_glyph_data(font,*text);        
+ 1321              		.ln	153
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 27
+
+
+ 1322 000316  6E 02 90 		mov	[w14+12],w4
+ 1323 000318  A4 02 90 		mov	[w4+4],w5
+ 1324 00031a  5E 02 90 		mov	[w14+10],w4
+ 1325 00031c  14 42 78 		mov.b	[w4],w4
+ 1326 00031e  04 02 FB 		se	w4,w4
+ 1327 000320  04 02 B1 		sub	#32,w4
+ 1328 000322  42 22 DD 		sl	w4,#2,w4
+ 1329 000324  04 82 42 		add	w5,w4,w4
+ 1330 000326  14 07 98 		mov	w4,[w14+2]
+ 154:/home/phil/Projects/phoenix/firmware/program/display.c ****         while((column<128) && (i < glyph->width)) {
+ 1331              		.ln	154
+ 1332 000328  00 00 37 		bra	.L31
+ 1333              	.L34:
+ 155:/home/phil/Projects/phoenix/firmware/program/display.c ****             if (page < glyph->pages) {
+ 1334              		.ln	155
+ 1335 00032a  1E 02 90 		mov	[w14+2],w4
+ 1336 00032c  14 42 90 		mov.b	[w4+1],w4
+ 1337 00032e  84 82 FB 		ze	w4,w5
+ 1338 000330  3E 02 90 		mov	[w14+6],w4
+ 1339 000332  84 8F 52 		sub	w5,w4,[w15]
+ 1340              		.set ___BP___,0
+ 1341 000334  00 00 34 		bra	le,.L32
+ 156:/home/phil/Projects/phoenix/firmware/program/display.c ****                 buffer[column] = font->bitmaps[glyph->index+page*glyph->width+i];
+ 1342              		.ln	156
+ 1343 000336  4E 02 90 		mov	[w14+8],w4
+ 1344 000338  AE 02 90 		mov	[w14+4],w5
+ 1345 00033a  04 83 42 		add	w5,w4,w6
+ 1346 00033c  6E 02 90 		mov	[w14+12],w4
+ 1347 00033e  B4 03 90 		mov	[w4+6],w7
+ 1348 000340  1E 02 90 		mov	[w14+2],w4
+ 1349 000342  14 00 90 		mov	[w4+2],w0
+ 1350 000344  1E 02 90 		mov	[w14+2],w4
+ 1351 000346  14 42 78 		mov.b	[w4],w4
+ 1352 000348  84 82 FB 		ze	w4,w5
+ 1353 00034a  3E 02 90 		mov	[w14+6],w4
+ 1354 00034c  04 AA B9 		mul.ss	w5,w4,w4
+ 1355 00034e  04 02 78 		mov	w4,w4
+ 1356 000350  84 02 40 		add	w0,w4,w5
+ 1357 000352  1E 02 78 		mov	[w14],w4
+ 1358 000354  04 82 42 		add	w5,w4,w4
+ 1359 000356  04 82 43 		add	w7,w4,w4
+ 1360 000358  14 42 78 		mov.b	[w4],w4
+ 1361 00035a  04 4B 78 		mov.b	w4,[w6]
+ 1362              	.L32:
+ 157:/home/phil/Projects/phoenix/firmware/program/display.c ****             }
+ 158:/home/phil/Projects/phoenix/firmware/program/display.c ****             column++;
+ 1363              		.ln	158
+ 1364 00035c  4E 02 90 		mov	[w14+8],w4
+ 1365 00035e  04 02 E8 		inc	w4,w4
+ 1366 000360  44 07 98 		mov	w4,[w14+8]
+ 159:/home/phil/Projects/phoenix/firmware/program/display.c ****             i++;
+ 1367              		.ln	159
+ 1368 000362  1E 0F E8 		inc	[w14],[w14]
+ 1369              	.L31:
+ 1370              		.ln	154
+ 1371 000364  CE 02 90 		mov	[w14+8],w5
+ 1372 000366  F4 07 20 		mov	#127,w4
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 28
+
+
+ 1373 000368  84 8F 52 		sub	w5,w4,[w15]
+ 1374              		.set ___BP___,0
+ 1375 00036a  00 00 3C 		bra	gt,.L33
+ 1376 00036c  1E 02 90 		mov	[w14+2],w4
+ 1377 00036e  14 42 78 		mov.b	[w4],w4
+ 1378 000370  04 82 FB 		ze	w4,w4
+ 1379 000372  9E 0F 52 		sub	w4,[w14],[w15]
+ 1380              		.set ___BP___,0
+ 1381 000374  00 00 3C 		bra	gt,.L34
+ 1382              	.L33:
+ 160:/home/phil/Projects/phoenix/firmware/program/display.c ****         }
+ 161:/home/phil/Projects/phoenix/firmware/program/display.c ****         column+=font->advance;
+ 1383              		.ln	161
+ 1384 000376  6E 02 90 		mov	[w14+12],w4
+ 1385 000378  14 42 78 		mov.b	[w4],w4
+ 1386 00037a  04 82 FB 		ze	w4,w4
+ 1387 00037c  CE 02 90 		mov	[w14+8],w5
+ 1388 00037e  04 82 42 		add	w5,w4,w4
+ 1389 000380  44 07 98 		mov	w4,[w14+8]
+ 162:/home/phil/Projects/phoenix/firmware/program/display.c ****         text++;
+ 1390              		.ln	162
+ 1391 000382  5E 02 90 		mov	[w14+10],w4
+ 1392 000384  04 02 E8 		inc	w4,w4
+ 1393 000386  54 07 98 		mov	w4,[w14+10]
+ 1394              	.L30:
+ 1395              		.ln	151
+ 1396 000388  5E 02 90 		mov	[w14+10],w4
+ 1397 00038a  14 42 78 		mov.b	[w4],w4
+ 1398 00038c  E0 4F 52 		sub.b	w4,#0,[w15]
+ 1399              		.set ___BP___,0
+ 1400 00038e  00 00 3A 		bra	nz,.L35
+ 163:/home/phil/Projects/phoenix/firmware/program/display.c ****     }
+ 164:/home/phil/Projects/phoenix/firmware/program/display.c ****     return column;
+ 1401              		.ln	164
+ 1402 000390  4E 02 90 		mov	[w14+8],w4
+ 165:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 1403              		.ln	165
+ 1404 000392  04 00 78 		mov	w4,w0
+ 1405 000394  00 80 FA 		ulnk	
+ 1406 000396  00 00 06 		return	
+ 1407              		.set ___PA___,0
+ 1408              		.def	.eb
+ 1409              		.val	.
+ 1410              		.scl	100
+ 1411              		.line	165
+ 1412              		.endef
+ 1413              		.def	.ef
+ 1414              		.val	.
+ 1415              		.scl	101
+ 1416              		.line	165
+ 1417              		.endef
+ 1418              		.def	_render_text_to_page
+ 1419              		.val	.
+ 1420              		.scl	-1
+ 1421              		.endef
+ 1422              		.align	2
+ 1423              		.def	_display_scroll_text
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 29
+
+
+ 1424              		.val	_display_scroll_text
+ 1425              		.scl	2
+ 1426              		.type	041
+ 1427              		.endef
+ 1428              		.global	_display_scroll_text	; export
+ 1429              	_display_scroll_text:
+ 1430              		.def	.bf
+ 1431              		.val	.
+ 1432              		.scl	101
+ 166:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+ 167:/home/phil/Projects/phoenix/firmware/program/display.c **** /* scroll in a piece of text, finishing at page and column specified*/
+ 168:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_scroll_text(int page, int column, const char *text, const struct FONT *font, bool up) 
+ 1433              		.line	168
+ 1434              		.endef
+ 1435              		.def	_page
+ 1436              		.val	130
+ 1437              		.scl	9
+ 1438              		.type	04
+ 1439              		.endef
+ 1440              		.def	_column
+ 1441              		.val	132
+ 1442              		.scl	9
+ 1443              		.type	04
+ 1444              		.endef
+ 1445              		.def	_text
+ 1446              		.val	134
+ 1447              		.scl	9
+ 1448              		.type	022
+ 1449              		.endef
+ 1450              		.def	_font
+ 1451              		.val	136
+ 1452              		.scl	9
+ 1453              		.tag	_FONT
+ 1454              		.size	8
+ 1455              		.type	030
+ 1456              		.endef
+ 1457              		.def	_up
+ 1458              		.val	138
+ 1459              		.scl	9
+ 1460              		.type	014
+ 1461              		.endef
+ 1462              		.def	.bb
+ 1463              		.val	.
+ 1464              		.scl	100
+ 1465              		.line	168
+ 1466              		.endef
+ 1467              		.def	_temp_buffer
+ 1468              		.val	2
+ 1469              		.scl	1
+ 1470              		.dim	128
+ 1471              		.size	128
+ 1472              		.type	074
+ 1473              		.endef
+ 1474              		.def	_i
+ 1475              		.val	0
+ 1476              		.scl	1
+ 1477              		.type	04
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 30
+
+
+ 1478              		.endef
+ 1479              		.set ___PA___,1
+ 1480 000398  8C 00 FA 		lnk	#140
+ 1481 00039a  10 87 98 		mov	w0,[w14+130]
+ 1482 00039c  21 87 98 		mov	w1,[w14+132]
+ 1483 00039e  32 87 98 		mov	w2,[w14+134]
+ 1484 0003a0  43 87 98 		mov	w3,[w14+136]
+ 1485 0003a2  24 4F 99 		mov.b	w4,[w14+138]
+ 1486              		.def	___FP
+ 1487              		.val	14
+ 1488              		.scl	4
+ 1489              		.type	4
+ 1490              		.endef
+ 169:/home/phil/Projects/phoenix/firmware/program/display.c ****     uint8_t temp_buffer[128];
+ 170:/home/phil/Projects/phoenix/firmware/program/display.c ****     int i;
+ 171:/home/phil/Projects/phoenix/firmware/program/display.c ****     if (up) {
+ 1491              		.ln	171
+ 1492 0003a4  2E 4A 91 		mov.b	[w14+138],w4
+ 1493 0003a6  E0 4F 52 		sub.b	w4,#0,[w15]
+ 1494              		.set ___BP___,0
+ 1495 0003a8  00 00 32 		bra	z,.L37
+ 172:/home/phil/Projects/phoenix/firmware/program/display.c ****         i = 0;
+ 1496              		.ln	172
+ 1497 0003aa  00 02 EB 		clr	w4
+ 1498 0003ac  04 0F 78 		mov	w4,[w14]
+ 173:/home/phil/Projects/phoenix/firmware/program/display.c ****         while ((9-i)>page) {
+ 1499              		.ln	173
+ 1500 0003ae  00 00 37 		bra	.L38
+ 1501              	.L40:
+ 174:/home/phil/Projects/phoenix/firmware/program/display.c ****             memset(temp_buffer,0,128);
+ 1502              		.ln	174
+ 1503 0003b0  0E 82 E8 		inc2	w14,w4
+ 1504 0003b2  02 08 20 		mov	#128,w2
+ 1505 0003b4  80 00 EB 		clr	w1
+ 1506 0003b6  04 00 78 		mov	w4,w0
+ 1507 0003b8  00 00 07 		rcall	_memset
+ 175:/home/phil/Projects/phoenix/firmware/program/display.c ****             if (i < font->max_pages) render_text_to_page(temp_buffer,i,column,text,font);
+ 1508              		.ln	175
+ 1509 0003ba  4E 82 90 		mov	[w14+136],w4
+ 1510 0003bc  14 42 90 		mov.b	[w4+1],w4
+ 1511 0003be  04 82 FB 		ze	w4,w4
+ 1512 0003c0  9E 0F 52 		sub	w4,[w14],[w15]
+ 1513              		.set ___BP___,0
+ 1514 0003c2  00 00 34 		bra	le,.L39
+ 1515 0003c4  8E 82 E8 		inc2	w14,w5
+ 1516 0003c6  4E 82 90 		mov	[w14+136],w4
+ 1517 0003c8  BE 81 90 		mov	[w14+134],w3
+ 1518 0003ca  2E 81 90 		mov	[w14+132],w2
+ 1519 0003cc  9E 00 78 		mov	[w14],w1
+ 1520 0003ce  05 00 78 		mov	w5,w0
+ 1521 0003d0  00 00 07 		rcall	_render_text_to_page
+ 1522              	.L39:
+ 176:/home/phil/Projects/phoenix/firmware/program/display.c ****             display_scroll_page(temp_buffer,up);
+ 1523              		.ln	176
+ 1524 0003d2  0E 82 E8 		inc2	w14,w4
+ 1525 0003d4  AE 48 91 		mov.b	[w14+138],w1
+ 1526 0003d6  04 00 78 		mov	w4,w0
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 31
+
+
+ 1527 0003d8  00 00 07 		rcall	_display_scroll_page
+ 177:/home/phil/Projects/phoenix/firmware/program/display.c ****             i++;
+ 1528              		.ln	177
+ 1529 0003da  1E 0F E8 		inc	[w14],[w14]
+ 1530              	.L38:
+ 1531              		.ln	173
+ 1532 0003dc  94 00 20 		mov	#9,w4
+ 1533 0003de  9E 02 52 		sub	w4,[w14],w5
+ 1534 0003e0  1E 82 90 		mov	[w14+130],w4
+ 1535 0003e2  84 8F 52 		sub	w5,w4,[w15]
+ 1536              		.set ___BP___,0
+ 1537 0003e4  00 00 3C 		bra	gt,.L40
+ 1538 0003e6  00 00 37 		bra	.L36
+ 1539              	.L37:
+ 178:/home/phil/Projects/phoenix/firmware/program/display.c ****         }
+ 179:/home/phil/Projects/phoenix/firmware/program/display.c ****     } else {
+ 180:/home/phil/Projects/phoenix/firmware/program/display.c ****         for(i=(font->max_pages-1); i > -1; i--) {
+ 1540              		.ln	180
+ 1541 0003e8  4E 82 90 		mov	[w14+136],w4
+ 1542 0003ea  14 42 90 		mov.b	[w4+1],w4
+ 1543 0003ec  04 82 FB 		ze	w4,w4
+ 1544 0003ee  04 0F E9 		dec	w4,[w14]
+ 1545 0003f0  00 00 37 		bra	.L42
+ 1546              	.L43:
+ 181:/home/phil/Projects/phoenix/firmware/program/display.c ****             memset(temp_buffer,0,128);
+ 1547              		.ln	181
+ 1548 0003f2  0E 82 E8 		inc2	w14,w4
+ 1549 0003f4  02 08 20 		mov	#128,w2
+ 1550 0003f6  80 00 EB 		clr	w1
+ 1551 0003f8  04 00 78 		mov	w4,w0
+ 1552 0003fa  00 00 07 		rcall	_memset
+ 182:/home/phil/Projects/phoenix/firmware/program/display.c ****             render_text_to_page(temp_buffer,i,column,text,font);
+ 1553              		.ln	182
+ 1554 0003fc  8E 82 E8 		inc2	w14,w5
+ 1555 0003fe  4E 82 90 		mov	[w14+136],w4
+ 1556 000400  BE 81 90 		mov	[w14+134],w3
+ 1557 000402  2E 81 90 		mov	[w14+132],w2
+ 1558 000404  9E 00 78 		mov	[w14],w1
+ 1559 000406  05 00 78 		mov	w5,w0
+ 1560 000408  00 00 07 		rcall	_render_text_to_page
+ 183:/home/phil/Projects/phoenix/firmware/program/display.c ****             display_scroll_page(temp_buffer,up);
+ 1561              		.ln	183
+ 1562 00040a  0E 82 E8 		inc2	w14,w4
+ 1563 00040c  AE 48 91 		mov.b	[w14+138],w1
+ 1564 00040e  04 00 78 		mov	w4,w0
+ 1565 000410  00 00 07 		rcall	_display_scroll_page
+ 1566              		.ln	180
+ 1567 000412  1E 0F E9 		dec	[w14],[w14]
+ 1568              	.L42:
+ 1569 000414  1E 02 78 		mov	[w14],w4
+ 1570 000416  E0 0F 52 		sub	w4,#0,[w15]
+ 1571              		.set ___BP___,0
+ 1572 000418  00 00 3D 		bra	ge,.L43
+ 184:/home/phil/Projects/phoenix/firmware/program/display.c ****         }
+ 185:/home/phil/Projects/phoenix/firmware/program/display.c ****         memset(temp_buffer,0,128);
+ 1573              		.ln	185
+ 1574 00041a  0E 82 E8 		inc2	w14,w4
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 32
+
+
+ 1575 00041c  02 08 20 		mov	#128,w2
+ 1576 00041e  80 00 EB 		clr	w1
+ 1577 000420  04 00 78 		mov	w4,w0
+ 1578 000422  00 00 07 		rcall	_memset
+ 186:/home/phil/Projects/phoenix/firmware/program/display.c ****         for(i=0; i < page; i++) {
+ 1579              		.ln	186
+ 1580 000424  00 02 EB 		clr	w4
+ 1581 000426  04 0F 78 		mov	w4,[w14]
+ 1582 000428  00 00 37 		bra	.L44
+ 1583              	.L45:
+ 187:/home/phil/Projects/phoenix/firmware/program/display.c ****             display_scroll_page(temp_buffer,up);
+ 1584              		.ln	187
+ 1585 00042a  0E 82 E8 		inc2	w14,w4
+ 1586 00042c  AE 48 91 		mov.b	[w14+138],w1
+ 1587 00042e  04 00 78 		mov	w4,w0
+ 1588 000430  00 00 07 		rcall	_display_scroll_page
+ 1589              		.ln	186
+ 1590 000432  1E 0F E8 		inc	[w14],[w14]
+ 1591              	.L44:
+ 1592 000434  1E 82 90 		mov	[w14+130],w4
+ 1593 000436  9E 02 78 		mov	[w14],w5
+ 1594 000438  84 8F 52 		sub	w5,w4,[w15]
+ 1595              		.set ___BP___,0
+ 1596 00043a  00 00 35 		bra	lt,.L45
+ 1597              	.L36:
+ 188:/home/phil/Projects/phoenix/firmware/program/display.c ****         }
+ 189:/home/phil/Projects/phoenix/firmware/program/display.c ****     }
+ 190:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 1598              		.ln	190
+ 1599 00043c  00 80 FA 		ulnk	
+ 1600 00043e  00 00 06 		return	
+ 1601              		.set ___PA___,0
+ 1602              		.def	.eb
+ 1603              		.val	.
+ 1604              		.scl	100
+ 1605              		.line	190
+ 1606              		.endef
+ 1607              		.def	.ef
+ 1608              		.val	.
+ 1609              		.scl	101
+ 1610              		.line	190
+ 1611              		.endef
+ 1612              		.def	_display_scroll_text
+ 1613              		.val	.
+ 1614              		.scl	-1
+ 1615              		.endef
+ 1616              		.align	2
+ 1617              		.def	_display_swipe_pages
+ 1618              		.val	_display_swipe_pages
+ 1619              		.scl	2
+ 1620              		.type	041
+ 1621              		.endef
+ 1622              		.global	_display_swipe_pages	; export
+ 1623              	_display_swipe_pages:
+ 1624              		.def	.bf
+ 1625              		.val	.
+ 1626              		.scl	101
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 33
+
+
+ 191:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+ 192:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_swipe_pages(int start_page, uint8_t *data, int page_count, bool left){
+ 1627              		.line	192
+ 1628              		.endef
+ 1629              		.def	_start_page
+ 1630              		.val	134
+ 1631              		.scl	9
+ 1632              		.type	04
+ 1633              		.endef
+ 1634              		.def	_data
+ 1635              		.val	136
+ 1636              		.scl	9
+ 1637              		.type	034
+ 1638              		.endef
+ 1639              		.def	_page_count
+ 1640              		.val	138
+ 1641              		.scl	9
+ 1642              		.type	04
+ 1643              		.endef
+ 1644              		.def	_left
+ 1645              		.val	140
+ 1646              		.scl	9
+ 1647              		.type	014
+ 1648              		.endef
+ 1649              		.def	.bb
+ 1650              		.val	.
+ 1651              		.scl	100
+ 1652              		.line	192
+ 1653              		.endef
+ 1654              		.def	_offset
+ 1655              		.val	0
+ 1656              		.scl	1
+ 1657              		.type	04
+ 1658              		.endef
+ 1659              		.def	_page
+ 1660              		.val	2
+ 1661              		.scl	1
+ 1662              		.type	04
+ 1663              		.endef
+ 1664              		.def	_real_page
+ 1665              		.val	4
+ 1666              		.scl	1
+ 1667              		.type	04
+ 1668              		.endef
+ 1669              		.def	_temp_buffer
+ 1670              		.val	6
+ 1671              		.scl	1
+ 1672              		.dim	128
+ 1673              		.size	128
+ 1674              		.type	074
+ 1675              		.endef
+ 1676              		.set ___PA___,1
+ 1677 000440  8E 00 FA 		lnk	#142
+ 1678 000442  30 87 98 		mov	w0,[w14+134]
+ 1679 000444  41 87 98 		mov	w1,[w14+136]
+ 1680 000446  52 87 98 		mov	w2,[w14+138]
+ 1681 000448  43 4F 99 		mov.b	w3,[w14+140]
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 34
+
+
+ 1682              		.def	___FP
+ 1683              		.val	14
+ 1684              		.scl	4
+ 1685              		.type	4
+ 1686              		.endef
+ 193:/home/phil/Projects/phoenix/firmware/program/display.c ****     int offset;
+ 194:/home/phil/Projects/phoenix/firmware/program/display.c ****     int page, real_page;
+ 195:/home/phil/Projects/phoenix/firmware/program/display.c ****     uint8_t temp_buffer[128];
+ 196:/home/phil/Projects/phoenix/firmware/program/display.c ****     if (left){
+ 1687              		.ln	196
+ 1688 00044a  4E 4A 91 		mov.b	[w14+140],w4
+ 1689 00044c  E0 4F 52 		sub.b	w4,#0,[w15]
+ 1690              		.set ___BP___,0
+ 1691 00044e  00 00 32 		bra	z,.L47
+ 197:/home/phil/Projects/phoenix/firmware/program/display.c ****         for(offset=0;offset<128;offset+=SWIPE_STEP){
+ 1692              		.ln	197
+ 1693 000450  00 02 EB 		clr	w4
+ 1694 000452  04 0F 78 		mov	w4,[w14]
+ 1695 000454  00 00 37 		bra	.L48
+ 1696              	.L51:
+ 198:/home/phil/Projects/phoenix/firmware/program/display.c ****             for(page=0;page<page_count;++page){
+ 1697              		.ln	198
+ 1698 000456  00 02 EB 		clr	w4
+ 1699 000458  14 07 98 		mov	w4,[w14+2]
+ 1700 00045a  00 00 37 		bra	.L49
+ 1701              	.L50:
+ 199:/home/phil/Projects/phoenix/firmware/program/display.c ****                 memset(temp_buffer,0,128);
+ 1702              		.ln	199
+ 1703 00045c  66 02 47 		add	w14,#6,w4
+ 1704 00045e  02 08 20 		mov	#128,w2
+ 1705 000460  80 00 EB 		clr	w1
+ 1706 000462  04 00 78 		mov	w4,w0
+ 1707 000464  00 00 07 		rcall	_memset
+ 200:/home/phil/Projects/phoenix/firmware/program/display.c ****                 real_page = (start_page+top_page+page) % 8;
+ 1708              		.ln	200
+ 1709 000466  05 00 80 		mov	_top_page,w5
+ 1710 000468  3E 82 90 		mov	[w14+134],w4
+ 1711 00046a  84 82 42 		add	w5,w4,w5
+ 1712 00046c  1E 02 90 		mov	[w14+2],w4
+ 1713 00046e  84 82 42 		add	w5,w4,w5
+ 1714 000470  84 00 20 		mov	#8,w4
+ 1715 000472  11 00 09 		repeat	#18-1
+ 1716 000474  84 02 D8 		div.sw	w5,w4
+ 1717 000476  01 02 78 		mov	w1,w4
+ 1718 000478  24 07 98 		mov	w4,[w14+4]
+ 201:/home/phil/Projects/phoenix/firmware/program/display.c ****                 // copy from current buffer over into temp_buffer, 
+ 202:/home/phil/Projects/phoenix/firmware/program/display.c ****                 memcpy(temp_buffer,&buffer[real_page][SWIPE_STEP],128-SWIPE_STEP-offset);
+ 1719              		.ln	202
+ 1720 00047a  84 07 20 		mov	#120,w4
+ 1721 00047c  1E 02 52 		sub	w4,[w14],w4
+ 1722 00047e  04 03 78 		mov	w4,w6
+ 1723 000480  2E 02 90 		mov	[w14+4],w4
+ 1724 000482  47 22 DD 		sl	w4,#7,w4
+ 1725 000484  E8 02 42 		add	w4,#8,w5
+ 1726 000486  04 00 20 		mov	#_buffer,w4
+ 1727 000488  84 82 42 		add	w5,w4,w5
+ 1728 00048a  66 02 47 		add	w14,#6,w4
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 35
+
+
+ 1729 00048c  06 01 78 		mov	w6,w2
+ 1730 00048e  85 00 78 		mov	w5,w1
+ 1731 000490  04 00 78 		mov	w4,w0
+ 1732 000492  00 00 07 		rcall	_memcpy
+ 203:/home/phil/Projects/phoenix/firmware/program/display.c ****                 memcpy(&temp_buffer[128-offset],&data[page*128],offset);
+ 1733              		.ln	203
+ 1734 000494  1E 03 78 		mov	[w14],w6
+ 1735 000496  1E 02 90 		mov	[w14+2],w4
+ 1736 000498  47 22 DD 		sl	w4,#7,w4
+ 1737 00049a  CE 82 90 		mov	[w14+136],w5
+ 1738 00049c  84 82 42 		add	w5,w4,w5
+ 1739 00049e  04 08 20 		mov	#128,w4
+ 1740 0004a0  1E 02 52 		sub	w4,[w14],w4
+ 1741 0004a2  E6 03 47 		add	w14,#6,w7
+ 1742 0004a4  04 82 43 		add	w7,w4,w4
+ 1743 0004a6  06 01 78 		mov	w6,w2
+ 1744 0004a8  85 00 78 		mov	w5,w1
+ 1745 0004aa  04 00 78 		mov	w4,w0
+ 1746 0004ac  00 00 07 		rcall	_memcpy
+ 204:/home/phil/Projects/phoenix/firmware/program/display.c ****                 set_page(real_page);
+ 1747              		.ln	204
+ 1748 0004ae  2E 00 90 		mov	[w14+4],w0
+ 1749 0004b0  00 00 07 		rcall	_set_page
+ 205:/home/phil/Projects/phoenix/firmware/program/display.c ****                 set_column(0);
+ 1750              		.ln	205
+ 1751 0004b2  00 00 EB 		clr	w0
+ 1752 0004b4  00 00 07 		rcall	_set_column
+ 206:/home/phil/Projects/phoenix/firmware/program/display.c ****                 display_send_data(temp_buffer,128);
+ 1753              		.ln	206
+ 1754 0004b6  66 02 47 		add	w14,#6,w4
+ 1755 0004b8  01 C8 B3 		mov.b	#-128,w1
+ 1756 0004ba  04 00 78 		mov	w4,w0
+ 1757 0004bc  00 00 07 		rcall	_display_send_data
+ 1758              		.ln	198
+ 1759 0004be  1E 02 90 		mov	[w14+2],w4
+ 1760 0004c0  04 02 E8 		inc	w4,w4
+ 1761 0004c2  14 07 98 		mov	w4,[w14+2]
+ 1762              	.L49:
+ 1763 0004c4  9E 02 90 		mov	[w14+2],w5
+ 1764 0004c6  5E 82 90 		mov	[w14+138],w4
+ 1765 0004c8  84 8F 52 		sub	w5,w4,[w15]
+ 1766              		.set ___BP___,0
+ 1767 0004ca  00 00 35 		bra	lt,.L50
+ 207:/home/phil/Projects/phoenix/firmware/program/display.c ****             }
+ 208:/home/phil/Projects/phoenix/firmware/program/display.c ****             __delay_ms(SCROLL_RATE);
+ 1768              		.ln	208
+ 1769 0004cc  60 00 B8 		mul.uu	w0,#0,w0
+ 1770 0004ce  00 00 07 		rcall	___delay32
+ 1771              		.ln	197
+ 1772 0004d0  1E 02 78 		mov	[w14],w4
+ 1773 0004d2  68 0F 42 		add	w4,#8,[w14]
+ 1774              	.L48:
+ 1775 0004d4  F4 07 20 		mov	#127,w4
+ 1776 0004d6  9E 02 78 		mov	[w14],w5
+ 1777 0004d8  84 8F 52 		sub	w5,w4,[w15]
+ 1778              		.set ___BP___,0
+ 1779 0004da  00 00 34 		bra	le,.L51
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 36
+
+
+ 1780 0004dc  00 00 37 		bra	.L46
+ 1781              	.L47:
+ 209:/home/phil/Projects/phoenix/firmware/program/display.c ****         }
+ 210:/home/phil/Projects/phoenix/firmware/program/display.c ****     } else {
+ 211:/home/phil/Projects/phoenix/firmware/program/display.c ****         for(offset=128;offset>0;offset-=SWIPE_STEP){
+ 1782              		.ln	211
+ 1783 0004de  04 08 20 		mov	#128,w4
+ 1784 0004e0  04 0F 78 		mov	w4,[w14]
+ 1785 0004e2  00 00 37 		bra	.L53
+ 1786              	.L56:
+ 212:/home/phil/Projects/phoenix/firmware/program/display.c ****             for(page=0;page<page_count;++page){
+ 1787              		.ln	212
+ 1788 0004e4  00 02 EB 		clr	w4
+ 1789 0004e6  14 07 98 		mov	w4,[w14+2]
+ 1790 0004e8  00 00 37 		bra	.L54
+ 1791              	.L55:
+ 213:/home/phil/Projects/phoenix/firmware/program/display.c ****                 memset(temp_buffer,0,128);
+ 1792              		.ln	213
+ 1793 0004ea  66 02 47 		add	w14,#6,w4
+ 1794 0004ec  02 08 20 		mov	#128,w2
+ 1795 0004ee  80 00 EB 		clr	w1
+ 1796 0004f0  04 00 78 		mov	w4,w0
+ 1797 0004f2  00 00 07 		rcall	_memset
+ 214:/home/phil/Projects/phoenix/firmware/program/display.c ****                 real_page = (start_page+top_page+page) % 8;
+ 1798              		.ln	214
+ 1799 0004f4  05 00 80 		mov	_top_page,w5
+ 1800 0004f6  3E 82 90 		mov	[w14+134],w4
+ 1801 0004f8  84 82 42 		add	w5,w4,w5
+ 1802 0004fa  1E 02 90 		mov	[w14+2],w4
+ 1803 0004fc  84 82 42 		add	w5,w4,w5
+ 1804 0004fe  84 00 20 		mov	#8,w4
+ 1805 000500  11 00 09 		repeat	#18-1
+ 1806 000502  84 02 D8 		div.sw	w5,w4
+ 1807 000504  01 02 78 		mov	w1,w4
+ 1808 000506  24 07 98 		mov	w4,[w14+4]
+ 215:/home/phil/Projects/phoenix/firmware/program/display.c ****                 // copy from current buffer over into temp_buffer, 
+ 216:/home/phil/Projects/phoenix/firmware/program/display.c ****                 memcpy(&temp_buffer[128+SWIPE_STEP-offset],&buffer[real_page][128-offset],offset-SW
+ 1809              		.ln	216
+ 1810 000508  9E 02 78 		mov	[w14],w5
+ 1811 00050a  68 82 52 		sub	w5,#8,w4
+ 1812 00050c  04 03 78 		mov	w4,w6
+ 1813 00050e  2E 02 90 		mov	[w14+4],w4
+ 1814 000510  C7 22 DD 		sl	w4,#7,w5
+ 1815 000512  1E 02 78 		mov	[w14],w4
+ 1816 000514  04 82 52 		sub	w5,w4,w4
+ 1817 000516  05 08 20 		mov	#128,w5
+ 1818 000518  84 82 42 		add	w5,w4,w5
+ 1819 00051a  04 00 20 		mov	#_buffer,w4
+ 1820 00051c  84 82 42 		add	w5,w4,w5
+ 1821 00051e  84 08 20 		mov	#136,w4
+ 1822 000520  1E 02 52 		sub	w4,[w14],w4
+ 1823 000522  E6 03 47 		add	w14,#6,w7
+ 1824 000524  04 82 43 		add	w7,w4,w4
+ 1825 000526  06 01 78 		mov	w6,w2
+ 1826 000528  85 00 78 		mov	w5,w1
+ 1827 00052a  04 00 78 		mov	w4,w0
+ 1828 00052c  00 00 07 		rcall	_memcpy
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 37
+
+
+ 217:/home/phil/Projects/phoenix/firmware/program/display.c ****                 memcpy(temp_buffer,&data[page*128+offset],128-offset);
+ 1829              		.ln	217
+ 1830 00052e  04 08 20 		mov	#128,w4
+ 1831 000530  1E 02 52 		sub	w4,[w14],w4
+ 1832 000532  04 03 78 		mov	w4,w6
+ 1833 000534  1E 02 90 		mov	[w14+2],w4
+ 1834 000536  47 22 DD 		sl	w4,#7,w4
+ 1835 000538  1E 02 42 		add	w4,[w14],w4
+ 1836 00053a  CE 82 90 		mov	[w14+136],w5
+ 1837 00053c  84 82 42 		add	w5,w4,w5
+ 1838 00053e  66 02 47 		add	w14,#6,w4
+ 1839 000540  06 01 78 		mov	w6,w2
+ 1840 000542  85 00 78 		mov	w5,w1
+ 1841 000544  04 00 78 		mov	w4,w0
+ 1842 000546  00 00 07 		rcall	_memcpy
+ 218:/home/phil/Projects/phoenix/firmware/program/display.c ****                 set_page(real_page);
+ 1843              		.ln	218
+ 1844 000548  2E 00 90 		mov	[w14+4],w0
+ 1845 00054a  00 00 07 		rcall	_set_page
+ 219:/home/phil/Projects/phoenix/firmware/program/display.c ****                 set_column(0);
+ 1846              		.ln	219
+ 1847 00054c  00 00 EB 		clr	w0
+ 1848 00054e  00 00 07 		rcall	_set_column
+ 220:/home/phil/Projects/phoenix/firmware/program/display.c ****                 display_send_data(temp_buffer,128);
+ 1849              		.ln	220
+ 1850 000550  66 02 47 		add	w14,#6,w4
+ 1851 000552  01 C8 B3 		mov.b	#-128,w1
+ 1852 000554  04 00 78 		mov	w4,w0
+ 1853 000556  00 00 07 		rcall	_display_send_data
+ 1854              		.ln	212
+ 1855 000558  1E 02 90 		mov	[w14+2],w4
+ 1856 00055a  04 02 E8 		inc	w4,w4
+ 1857 00055c  14 07 98 		mov	w4,[w14+2]
+ 1858              	.L54:
+ 1859 00055e  9E 02 90 		mov	[w14+2],w5
+ 1860 000560  5E 82 90 		mov	[w14+138],w4
+ 1861 000562  84 8F 52 		sub	w5,w4,[w15]
+ 1862              		.set ___BP___,0
+ 1863 000564  00 00 35 		bra	lt,.L55
+ 221:/home/phil/Projects/phoenix/firmware/program/display.c ****             }
+ 222:/home/phil/Projects/phoenix/firmware/program/display.c ****             __delay_ms(SCROLL_RATE);
+ 1864              		.ln	222
+ 1865 000566  60 00 B8 		mul.uu	w0,#0,w0
+ 1866 000568  00 00 07 		rcall	___delay32
+ 1867              		.ln	211
+ 1868 00056a  1E 00 78 		mov	[w14],w0
+ 1869 00056c  68 0F 50 		sub	w0,#8,[w14]
+ 1870              	.L53:
+ 1871 00056e  1E 02 78 		mov	[w14],w4
+ 1872 000570  E0 0F 52 		sub	w4,#0,[w15]
+ 1873              		.set ___BP___,0
+ 1874 000572  00 00 3C 		bra	gt,.L56
+ 1875              	.L46:
+ 223:/home/phil/Projects/phoenix/firmware/program/display.c ****         }
+ 224:/home/phil/Projects/phoenix/firmware/program/display.c ****     }
+ 225:/home/phil/Projects/phoenix/firmware/program/display.c **** };
+ 1876              		.ln	225
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 38
+
+
+ 1877 000574  00 80 FA 		ulnk	
+ 1878 000576  00 00 06 		return	
+ 1879              		.set ___PA___,0
+ 1880              		.def	.eb
+ 1881              		.val	.
+ 1882              		.scl	100
+ 1883              		.line	225
+ 1884              		.endef
+ 1885              		.def	.ef
+ 1886              		.val	.
+ 1887              		.scl	101
+ 1888              		.line	225
+ 1889              		.endef
+ 1890              		.def	_display_swipe_pages
+ 1891              		.val	.
+ 1892              		.scl	-1
+ 1893              		.endef
+ 1894              		.align	2
+ 1895              		.def	_display_flip
+ 1896              		.val	_display_flip
+ 1897              		.scl	2
+ 1898              		.type	041
+ 1899              		.endef
+ 1900              		.global	_display_flip	; export
+ 1901              	_display_flip:
+ 1902              		.def	.bf
+ 1903              		.val	.
+ 1904              		.scl	101
+ 226:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+ 227:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_flip(bool invert) {
+ 1905              		.line	227
+ 1906              		.endef
+ 1907              		.def	_invert
+ 1908              		.val	2
+ 1909              		.scl	9
+ 1910              		.type	014
+ 1911              		.endef
+ 1912              		.def	.bb
+ 1913              		.val	.
+ 1914              		.scl	100
+ 1915              		.line	227
+ 1916              		.endef
+ 1917              		.def	_i
+ 1918              		.val	0
+ 1919              		.scl	1
+ 1920              		.type	04
+ 1921              		.endef
+ 1922              		.set ___PA___,1
+ 1923 000578  04 00 FA 		lnk	#4
+ 1924 00057a  20 47 98 		mov.b	w0,[w14+2]
+ 1925              		.def	___FP
+ 1926              		.val	14
+ 1927              		.scl	4
+ 1928              		.type	4
+ 1929              		.endef
+ 228:/home/phil/Projects/phoenix/firmware/program/display.c ****     int i;
+ 229:/home/phil/Projects/phoenix/firmware/program/display.c **** 	if (invert) {
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 39
+
+
+ 1930              		.ln	229
+ 1931 00057c  2E 42 90 		mov.b	[w14+2],w4
+ 1932 00057e  E0 4F 52 		sub.b	w4,#0,[w15]
+ 1933              		.set ___BP___,0
+ 1934 000580  00 00 32 		bra	z,.L58
+ 230:/home/phil/Projects/phoenix/firmware/program/display.c **** 		send1(0xA1);
+ 1935              		.ln	230
+ 1936 000582  10 CA B3 		mov.b	#-95,w0
+ 1937 000584  00 00 07 		rcall	_send1
+ 231:/home/phil/Projects/phoenix/firmware/program/display.c **** 		send1(0xC8);
+ 1938              		.ln	231
+ 1939 000586  80 CC B3 		mov.b	#-56,w0
+ 1940 000588  00 00 07 		rcall	_send1
+ 1941 00058a  00 00 37 		bra	.L59
+ 1942              	.L58:
+ 232:/home/phil/Projects/phoenix/firmware/program/display.c **** 	} else {
+ 233:/home/phil/Projects/phoenix/firmware/program/display.c **** 		send1(0xA0);
+ 1943              		.ln	233
+ 1944 00058c  00 CA B3 		mov.b	#-96,w0
+ 1945 00058e  00 00 07 		rcall	_send1
+ 234:/home/phil/Projects/phoenix/firmware/program/display.c **** 		send1(0xC0);
+ 1946              		.ln	234
+ 1947 000590  00 CC B3 		mov.b	#-64,w0
+ 1948 000592  00 00 07 		rcall	_send1
+ 1949              	.L59:
+ 235:/home/phil/Projects/phoenix/firmware/program/display.c **** 	}
+ 236:/home/phil/Projects/phoenix/firmware/program/display.c **** 	display_inverted = invert;
+ 1950              		.ln	236
+ 1951 000594  2E 40 90 		mov.b	[w14+2],w0
+ 1952 000596  02 E4 B7 		mov.b	WREG,_display_inverted
+ 237:/home/phil/Projects/phoenix/firmware/program/display.c **** 	for (i=0; i<8; ++i) {
+ 1953              		.ln	237
+ 1954 000598  00 02 EB 		clr	w4
+ 1955 00059a  04 0F 78 		mov	w4,[w14]
+ 1956 00059c  00 00 37 		bra	.L60
+ 1957              	.L61:
+ 238:/home/phil/Projects/phoenix/firmware/program/display.c **** 	    set_column(0);
+ 1958              		.ln	238
+ 1959 00059e  00 00 EB 		clr	w0
+ 1960 0005a0  00 00 07 		rcall	_set_column
+ 239:/home/phil/Projects/phoenix/firmware/program/display.c **** 	    set_page(i);
+ 1961              		.ln	239
+ 1962 0005a2  1E 00 78 		mov	[w14],w0
+ 1963 0005a4  00 00 07 		rcall	_set_page
+ 240:/home/phil/Projects/phoenix/firmware/program/display.c **** 	    display_send_data(buffer[i],128);
+ 1964              		.ln	240
+ 1965 0005a6  05 00 20 		mov	#_buffer,w5
+ 1966 0005a8  1E 02 78 		mov	[w14],w4
+ 1967 0005aa  47 22 DD 		sl	w4,#7,w4
+ 1968 0005ac  04 82 42 		add	w5,w4,w4
+ 1969 0005ae  01 C8 B3 		mov.b	#-128,w1
+ 1970 0005b0  04 00 78 		mov	w4,w0
+ 1971 0005b2  00 00 07 		rcall	_display_send_data
+ 1972              		.ln	237
+ 1973 0005b4  1E 0F E8 		inc	[w14],[w14]
+ 1974              	.L60:
+ 1975 0005b6  1E 02 78 		mov	[w14],w4
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 40
+
+
+ 1976 0005b8  E7 0F 52 		sub	w4,#7,[w15]
+ 1977              		.set ___BP___,0
+ 1978 0005ba  00 00 34 		bra	le,.L61
+ 241:/home/phil/Projects/phoenix/firmware/program/display.c **** 	}
+ 242:/home/phil/Projects/phoenix/firmware/program/display.c **** 	
+ 243:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 1979              		.ln	243
+ 1980 0005bc  00 80 FA 		ulnk	
+ 1981 0005be  00 00 06 		return	
+ 1982              		.set ___PA___,0
+ 1983              		.def	.eb
+ 1984              		.val	.
+ 1985              		.scl	100
+ 1986              		.line	243
+ 1987              		.endef
+ 1988              		.def	.ef
+ 1989              		.val	.
+ 1990              		.scl	101
+ 1991              		.line	243
+ 1992              		.endef
+ 1993              		.def	_display_flip
+ 1994              		.val	.
+ 1995              		.scl	-1
+ 1996              		.endef
+ 1997              		.align	2
+ 1998              		.def	_display_set_brightness
+ 1999              		.val	_display_set_brightness
+ 2000              		.scl	2
+ 2001              		.type	041
+ 2002              		.endef
+ 2003              		.global	_display_set_brightness	; export
+ 2004              	_display_set_brightness:
+ 2005              		.def	.bf
+ 2006              		.val	.
+ 2007              		.scl	101
+ 244:/home/phil/Projects/phoenix/firmware/program/display.c **** 
+ 245:/home/phil/Projects/phoenix/firmware/program/display.c **** void display_set_brightness(uint8_t brightness){
+ 2008              		.line	245
+ 2009              		.endef
+ 2010              		.def	_brightness
+ 2011              		.val	0
+ 2012              		.scl	9
+ 2013              		.type	014
+ 2014              		.endef
+ 2015              		.def	.bb
+ 2016              		.val	.
+ 2017              		.scl	100
+ 2018              		.line	245
+ 2019              		.endef
+ 2020              		.set ___PA___,1
+ 2021 0005c0  02 00 FA 		lnk	#2
+ 2022 0005c2  00 4F 78 		mov.b	w0,[w14]
+ 2023              		.def	___FP
+ 2024              		.val	14
+ 2025              		.scl	4
+ 2026              		.type	4
+ 2027              		.endef
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 41
+
+
+ 246:/home/phil/Projects/phoenix/firmware/program/display.c **** 	send2(0x81,brightness);
+ 2028              		.ln	246
+ 2029 0005c4  9E 40 78 		mov.b	[w14],w1
+ 2030 0005c6  10 C8 B3 		mov.b	#-127,w0
+ 2031 0005c8  00 00 07 		rcall	_send2
+ 247:/home/phil/Projects/phoenix/firmware/program/display.c **** }
+ 2032              		.ln	247
+ 2033 0005ca  00 80 FA 		ulnk	
+ 2034 0005cc  00 00 06 		return	
+ 2035              		.set ___PA___,0
+ 2036              		.def	.eb
+ 2037              		.val	.
+ 2038              		.scl	100
+ 2039              		.line	247
+ 2040              		.endef
+ 2041              		.def	.ef
+ 2042              		.val	.
+ 2043              		.scl	101
+ 2044              		.line	247
+ 2045              		.endef
+ 2046              		.def	_display_set_brightness
+ 2047              		.val	.
+ 2048              		.scl	-1
+ 2049              		.endef
+ 2050              		.def	_display_inverted
+ 2051              		.val	_display_inverted
+ 2052              		.scl	2
+ 2053              		.type	014
+ 2054              		.endef
+ 2055              		.section	.text,code
+ 2056              		.def	_buffer
+ 2057              		.val	_buffer
+ 2058              		.scl	2
+ 2059              		.dim	8,128
+ 2060              		.size	1024
+ 2061              		.type	0374
+ 2062              		.endef
+ 2063              		.def	_top_page
+ 2064              		.val	_top_page
+ 2065              		.scl	2
+ 2066              		.type	04
+ 2067              		.endef
+ 2068              		.def	_cur_column
+ 2069              		.val	_cur_column
+ 2070              		.scl	2
+ 2071              		.type	04
+ 2072              		.endef
+ 2073              		.def	_cur_page
+ 2074              		.val	_cur_page
+ 2075              		.scl	2
+ 2076              		.type	04
+ 2077              		.endef
+ 2078              	
+ 2079              		.section __c30_signature, info, data
+ 2080 0000 01 00       		.word 0x0001
+ 2081 0002 01 00       		.word 0x0001
+ 2082 0004 00 00       		.word 0x0000
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 42
+
+
+ 2083                 	
+ 2084                 	; MCHP configuration words
+ 2085                 	
+ 2086                 		.set ___PA___,0
+ 2087                 		.end
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 43
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/stddef.h
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/string.h
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../support/generic/h/libpic30.h
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h
+                            *ABS*:00000000 /home/phil/Projects/phoenix/firmware/program/i2c_util.h
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h
+                            *ABS*:00000000 /home/phil/Projects/phoenix/firmware/program/font.h
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/stdbool.h
+                            *ABS*:00000000 /home/phil/Projects/phoenix/firmware/program/display.h
+                            *ABS*:00000000 /home/phil/Projects/phoenix/firmware/program/display.c
+                            *ABS*:00000001 __C30COFF
+                            *ABS*:00000000 _int8_t
+                            *ABS*:00000000 _int16_t
+                            *ABS*:00000000 _int32_t
+                            *ABS*:00000000 _int64_t
+                            *ABS*:00000000 _uint8_t
+                            *ABS*:00000000 _uint16_t
+                            *ABS*:00000000 _uint32_t
+                            *ABS*:00000000 _uint64_t
+                            *ABS*:00000000 _int_least8_t
+                            *ABS*:00000000 _int_least16_t
+                            *ABS*:00000000 _int_least24_t
+                            *ABS*:00000000 _int_least32_t
+                            *ABS*:00000000 _int_least64_t
+                            *ABS*:00000000 _uint_least8_t
+                            *ABS*:00000000 _uint_least16_t
+                            *ABS*:00000000 _uint_least24_t
+                            *ABS*:00000000 _uint_least32_t
+                            *ABS*:00000000 _uint_least64_t
+                            *ABS*:00000000 _int_fast8_t
+                            *ABS*:00000000 _int_fast16_t
+                            *ABS*:00000000 _int_fast24_t
+                            *ABS*:00000000 _int_fast32_t
+                            *ABS*:00000000 _int_fast64_t
+                            *ABS*:00000000 _uint_fast8_t
+                            *ABS*:00000000 _uint_fast16_t
+                            *ABS*:00000000 _uint_fast24_t
+                            *ABS*:00000000 _uint_fast32_t
+                            *ABS*:00000000 _uint_fast64_t
+                            *ABS*:00000000 _intmax_t
+                            *ABS*:00000000 _uintmax_t
+                            *ABS*:00000000 _GLYPH_DATA
+                            *ABS*:00000000 _width
+                            *ABS*:00000001 _pages
+                            *ABS*:00000002 _index
+                            *ABS*:00000004 .eos
+                            *ABS*:00000000 _FONT
+                            *ABS*:00000000 _advance
+                            *ABS*:00000001 _max_pages
+                            *ABS*:00000002 _max_width
+                            *ABS*:00000004 _indices
+                            *ABS*:00000006 _bitmaps
+                            *ABS*:00000008 .eos
+                            *ABS*:00000000 __prog_addressT
+                            *ABS*:00000000 _ptrdiff_t
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 44
+
+
+                            *ABS*:00000000 _size_t
+                            *ABS*:00000000 _wchar_t
+           display.s:215    .nbss:00000000 _buffer
+           display.s:218    .nbss:00000400 _top_page
+           display.s:221    .nbss:00000402 _display_inverted
+           display.s:225    .nbss:00000404 _cur_column
+           display.s:229    .nbss:00000406 _cur_page
+           display.s:239    .text:00000000 _send1
+           display.s:241    .text:00000000 .bf
+                            *ABS*:00000000 _command
+           display.s:251    .text:00000000 .bb
+           display.s:255    *ABS*:00000000 ___PA___
+           display.s:256    .text:00000000 $AUTOLINE$
+                            *ABS*:0000000e ___FP
+           display.s:275    .text:00000014 .eb
+           display.s:280    .text:00000014 .ef
+           display.s:285    .text:00000014 _send1
+           display.s:295    .text:00000014 _send2
+           display.s:297    .text:00000014 .bf
+                            *ABS*:00000002 _command
+                            *ABS*:00000003 _data
+           display.s:312    .text:00000014 .bb
+                            *ABS*:00000000 _both_bytes
+                            *ABS*:0000000e ___FP
+           display.s:351    .text:00000034 .eb
+           display.s:356    .text:00000034 .ef
+           display.s:361    .text:00000034 _send2
+           display.s:371    .text:00000034 _display_init
+           display.s:373    .text:00000034 .bf
+           display.s:378    .text:00000034 .bb
+                            *ABS*:0000000e ___FP
+           display.s:435    .text:00000074 .eb
+           display.s:440    .text:00000074 .ef
+           display.s:445    .text:00000074 _display_init
+           display.s:455    .text:00000074 _display_close
+           display.s:457    .text:00000074 .bf
+           display.s:462    .text:00000074 .bb
+                            *ABS*:0000000e ___FP
+           display.s:481    .text:0000007e .eb
+           display.s:486    .text:0000007e .ef
+           display.s:491    .text:0000007e _display_close
+           display.s:501    .text:0000007e _display_send_data
+           display.s:503    .text:0000007e .bf
+                            *ABS*:00000000 _data
+                            *ABS*:00000002 _length
+           display.s:518    .text:0000007e .bb
+                            *ABS*:0000000e ___FP
+           display.s:555    .text:000000aa .eb
+           display.s:560    .text:000000aa .ef
+           display.s:565    .text:000000aa _display_send_data
+           display.s:575    .text:000000aa _set_page
+           display.s:577    .text:000000aa .bf
+                            *ABS*:00000000 _page
+           display.s:587    .text:000000aa .bb
+                            *ABS*:0000000e ___FP
+           display.s:614    .text:000000c2 .eb
+           display.s:619    .text:000000c2 .ef
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 45
+
+
+           display.s:624    .text:000000c2 _set_page
+           display.s:634    .text:000000c2 _set_column
+           display.s:636    .text:000000c2 .bf
+                            *ABS*:00000000 _column
+           display.s:646    .text:000000c2 .bb
+                            *ABS*:0000000e ___FP
+           display.s:685    .text:000000f0 .eb
+           display.s:690    .text:000000f0 .ef
+           display.s:695    .text:000000f0 _set_column
+           display.s:705    .text:000000f0 _display_clear_screen
+           display.s:707    .text:000000f0 .bf
+           display.s:712    .text:000000f0 .bb
+                            *ABS*:00000000 _x
+                            *ABS*:0000000e ___FP
+           display.s:756    .text:0000011a .L9
+           display.s:759    *ABS*:00000000 ___BP___
+           display.s:766    .text:00000124 .eb
+           display.s:771    .text:00000124 .ef
+           display.s:776    .text:00000124 _display_clear_screen
+           display.s:786    .text:00000124 _display_write_text
+           display.s:788    .text:00000124 .bf
+                            *ABS*:00000084 _page
+                            *ABS*:00000086 _column
+                            *ABS*:00000088 _text
+                            *ABS*:0000008a _font
+                            *ABS*:0000008c _right_justify
+           display.s:820    .text:00000124 .bb
+                            *ABS*:00000000 _i
+                            *ABS*:00000002 _end_col
+                            *ABS*:00000004 _temp_buffer
+                            *ABS*:0000000e ___FP
+           display.s:895    .text:0000016e .L14
+           display.s:902    .text:00000178 .L15
+           display.s:911    .text:00000186 .L13
+           display.s:937    .text:000001b2 .L16
+           display.s:940    .text:000001b4 .L12
+           display.s:953    .text:000001c2 .eb
+           display.s:958    .text:000001c2 .ef
+           display.s:963    .text:000001c2 _display_write_text
+           display.s:973    .text:000001c2 _display_scroll_page
+           display.s:975    .text:000001c2 .bf
+                            *ABS*:00000086 _data
+                            *ABS*:00000088 _up
+           display.s:990    .text:000001c2 .bb
+                            *ABS*:00000000 _i
+                            *ABS*:00000002 _j
+                            *ABS*:00000004 _mask
+                            *ABS*:00000005 _temp_buffer
+                            *ABS*:0000000e ___FP
+           display.s:1095   .text:00000236 .L21
+           display.s:1111   .text:0000024c .L20
+           display.s:1125   .text:00000262 .L19
+           display.s:1191   .text:000002cc .L26
+           display.s:1207   .text:000002e2 .L25
+           display.s:1220   .text:000002f6 .L24
+           display.s:1233   .text:00000304 .eb
+           display.s:1238   .text:00000304 .ef
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 46
+
+
+           display.s:1243   .text:00000304 _display_scroll_page
+           display.s:1253   .text:00000304 _render_text_to_page
+           display.s:1255   .text:00000304 .bf
+                            *ABS*:00000004 _buffer
+                            *ABS*:00000006 _page
+                            *ABS*:00000008 _column
+                            *ABS*:0000000a _text
+                            *ABS*:0000000c _font
+           display.s:1287   .text:00000304 .bb
+                            *ABS*:00000000 _i
+                            *ABS*:00000002 _glyph
+                            *ABS*:0000000e ___FP
+           display.s:1362   .text:0000035c .L32
+           display.s:1369   .text:00000364 .L31
+           display.s:1382   .text:00000376 .L33
+           display.s:1394   .text:00000388 .L30
+           display.s:1409   .text:00000398 .eb
+           display.s:1414   .text:00000398 .ef
+           display.s:1419   .text:00000398 _render_text_to_page
+           display.s:1429   .text:00000398 _display_scroll_text
+           display.s:1431   .text:00000398 .bf
+                            *ABS*:00000082 _page
+                            *ABS*:00000084 _column
+                            *ABS*:00000086 _text
+                            *ABS*:00000088 _font
+                            *ABS*:0000008a _up
+           display.s:1463   .text:00000398 .bb
+                            *ABS*:00000002 _temp_buffer
+                            *ABS*:00000000 _i
+                            *ABS*:0000000e ___FP
+           display.s:1522   .text:000003d2 .L39
+           display.s:1530   .text:000003dc .L38
+           display.s:1539   .text:000003e8 .L37
+           display.s:1568   .text:00000414 .L42
+           display.s:1591   .text:00000434 .L44
+           display.s:1597   .text:0000043c .L36
+           display.s:1603   .text:00000440 .eb
+           display.s:1608   .text:00000440 .ef
+           display.s:1613   .text:00000440 _display_scroll_text
+           display.s:1623   .text:00000440 _display_swipe_pages
+           display.s:1625   .text:00000440 .bf
+                            *ABS*:00000086 _start_page
+                            *ABS*:00000088 _data
+                            *ABS*:0000008a _page_count
+                            *ABS*:0000008c _left
+           display.s:1650   .text:00000440 .bb
+                            *ABS*:00000000 _offset
+                            *ABS*:00000002 _page
+                            *ABS*:00000004 _real_page
+                            *ABS*:00000006 _temp_buffer
+                            *ABS*:0000000e ___FP
+           display.s:1762   .text:000004c4 .L49
+           display.s:1774   .text:000004d4 .L48
+           display.s:1781   .text:000004de .L47
+           display.s:1858   .text:0000055e .L54
+           display.s:1870   .text:0000056e .L53
+           display.s:1875   .text:00000574 .L46
+MPLAB XC16 ASSEMBLY Listing:  display.s 			page 47
+
+
+           display.s:1881   .text:00000578 .eb
+           display.s:1886   .text:00000578 .ef
+           display.s:1891   .text:00000578 _display_swipe_pages
+           display.s:1901   .text:00000578 _display_flip
+           display.s:1903   .text:00000578 .bf
+                            *ABS*:00000002 _invert
+           display.s:1913   .text:00000578 .bb
+                            *ABS*:00000000 _i
+                            *ABS*:0000000e ___FP
+           display.s:1942   .text:0000058c .L58
+           display.s:1949   .text:00000594 .L59
+           display.s:1974   .text:000005b6 .L60
+           display.s:1984   .text:000005c0 .eb
+           display.s:1989   .text:000005c0 .ef
+           display.s:1994   .text:000005c0 _display_flip
+           display.s:2004   .text:000005c0 _display_set_brightness
+           display.s:2006   .text:000005c0 .bf
+                            *ABS*:00000000 _brightness
+           display.s:2016   .text:000005c0 .bb
+                            *ABS*:0000000e ___FP
+           display.s:2037   .text:000005ce .eb
+           display.s:2042   .text:000005ce .ef
+           display.s:2047   .text:000005ce _display_set_brightness
+                            .text:00000104 .L10
+                            .text:00000136 .L17
+                            .text:0000021e .L22
+                            .text:000001f0 .L23
+                            .text:000002b4 .L27
+                            .text:00000284 .L28
+                            .text:0000032a .L34
+                            .text:00000312 .L35
+                            .text:000003b0 .L40
+                            .text:000003f2 .L43
+                            .text:0000042a .L45
+                            .text:0000045c .L50
+                            .text:00000456 .L51
+                            .text:000004ea .L55
+                            .text:000004e4 .L56
+                            .text:0000059e .L61
+
+UNDEFINED SYMBOLS
+_write_i2c_command_block
+___delay32
+_memcpy
+_memset
+
+EQUATE SYMBOLS
+/opt/microchip/xc16/v1.23/bin/bin/../../include/stddef.h = 0x0
+/opt/microchip/xc16/v1.23/bin/bin/../../include/string.h = 0x0
+/opt/microchip/xc16/v1.23/bin/bin/../../support/generic/h/libpic30.h = 0x0
+/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h = 0x0
+/home/phil/Projects/phoenix/firmware/program/i2c_util.h = 0x0
+/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h = 0x0
+/home/phil/Projects/phoenix/firmware/program/font.h = 0x0
+/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h = 0x0
+/opt/microchip/xc16/v1.23/bin/bin/../../include/stdbool.h = 0x0
+/home/phil/Projects/phoenix/firmware/program/display.h = 0x0
+/home/phil/Projects/phoenix/firmware/program/display.c = 0x0
+                       __C30COFF = 0x1
+                         _int8_t = 0x0
+                        _int16_t = 0x0
+                        _int32_t = 0x0
+                        _int64_t = 0x0
+                        _uint8_t = 0x0
+                       _uint16_t = 0x0
+                       _uint32_t = 0x0
+                       _uint64_t = 0x0
+                   _int_least8_t = 0x0
+                  _int_least16_t = 0x0
+                  _int_least24_t = 0x0
+                  _int_least32_t = 0x0
+                  _int_least64_t = 0x0
+                  _uint_least8_t = 0x0
+                 _uint_least16_t = 0x0
+                 _uint_least24_t = 0x0
+                 _uint_least32_t = 0x0
+                 _uint_least64_t = 0x0
+                    _int_fast8_t = 0x0
+                   _int_fast16_t = 0x0
+                   _int_fast24_t = 0x0
+                   _int_fast32_t = 0x0
+                   _int_fast64_t = 0x0
+                   _uint_fast8_t = 0x0
+                  _uint_fast16_t = 0x0
+                  _uint_fast24_t = 0x0
+                  _uint_fast32_t = 0x0
+                  _uint_fast64_t = 0x0
+                       _intmax_t = 0x0
+                      _uintmax_t = 0x0
+                     _GLYPH_DATA = 0x0
+                          _width = 0x0
+                          _pages = 0x1
+                          _index = 0x2
+                            .eos = 0x4
+                           _FONT = 0x0
+                        _advance = 0x0
+                      _max_pages = 0x1
+                      _max_width = 0x2
+                        _indices = 0x4
+                        _bitmaps = 0x6
+                            .eos = 0x8
+                 __prog_addressT = 0x0
+                      _ptrdiff_t = 0x0
+                         _size_t = 0x0
+                        _wchar_t = 0x0
+                        _command = 0x0
+                        ___PA___ = 0x0
+                           ___FP = 0xe
+                        _command = 0x2
+                           _data = 0x3
+                     _both_bytes = 0x0
+                           ___FP = 0xe
+                           ___FP = 0xe
+                           ___FP = 0xe
+                           _data = 0x0
+                         _length = 0x2
+                           ___FP = 0xe
+                           _page = 0x0
+                           ___FP = 0xe
+                         _column = 0x0
+                           ___FP = 0xe
+                              _x = 0x0
+                           ___FP = 0xe
+                        ___BP___ = 0x0
+                           _page = 0x84
+                         _column = 0x86
+                           _text = 0x88
+                           _font = 0x8a
+                  _right_justify = 0x8c
+                              _i = 0x0
+                        _end_col = 0x2
+                    _temp_buffer = 0x4
+                           ___FP = 0xe
+                           _data = 0x86
+                             _up = 0x88
+                              _i = 0x0
+                              _j = 0x2
+                           _mask = 0x4
+                    _temp_buffer = 0x5
+                           ___FP = 0xe
+                         _buffer = 0x4
+                           _page = 0x6
+                         _column = 0x8
+                           _text = 0xa
+                           _font = 0xc
+                              _i = 0x0
+                          _glyph = 0x2
+                           ___FP = 0xe
+                           _page = 0x82
+                         _column = 0x84
+                           _text = 0x86
+                           _font = 0x88
+                             _up = 0x8a
+                    _temp_buffer = 0x2
+                              _i = 0x0
+                           ___FP = 0xe
+                     _start_page = 0x86
+                           _data = 0x88
+                     _page_count = 0x8a
+                           _left = 0x8c
+                         _offset = 0x0
+                           _page = 0x2
+                      _real_page = 0x4
+                    _temp_buffer = 0x6
+                           ___FP = 0xe
+                         _invert = 0x2
+                              _i = 0x0
+                           ___FP = 0xe
+                     _brightness = 0x0
+                           ___FP = 0xe

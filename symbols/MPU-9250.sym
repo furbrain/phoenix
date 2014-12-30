@@ -1,0 +1,183 @@
+v 20060113 1
+P 2100 7300 1800 7300 1 0 0
+{
+T 1900 7350 5 8 1 1 0 0 1
+pinnumber=9
+T 1900 7250 5 8 0 1 0 2 1
+pinseq=4
+T 1750 7300 9 8 1 1 0 6 1
+pinlabel=ADO
+T 1750 7300 5 8 0 1 0 8 1
+pintype=io
+}
+P 2100 6900 1800 6900 1 0 0
+{
+T 1900 6950 5 8 1 1 0 0 1
+pinnumber=7
+T 1900 6850 5 8 0 1 0 2 1
+pinseq=2
+T 1750 6900 9 8 1 1 0 6 1
+pinlabel=AUX_CL
+T 1750 6900 5 8 0 1 0 8 1
+pintype=io
+}
+P 2100 6500 1800 6500 1 0 0
+{
+T 1900 6550 5 8 1 1 0 0 1
+pinnumber=21
+T 1900 6450 5 8 0 1 0 2 1
+pinseq=12
+T 1750 6500 9 8 1 1 0 6 1
+pinlabel=AUX_DA
+T 1750 6500 5 8 0 1 0 8 1
+pintype=io
+}
+P 2100 6100 1800 6100 1 0 0
+{
+T 1900 6150 5 8 1 1 0 0 1
+pinnumber=12
+T 1900 6050 5 8 0 1 0 2 1
+pinseq=7
+T 1750 6100 9 8 1 1 0 6 1
+pinlabel=INT
+T 1750 6100 5 8 0 1 0 8 1
+pintype=out
+}
+P 2100 5700 1800 5700 1 0 0
+{
+T 1900 5750 5 8 1 1 0 0 1
+pinnumber=23
+T 1900 5650 5 8 0 1 0 2 1
+pinseq=14
+T 1750 5700 9 8 1 1 0 6 1
+pinlabel=SCL
+T 1750 5700 5 8 0 1 0 8 1
+pintype=io
+}
+P 2100 5300 1800 5300 1 0 0
+{
+T 1900 5350 5 8 1 1 0 0 1
+pinnumber=24
+T 1900 5250 5 8 0 1 0 2 1
+pinseq=15
+T 1750 5300 9 8 1 1 0 6 1
+pinlabel=SDA
+T 1750 5300 5 8 0 1 0 8 1
+pintype=io
+}
+P 100 7300 400 7300 1 0 0
+{
+T 300 7350 5 8 1 1 0 6 1
+pinnumber=11
+T 300 7250 5 8 0 1 0 8 1
+pinseq=6
+T 450 7300 9 8 1 1 0 0 1
+pinlabel=FSYNC
+T 450 7300 5 8 0 1 0 2 1
+pintype=io
+}
+P 100 6900 400 6900 1 0 0
+{
+T 300 6950 5 8 1 1 0 6 1
+pinnumber=18
+T 300 6850 5 8 0 1 0 8 1
+pinseq=9
+T 450 6900 9 8 1 1 0 0 1
+pinlabel=GND
+T 450 6900 5 8 0 1 0 2 1
+pintype=pwr
+}
+P 100 6500 400 6500 1 0 0
+{
+T 300 6550 5 8 1 1 0 6 1
+pinnumber=10
+T 300 6450 5 8 0 1 0 8 1
+pinseq=5
+T 450 6500 9 8 1 1 0 0 1
+pinlabel=REGOUT
+T 450 6500 5 8 0 1 0 2 1
+pintype=io
+}
+P 100 6100 400 6100 1 0 0
+{
+T 300 6150 5 8 1 1 0 6 1
+pinnumber=1
+T 300 6050 5 8 0 1 0 8 1
+pinseq=1
+T 450 6100 9 8 1 1 0 0 1
+pinlabel=RESV
+T 450 6100 5 8 0 1 0 2 1
+pintype=io
+}
+P 100 5700 400 5700 1 0 0
+{
+T 300 5750 5 8 1 1 0 6 1
+pinnumber=19
+T 300 5650 5 8 0 1 0 8 1
+pinseq=10
+T 450 5700 9 8 1 1 0 0 1
+pinlabel=RESV2
+T 450 5700 5 8 0 1 0 2 1
+pintype=io
+}
+P 100 5300 400 5300 1 0 0
+{
+T 300 5350 5 8 1 1 0 6 1
+pinnumber=20
+T 300 5250 5 8 0 1 0 8 1
+pinseq=11
+T 450 5300 9 8 1 1 0 0 1
+pinlabel=RESV3
+T 450 5300 5 8 0 1 0 2 1
+pintype=io
+}
+P 100 4900 400 4900 1 0 0
+{
+T 300 4950 5 8 1 1 0 6 1
+pinnumber=13
+T 300 4850 5 8 0 1 0 8 1
+pinseq=8
+T 450 4900 9 8 1 1 0 0 1
+pinlabel=VDD
+T 450 4900 5 8 0 1 0 2 1
+pintype=pwr
+}
+P 100 4500 400 4500 1 0 0
+{
+T 300 4550 5 8 1 1 0 6 1
+pinnumber=8
+T 300 4450 5 8 0 1 0 8 1
+pinseq=3
+T 450 4500 9 8 1 1 0 0 1
+pinlabel=VDDIO
+T 450 4500 5 8 0 1 0 2 1
+pintype=pwr
+}
+P 100 4100 400 4100 1 0 0
+{
+T 300 4150 5 8 1 1 0 6 1
+pinnumber=22
+T 300 4050 5 8 0 1 0 8 1
+pinseq=13
+T 450 4100 9 8 1 1 0 0 1
+pinlabel=nCS
+T 450 4100 5 8 0 1 0 2 1
+pintype=in
+}
+B 400 100 1400 7600 3 0 0 0 -1 -1 0 -1 -1 -1 -1 -1
+T 1800 7800 8 10 1 1 0 6 1
+refdes=U?
+T 400 7800 9 10 1 0 0 0 1
+MPU-9250
+T 400 8000 5 10 0 0 0 0 1
+device=MPU-9250
+T 400 8200 5 10 0 0 0 0 1
+footprint=QFN24_3
+T 400 8400 5 10 0 0 0 0 1
+author=Phil Underwood <beardydoc@gmail.com>
+T 400 8600 5 10 0 0 0 0 1
+documentation=http://www.invensense.com/mems/gyro/documents/PS-MPU-9250A-01.pdf
+T 400 8800 5 10 0 0 0 0 1
+description=9-axis accelerometer,magnetometer,gyro
+T 400 9000 5 10 0 0 0 0 1
+numslots=0

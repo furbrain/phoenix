@@ -1,0 +1,16 @@
+OLED    PI
+CS      0   SDA
+RES     1   SCL
+D/C     4
+WR      17
+RD      21
+
+DB0     22
+DB1     10  MOSI
+DB2     9   MISO
+DB3     11  CLK
+
+DB4     24
+DB5     25
+DB6     8   CE0
+DB7     7   CE1

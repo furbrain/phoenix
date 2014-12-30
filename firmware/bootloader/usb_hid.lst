@@ -1,0 +1,1392 @@
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 1
+
+
+   1              		.file "/home/phil/Projects/phoenix/firmware/bootloader/usb_hid.c"
+   2              		.section	.debug_abbrev,info
+   3                 	.Ldebug_abbrev0:
+   4                 		.section	.debug_info,info
+   5                 	.Ldebug_info0:
+   6                 		.section	.debug_line,info
+   7                 	.Ldebug_line0:
+   8                 		.section	.text,code
+   9              	.Ltext0:
+  10              		.section	.text,code
+  11              		.align	2
+  12              		.global	_process_hid_setup_request	; export
+  13              		.type	_process_hid_setup_request,@function
+  14              	_process_hid_setup_request:
+  15              	.LFB0:
+  16              	.LSM0:
+  17              		.set ___PA___,1
+  18 000000  08 00 FA 		lnk	#8
+  19 000002  30 07 98 		mov	w0,[w14+6]
+  20              	.LSM1:
+  21 000004  BE 02 90 		mov	[w14+6],w5
+  22 000006  45 42 90 		mov.b	[w5+4],w4
+  23 000008  04 83 FB 		ze	w4,w6
+  24 00000a  55 42 90 		mov.b	[w5+5],w4
+  25 00000c  04 82 FB 		ze	w4,w4
+  26 00000e  48 22 DD 		sl	w4,#8,w4
+  27 000010  86 02 78 		mov	w6,w5
+  28 000012  84 82 72 		ior	w5,w4,w5
+  29 000014  05 02 78 		mov	w5,w4
+  30 000016  24 47 98 		mov.b	w4,[w14+2]
+  31              	.LSM2:
+  32 000018  3E 02 90 		mov	[w14+6],w4
+  33 00001a  14 42 90 		mov.b	[w4+1],w4
+  34 00001c  E6 4F 52 		sub.b	w4,#6,[w15]
+  35              		.set ___BP___,0
+  36 00001e  00 00 3A 		bra	nz,.L2
+  37              	.LSM3:
+  38 000020  3E 02 90 		mov	[w14+6],w4
+  39 000022  94 42 78 		mov.b	[w4],w5
+  40              	.LSM4:
+  41 000024  14 C8 B3 		mov.b	#-127,w4
+  42 000026  84 CF 52 		sub.b	w5,w4,[w15]
+  43              		.set ___BP___,0
+  44 000028  00 00 3A 		bra	nz,.L2
+  45              	.LBB2:
+  46              	.LSM5:
+  47 00002a  BE 02 90 		mov	[w14+6],w5
+  48 00002c  25 42 90 		mov.b	[w5+2],w4
+  49 00002e  04 83 FB 		ze	w4,w6
+  50 000030  35 42 90 		mov.b	[w5+3],w4
+  51 000032  04 82 FB 		ze	w4,w4
+  52 000034  48 22 DD 		sl	w4,#8,w4
+  53 000036  86 02 78 		mov	w6,w5
+  54 000038  84 82 72 		ior	w5,w4,w5
+  55 00003a  05 02 78 		mov	w5,w4
+  56 00003c  48 22 DE 		lsr	w4,#8,w4
+  57 00003e  34 47 98 		mov.b	w4,[w14+3]
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 2
+
+
+  58              	.LSM6:
+  59 000040  00 82 EB 		setm	w4
+  60 000042  04 0F 78 		mov	w4,[w14]
+  61              	.LSM7:
+  62 000044  BE 42 90 		mov.b	[w14+3],w5
+  63 000046  14 C2 B3 		mov.b	#33,w4
+  64 000048  84 CF 52 		sub.b	w5,w4,[w15]
+  65              		.set ___BP___,0
+  66 00004a  00 00 3A 		bra	nz,.L3
+  67              	.LSM8:
+  68 00004c  64 02 47 		add	w14,#4,w4
+  69 00004e  84 00 78 		mov	w4,w1
+  70 000050  2E 40 90 		mov.b	[w14+2],w0
+  71 000052  00 00 07 		rcall	_USB_HID_DESCRIPTOR_FUNC
+  72 000054  00 02 78 		mov	w0,w4
+  73 000056  04 0F 78 		mov	w4,[w14]
+  74 000058  00 00 37 		bra	.L4
+  75              	.L3:
+  76              	.LSM9:
+  77 00005a  BE 42 90 		mov.b	[w14+3],w5
+  78 00005c  24 C2 B3 		mov.b	#34,w4
+  79 00005e  84 CF 52 		sub.b	w5,w4,[w15]
+  80              		.set ___BP___,0
+  81 000060  00 00 3A 		bra	nz,.L4
+  82              	.LSM10:
+  83 000062  64 02 47 		add	w14,#4,w4
+  84 000064  84 00 78 		mov	w4,w1
+  85 000066  2E 40 90 		mov.b	[w14+2],w0
+  86 000068  00 00 07 		rcall	_USB_HID_REPORT_DESCRIPTOR_FUNC
+  87 00006a  00 02 78 		mov	w0,w4
+  88 00006c  04 0F 78 		mov	w4,[w14]
+  89              	.L4:
+  90              	.LSM11:
+  91 00006e  1E 02 78 		mov	[w14],w4
+  92 000070  E0 0F 52 		sub	w4,#0,[w15]
+  93              		.set ___BP___,0
+  94 000072  00 00 3D 		bra	ge,.L5
+  95              	.LSM12:
+  96 000074  00 C2 EB 		setm.b	w4
+  97 000076  00 00 37 		bra	.L6
+  98              	.L5:
+  99              	.LSM13:
+ 100 000078  BE 02 90 		mov	[w14+6],w5
+ 101 00007a  65 42 90 		mov.b	[w5+6],w4
+ 102 00007c  04 83 FB 		ze	w4,w6
+ 103 00007e  75 42 90 		mov.b	[w5+7],w4
+ 104 000080  04 82 FB 		ze	w4,w4
+ 105 000082  48 22 DD 		sl	w4,#8,w4
+ 106 000084  86 02 78 		mov	w6,w5
+ 107 000086  84 82 72 		ior	w5,w4,w5
+ 108 000088  05 02 78 		mov	w5,w4
+ 109 00008a  9E 02 78 		mov	[w14],w5
+ 110 00008c  85 0F 52 		sub	w4,w5,[w15]
+ 111              		.set ___BP___,0
+ 112 00008e  00 00 36 		bra	leu,.L7
+ 113 000090  05 02 78 		mov	w5,w4
+ 114              	.L7:
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 3
+
+
+ 115 000092  AE 02 90 		mov	[w14+4],w5
+ 116 000094  80 01 EB 		clr	w3
+ 117 000096  00 01 EB 		clr	w2
+ 118 000098  84 00 78 		mov	w4,w1
+ 119 00009a  05 00 78 		mov	w5,w0
+ 120 00009c  00 00 07 		rcall	_usb_send_data_stage
+ 121              	.LSM14:
+ 122 00009e  00 42 EB 		clr.b	w4
+ 123 0000a0  00 00 37 		bra	.L6
+ 124              	.L2:
+ 125              	.LBE2:
+ 126              	.LSM15:
+ 127 0000a2  00 C2 EB 		setm.b	w4
+ 128              	.L6:
+ 129              	.LSM16:
+ 130 0000a4  04 40 78 		mov.b	w4,w0
+ 131 0000a6  00 80 FA 		ulnk	
+ 132 0000a8  00 00 06 		return	
+ 133              		.set ___PA___,0
+ 134              	.LFE0:
+ 135              		.section	.debug_frame,info
+ 136                 	.Lframe0:
+ 137 0000 10 00 00 00 		.4byte	.LECIE0-.LSCIE0
+ 138                 	.LSCIE0:
+ 139 0004 FF FF FF FF 		.4byte	0xffffffff
+ 140 0008 01          		.byte	0x1
+ 141 0009 00          		.byte	0
+ 142 000a 01          		.uleb128 0x1
+ 143 000b 02          		.sleb128 2
+ 144 000c 25          		.byte	0x25
+ 145 000d 12          		.byte	0x12
+ 146 000e 0F          		.uleb128 0xf
+ 147 000f 7E          		.sleb128 -2
+ 148 0010 09          		.byte	0x9
+ 149 0011 25          		.uleb128 0x25
+ 150 0012 0F          		.uleb128 0xf
+ 151 0013 00          		.align	4
+ 152                 	.LECIE0:
+ 153                 	.LSFDE0:
+ 154 0014 0C 00 00 00 		.4byte	.LEFDE0-.LASFDE0
+ 155                 	.LASFDE0:
+ 156 0018 00 00 00 00 		.4byte	.Lframe0
+ 157 001c 00 00 00 00 		.4byte	.LFB0
+ 158 0020 AA 00 00 00 		.4byte	.LFE0-.LFB0
+ 159                 		.align	4
+ 160                 	.LEFDE0:
+ 161                 		.section	.text,code
+ 162              	.Letext0:
+ 163              		.section	.debug_info,info
+ 164 0000 FF 03 00 00 		.4byte	0x3ff
+ 165 0004 02 00       		.2byte	0x2
+ 166 0006 00 00 00 00 		.4byte	.Ldebug_abbrev0
+ 167 000a 04          		.byte	0x4
+ 168 000b 01          		.uleb128 0x1
+ 169 000c 47 4E 55 20 		.asciz	"GNU C 4.5.1 (XC16, Microchip v1.23) (A) Build date: Sep 25 2014"
+ 169      43 20 34 2E 
+ 169      35 2E 31 20 
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 4
+
+
+ 169      28 58 43 31 
+ 169      36 2C 20 4D 
+ 169      69 63 72 6F 
+ 169      63 68 69 70 
+ 169      20 76 31 2E 
+ 169      32 33 29 20 
+ 170 004c 01          		.byte	0x1
+ 171 004d 75 73 62 5F 		.asciz	"usb_hid.c"
+ 171      68 69 64 2E 
+ 171      63 00 
+ 172 0057 2F 68 6F 6D 		.asciz	"/home/phil/Projects/phoenix/firmware/bootloader"
+ 172      65 2F 70 68 
+ 172      69 6C 2F 50 
+ 172      72 6F 6A 65 
+ 172      63 74 73 2F 
+ 172      70 68 6F 65 
+ 172      6E 69 78 2F 
+ 172      66 69 72 6D 
+ 172      77 61 72 65 
+ 173 0087 00 00 00 00 		.4byte	.Ltext0
+ 174 008b 00 00 00 00 		.4byte	.Letext0
+ 175 008f 00 00 00 00 		.4byte	.Ldebug_line0
+ 176 0093 02          		.uleb128 0x2
+ 177 0094 01          		.byte	0x1
+ 178 0095 06          		.byte	0x6
+ 179 0096 73 69 67 6E 		.asciz	"signed char"
+ 179      65 64 20 63 
+ 179      68 61 72 00 
+ 180 00a2 03          		.uleb128 0x3
+ 181 00a3 69 6E 74 31 		.asciz	"int16_t"
+ 181      36 5F 74 00 
+ 182 00ab 02          		.byte	0x2
+ 183 00ac 14          		.byte	0x14
+ 184 00ad B1 00 00 00 		.4byte	0xb1
+ 185 00b1 02          		.uleb128 0x2
+ 186 00b2 02          		.byte	0x2
+ 187 00b3 05          		.byte	0x5
+ 188 00b4 69 6E 74 00 		.asciz	"int"
+ 189 00b8 02          		.uleb128 0x2
+ 190 00b9 04          		.byte	0x4
+ 191 00ba 05          		.byte	0x5
+ 192 00bb 6C 6F 6E 67 		.asciz	"long int"
+ 192      20 69 6E 74 
+ 192      00 
+ 193 00c4 02          		.uleb128 0x2
+ 194 00c5 08          		.byte	0x8
+ 195 00c6 05          		.byte	0x5
+ 196 00c7 6C 6F 6E 67 		.asciz	"long long int"
+ 196      20 6C 6F 6E 
+ 196      67 20 69 6E 
+ 196      74 00 
+ 197 00d5 03          		.uleb128 0x3
+ 198 00d6 75 69 6E 74 		.asciz	"uint8_t"
+ 198      38 5F 74 00 
+ 199 00de 02          		.byte	0x2
+ 200 00df 2B          		.byte	0x2b
+ 201 00e0 E4 00 00 00 		.4byte	0xe4
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 5
+
+
+ 202 00e4 02          		.uleb128 0x2
+ 203 00e5 01          		.byte	0x1
+ 204 00e6 08          		.byte	0x8
+ 205 00e7 75 6E 73 69 		.asciz	"unsigned char"
+ 205      67 6E 65 64 
+ 205      20 63 68 61 
+ 205      72 00 
+ 206 00f5 03          		.uleb128 0x3
+ 207 00f6 75 69 6E 74 		.asciz	"uint16_t"
+ 207      31 36 5F 74 
+ 207      00 
+ 208 00ff 02          		.byte	0x2
+ 209 0100 31          		.byte	0x31
+ 210 0101 05 01 00 00 		.4byte	0x105
+ 211 0105 02          		.uleb128 0x2
+ 212 0106 02          		.byte	0x2
+ 213 0107 07          		.byte	0x7
+ 214 0108 75 6E 73 69 		.asciz	"unsigned int"
+ 214      67 6E 65 64 
+ 214      20 69 6E 74 
+ 214      00 
+ 215 0115 02          		.uleb128 0x2
+ 216 0116 04          		.byte	0x4
+ 217 0117 07          		.byte	0x7
+ 218 0118 6C 6F 6E 67 		.asciz	"long unsigned int"
+ 218      20 75 6E 73 
+ 218      69 67 6E 65 
+ 218      64 20 69 6E 
+ 218      74 00 
+ 219 012a 02          		.uleb128 0x2
+ 220 012b 08          		.byte	0x8
+ 221 012c 07          		.byte	0x7
+ 222 012d 6C 6F 6E 67 		.asciz	"long long unsigned int"
+ 222      20 6C 6F 6E 
+ 222      67 20 75 6E 
+ 222      73 69 67 6E 
+ 222      65 64 20 69 
+ 222      6E 74 00 
+ 223 0144 04          		.uleb128 0x4
+ 224 0145 53 74 61 6E 		.asciz	"StandardControlRequest"
+ 224      64 61 72 64 
+ 224      43 6F 6E 74 
+ 224      72 6F 6C 52 
+ 224      65 71 75 65 
+ 224      73 74 00 
+ 225 015c 02          		.byte	0x2
+ 226 015d 03          		.byte	0x3
+ 227 015e 69          		.byte	0x69
+ 228 015f 15 02 00 00 		.4byte	0x215
+ 229 0163 05          		.uleb128 0x5
+ 230 0164 47 45 54 5F 		.asciz	"GET_STATUS"
+ 230      53 54 41 54 
+ 230      55 53 00 
+ 231 016f 00          		.sleb128 0
+ 232 0170 05          		.uleb128 0x5
+ 233 0171 43 4C 45 41 		.asciz	"CLEAR_FEATURE"
+ 233      52 5F 46 45 
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 6
+
+
+ 233      41 54 55 52 
+ 233      45 00 
+ 234 017f 01          		.sleb128 1
+ 235 0180 05          		.uleb128 0x5
+ 236 0181 53 45 54 5F 		.asciz	"SET_FEATURE"
+ 236      46 45 41 54 
+ 236      55 52 45 00 
+ 237 018d 03          		.sleb128 3
+ 238 018e 05          		.uleb128 0x5
+ 239 018f 53 45 54 5F 		.asciz	"SET_ADDRESS"
+ 239      41 44 44 52 
+ 239      45 53 53 00 
+ 240 019b 05          		.sleb128 5
+ 241 019c 05          		.uleb128 0x5
+ 242 019d 47 45 54 5F 		.asciz	"GET_DESCRIPTOR"
+ 242      44 45 53 43 
+ 242      52 49 50 54 
+ 242      4F 52 00 
+ 243 01ac 06          		.sleb128 6
+ 244 01ad 05          		.uleb128 0x5
+ 245 01ae 53 45 54 5F 		.asciz	"SET_DESCRIPTOR"
+ 245      44 45 53 43 
+ 245      52 49 50 54 
+ 245      4F 52 00 
+ 246 01bd 07          		.sleb128 7
+ 247 01be 05          		.uleb128 0x5
+ 248 01bf 47 45 54 5F 		.asciz	"GET_CONFIGURATION"
+ 248      43 4F 4E 46 
+ 248      49 47 55 52 
+ 248      41 54 49 4F 
+ 248      4E 00 
+ 249 01d1 08          		.sleb128 8
+ 250 01d2 05          		.uleb128 0x5
+ 251 01d3 53 45 54 5F 		.asciz	"SET_CONFIGURATION"
+ 251      43 4F 4E 46 
+ 251      49 47 55 52 
+ 251      41 54 49 4F 
+ 251      4E 00 
+ 252 01e5 09          		.sleb128 9
+ 253 01e6 05          		.uleb128 0x5
+ 254 01e7 47 45 54 5F 		.asciz	"GET_INTERFACE"
+ 254      49 4E 54 45 
+ 254      52 46 41 43 
+ 254      45 00 
+ 255 01f5 0A          		.sleb128 10
+ 256 01f6 05          		.uleb128 0x5
+ 257 01f7 53 45 54 5F 		.asciz	"SET_INTERFACE"
+ 257      49 4E 54 45 
+ 257      52 46 41 43 
+ 257      45 00 
+ 258 0205 0B          		.sleb128 11
+ 259 0206 05          		.uleb128 0x5
+ 260 0207 53 59 4E 43 		.asciz	"SYNCH_FRAME"
+ 260      48 5F 46 52 
+ 260      41 4D 45 00 
+ 261 0213 0C          		.sleb128 12
+ 262 0214 00          		.byte	0x0
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 7
+
+
+ 263 0215 06          		.uleb128 0x6
+ 264 0216 01          		.byte	0x1
+ 265 0217 03          		.byte	0x3
+ 266 0218 A7          		.byte	0xa7
+ 267 0219 60 02 00 00 		.4byte	0x260
+ 268 021d 07          		.uleb128 0x7
+ 269 021e 64 65 73 74 		.asciz	"destination"
+ 269      69 6E 61 74 
+ 269      69 6F 6E 00 
+ 270 022a 03          		.byte	0x3
+ 271 022b A8          		.byte	0xa8
+ 272 022c D5 00 00 00 		.4byte	0xd5
+ 273 0230 01          		.byte	0x1
+ 274 0231 05          		.byte	0x5
+ 275 0232 03          		.byte	0x3
+ 276 0233 02          		.byte	0x2
+ 277 0234 23          		.byte	0x23
+ 278 0235 00          		.uleb128 0x0
+ 279 0236 07          		.uleb128 0x7
+ 280 0237 74 79 70 65 		.asciz	"type"
+ 280      00 
+ 281 023c 03          		.byte	0x3
+ 282 023d A9          		.byte	0xa9
+ 283 023e D5 00 00 00 		.4byte	0xd5
+ 284 0242 01          		.byte	0x1
+ 285 0243 02          		.byte	0x2
+ 286 0244 01          		.byte	0x1
+ 287 0245 02          		.byte	0x2
+ 288 0246 23          		.byte	0x23
+ 289 0247 00          		.uleb128 0x0
+ 290 0248 07          		.uleb128 0x7
+ 291 0249 64 69 72 65 		.asciz	"direction"
+ 291      63 74 69 6F 
+ 291      6E 00 
+ 292 0253 03          		.byte	0x3
+ 293 0254 AA          		.byte	0xaa
+ 294 0255 D5 00 00 00 		.4byte	0xd5
+ 295 0259 01          		.byte	0x1
+ 296 025a 01          		.byte	0x1
+ 297 025b 08          		.byte	0x8
+ 298 025c 02          		.byte	0x2
+ 299 025d 23          		.byte	0x23
+ 300 025e 00          		.uleb128 0x0
+ 301 025f 00          		.byte	0x0
+ 302 0260 08          		.uleb128 0x8
+ 303 0261 01          		.byte	0x1
+ 304 0262 03          		.byte	0x3
+ 305 0263 A6          		.byte	0xa6
+ 306 0264 83 02 00 00 		.4byte	0x283
+ 307 0268 09          		.uleb128 0x9
+ 308 0269 15 02 00 00 		.4byte	0x215
+ 309 026d 0A          		.uleb128 0xa
+ 310 026e 62 6D 52 65 		.asciz	"bmRequestType"
+ 310      71 75 65 73 
+ 310      74 54 79 70 
+ 310      65 00 
+ 311 027c 03          		.byte	0x3
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 8
+
+
+ 312 027d AC          		.byte	0xac
+ 313 027e D5 00 00 00 		.4byte	0xd5
+ 314 0282 00          		.byte	0x0
+ 315 0283 0B          		.uleb128 0xb
+ 316 0284 73 65 74 75 		.asciz	"setup_packet"
+ 316      70 5F 70 61 
+ 316      63 6B 65 74 
+ 316      00 
+ 317 0291 08          		.byte	0x8
+ 318 0292 03          		.byte	0x3
+ 319 0293 A5          		.byte	0xa5
+ 320 0294 F2 02 00 00 		.4byte	0x2f2
+ 321 0298 0C          		.uleb128 0xc
+ 322 0299 52 45 51 55 		.asciz	"REQUEST"
+ 322      45 53 54 00 
+ 323 02a1 03          		.byte	0x3
+ 324 02a2 AD          		.byte	0xad
+ 325 02a3 60 02 00 00 		.4byte	0x260
+ 326 02a7 02          		.byte	0x2
+ 327 02a8 23          		.byte	0x23
+ 328 02a9 00          		.uleb128 0x0
+ 329 02aa 0C          		.uleb128 0xc
+ 330 02ab 62 52 65 71 		.asciz	"bRequest"
+ 330      75 65 73 74 
+ 330      00 
+ 331 02b4 03          		.byte	0x3
+ 332 02b5 AE          		.byte	0xae
+ 333 02b6 D5 00 00 00 		.4byte	0xd5
+ 334 02ba 02          		.byte	0x2
+ 335 02bb 23          		.byte	0x23
+ 336 02bc 01          		.uleb128 0x1
+ 337 02bd 0C          		.uleb128 0xc
+ 338 02be 77 56 61 6C 		.asciz	"wValue"
+ 338      75 65 00 
+ 339 02c5 03          		.byte	0x3
+ 340 02c6 AF          		.byte	0xaf
+ 341 02c7 F5 00 00 00 		.4byte	0xf5
+ 342 02cb 02          		.byte	0x2
+ 343 02cc 23          		.byte	0x23
+ 344 02cd 02          		.uleb128 0x2
+ 345 02ce 0C          		.uleb128 0xc
+ 346 02cf 77 49 6E 64 		.asciz	"wIndex"
+ 346      65 78 00 
+ 347 02d6 03          		.byte	0x3
+ 348 02d7 B0          		.byte	0xb0
+ 349 02d8 F5 00 00 00 		.4byte	0xf5
+ 350 02dc 02          		.byte	0x2
+ 351 02dd 23          		.byte	0x23
+ 352 02de 04          		.uleb128 0x4
+ 353 02df 0C          		.uleb128 0xc
+ 354 02e0 77 4C 65 6E 		.asciz	"wLength"
+ 354      67 74 68 00 
+ 355 02e8 03          		.byte	0x3
+ 356 02e9 B1          		.byte	0xb1
+ 357 02ea F5 00 00 00 		.4byte	0xf5
+ 358 02ee 02          		.byte	0x2
+ 359 02ef 23          		.byte	0x23
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 9
+
+
+ 360 02f0 06          		.uleb128 0x6
+ 361 02f1 00          		.byte	0x0
+ 362 02f2 02          		.uleb128 0x2
+ 363 02f3 02          		.byte	0x2
+ 364 02f4 07          		.byte	0x7
+ 365 02f5 73 68 6F 72 		.asciz	"short unsigned int"
+ 365      74 20 75 6E 
+ 365      73 69 67 6E 
+ 365      65 64 20 69 
+ 365      6E 74 00 
+ 366 0308 02          		.uleb128 0x2
+ 367 0309 01          		.byte	0x1
+ 368 030a 02          		.byte	0x2
+ 369 030b 5F 42 6F 6F 		.asciz	"_Bool"
+ 369      6C 00 
+ 370 0311 04          		.uleb128 0x4
+ 371 0312 48 49 44 44 		.asciz	"HIDDescriptorTypes"
+ 371      65 73 63 72 
+ 371      69 70 74 6F 
+ 371      72 54 79 70 
+ 371      65 73 00 
+ 372 0325 02          		.byte	0x2
+ 373 0326 04          		.byte	0x4
+ 374 0327 3F          		.byte	0x3f
+ 375 0328 56 03 00 00 		.4byte	0x356
+ 376 032c 05          		.uleb128 0x5
+ 377 032d 44 45 53 43 		.asciz	"DESC_HID"
+ 377      5F 48 49 44 
+ 377      00 
+ 378 0336 21          		.sleb128 33
+ 379 0337 05          		.uleb128 0x5
+ 380 0338 44 45 53 43 		.asciz	"DESC_REPORT"
+ 380      5F 52 45 50 
+ 380      4F 52 54 00 
+ 381 0344 22          		.sleb128 34
+ 382 0345 05          		.uleb128 0x5
+ 383 0346 44 45 53 43 		.asciz	"DESC_PHYSICAL"
+ 383      5F 50 48 59 
+ 383      53 49 43 41 
+ 383      4C 00 
+ 384 0354 23          		.sleb128 35
+ 385 0355 00          		.byte	0x0
+ 386 0356 02          		.uleb128 0x2
+ 387 0357 01          		.byte	0x1
+ 388 0358 06          		.byte	0x6
+ 389 0359 63 68 61 72 		.asciz	"char"
+ 389      00 
+ 390 035e 0D          		.uleb128 0xd
+ 391 035f 01          		.byte	0x1
+ 392 0360 70 72 6F 63 		.asciz	"process_hid_setup_request"
+ 392      65 73 73 5F 
+ 392      68 69 64 5F 
+ 392      73 65 74 75 
+ 392      70 5F 72 65 
+ 392      71 75 65 73 
+ 392      74 00 
+ 393 037a 01          		.byte	0x1
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 10
+
+
+ 394 037b 32          		.byte	0x32
+ 395 037c 01          		.byte	0x1
+ 396 037d D5 00 00 00 		.4byte	0xd5
+ 397 0381 00 00 00 00 		.4byte	.LFB0
+ 398 0385 00 00 00 00 		.4byte	.LFE0
+ 399 0389 01          		.byte	0x1
+ 400 038a 5E          		.byte	0x5e
+ 401 038b F0 03 00 00 		.4byte	0x3f0
+ 402 038f 0E          		.uleb128 0xe
+ 403 0390 73 65 74 75 		.asciz	"setup"
+ 403      70 00 
+ 404 0396 01          		.byte	0x1
+ 405 0397 32          		.byte	0x32
+ 406 0398 F0 03 00 00 		.4byte	0x3f0
+ 407 039c 02          		.byte	0x2
+ 408 039d 7E          		.byte	0x7e
+ 409 039e 06          		.sleb128 6
+ 410 039f 0F          		.uleb128 0xf
+ 411 03a0 69 6E 74 65 		.asciz	"interface"
+ 411      72 66 61 63 
+ 411      65 00 
+ 412 03aa 01          		.byte	0x1
+ 413 03ab 36          		.byte	0x36
+ 414 03ac D5 00 00 00 		.4byte	0xd5
+ 415 03b0 02          		.byte	0x2
+ 416 03b1 7E          		.byte	0x7e
+ 417 03b2 02          		.sleb128 2
+ 418 03b3 10          		.uleb128 0x10
+ 419 03b4 00 00 00 00 		.4byte	.LBB2
+ 420 03b8 00 00 00 00 		.4byte	.LBE2
+ 421 03bc 0F          		.uleb128 0xf
+ 422 03bd 64 65 73 63 		.asciz	"descriptor"
+ 422      72 69 70 74 
+ 422      6F 72 00 
+ 423 03c8 01          		.byte	0x1
+ 424 03c9 4A          		.byte	0x4a
+ 425 03ca D5 00 00 00 		.4byte	0xd5
+ 426 03ce 02          		.byte	0x2
+ 427 03cf 7E          		.byte	0x7e
+ 428 03d0 03          		.sleb128 3
+ 429 03d1 0F          		.uleb128 0xf
+ 430 03d2 64 65 73 63 		.asciz	"desc"
+ 430      00 
+ 431 03d7 01          		.byte	0x1
+ 432 03d8 4C          		.byte	0x4c
+ 433 03d9 FB 03 00 00 		.4byte	0x3fb
+ 434 03dd 02          		.byte	0x2
+ 435 03de 7E          		.byte	0x7e
+ 436 03df 04          		.sleb128 4
+ 437 03e0 0F          		.uleb128 0xf
+ 438 03e1 6C 65 6E 00 		.asciz	"len"
+ 439 03e5 01          		.byte	0x1
+ 440 03e6 4D          		.byte	0x4d
+ 441 03e7 A2 00 00 00 		.4byte	0xa2
+ 442 03eb 02          		.byte	0x2
+ 443 03ec 7E          		.byte	0x7e
+ 444 03ed 00          		.sleb128 0
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 11
+
+
+ 445 03ee 00          		.byte	0x0
+ 446 03ef 00          		.byte	0x0
+ 447 03f0 11          		.uleb128 0x11
+ 448 03f1 02          		.byte	0x2
+ 449 03f2 F6 03 00 00 		.4byte	0x3f6
+ 450 03f6 12          		.uleb128 0x12
+ 451 03f7 83 02 00 00 		.4byte	0x283
+ 452 03fb 11          		.uleb128 0x11
+ 453 03fc 02          		.byte	0x2
+ 454 03fd 01 04 00 00 		.4byte	0x401
+ 455 0401 13          		.uleb128 0x13
+ 456 0402 00          		.byte	0x0
+ 457 0403 83 00 00 00 		.section	.debug_abbrev,info
+ 457      02 00 00 00 
+ 457      00 00 04 01 
+ 457      00 00 00 00 
+ 457      00 00 00 00 
+ 457      00 00 00 00 
+ 457      75 73 62 5F 
+ 457      68 69 64 2E 
+ 457      73 00 2F 68 
+ 458 0000 01          		.uleb128 0x1
+ 459 0001 11          		.uleb128 0x11
+ 460 0002 01          		.byte	0x1
+ 461 0003 25          		.uleb128 0x25
+ 462 0004 08          		.uleb128 0x8
+ 463 0005 13          		.uleb128 0x13
+ 464 0006 0B          		.uleb128 0xb
+ 465 0007 03          		.uleb128 0x3
+ 466 0008 08          		.uleb128 0x8
+ 467 0009 1B          		.uleb128 0x1b
+ 468 000a 08          		.uleb128 0x8
+ 469 000b 11          		.uleb128 0x11
+ 470 000c 01          		.uleb128 0x1
+ 471 000d 12          		.uleb128 0x12
+ 472 000e 01          		.uleb128 0x1
+ 473 000f 10          		.uleb128 0x10
+ 474 0010 06          		.uleb128 0x6
+ 475 0011 00          		.byte	0x0
+ 476 0012 00          		.byte	0x0
+ 477 0013 02          		.uleb128 0x2
+ 478 0014 24          		.uleb128 0x24
+ 479 0015 00          		.byte	0x0
+ 480 0016 0B          		.uleb128 0xb
+ 481 0017 0B          		.uleb128 0xb
+ 482 0018 3E          		.uleb128 0x3e
+ 483 0019 0B          		.uleb128 0xb
+ 484 001a 03          		.uleb128 0x3
+ 485 001b 08          		.uleb128 0x8
+ 486 001c 00          		.byte	0x0
+ 487 001d 00          		.byte	0x0
+ 488 001e 03          		.uleb128 0x3
+ 489 001f 16          		.uleb128 0x16
+ 490 0020 00          		.byte	0x0
+ 491 0021 03          		.uleb128 0x3
+ 492 0022 08          		.uleb128 0x8
+ 493 0023 3A          		.uleb128 0x3a
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 12
+
+
+ 494 0024 0B          		.uleb128 0xb
+ 495 0025 3B          		.uleb128 0x3b
+ 496 0026 0B          		.uleb128 0xb
+ 497 0027 49          		.uleb128 0x49
+ 498 0028 13          		.uleb128 0x13
+ 499 0029 00          		.byte	0x0
+ 500 002a 00          		.byte	0x0
+ 501 002b 04          		.uleb128 0x4
+ 502 002c 04          		.uleb128 0x4
+ 503 002d 01          		.byte	0x1
+ 504 002e 03          		.uleb128 0x3
+ 505 002f 08          		.uleb128 0x8
+ 506 0030 0B          		.uleb128 0xb
+ 507 0031 0B          		.uleb128 0xb
+ 508 0032 3A          		.uleb128 0x3a
+ 509 0033 0B          		.uleb128 0xb
+ 510 0034 3B          		.uleb128 0x3b
+ 511 0035 0B          		.uleb128 0xb
+ 512 0036 01          		.uleb128 0x1
+ 513 0037 13          		.uleb128 0x13
+ 514 0038 00          		.byte	0x0
+ 515 0039 00          		.byte	0x0
+ 516 003a 05          		.uleb128 0x5
+ 517 003b 28          		.uleb128 0x28
+ 518 003c 00          		.byte	0x0
+ 519 003d 03          		.uleb128 0x3
+ 520 003e 08          		.uleb128 0x8
+ 521 003f 1C          		.uleb128 0x1c
+ 522 0040 0D          		.uleb128 0xd
+ 523 0041 00          		.byte	0x0
+ 524 0042 00          		.byte	0x0
+ 525 0043 06          		.uleb128 0x6
+ 526 0044 13          		.uleb128 0x13
+ 527 0045 01          		.byte	0x1
+ 528 0046 0B          		.uleb128 0xb
+ 529 0047 0B          		.uleb128 0xb
+ 530 0048 3A          		.uleb128 0x3a
+ 531 0049 0B          		.uleb128 0xb
+ 532 004a 3B          		.uleb128 0x3b
+ 533 004b 0B          		.uleb128 0xb
+ 534 004c 01          		.uleb128 0x1
+ 535 004d 13          		.uleb128 0x13
+ 536 004e 00          		.byte	0x0
+ 537 004f 00          		.byte	0x0
+ 538 0050 07          		.uleb128 0x7
+ 539 0051 0D          		.uleb128 0xd
+ 540 0052 00          		.byte	0x0
+ 541 0053 03          		.uleb128 0x3
+ 542 0054 08          		.uleb128 0x8
+ 543 0055 3A          		.uleb128 0x3a
+ 544 0056 0B          		.uleb128 0xb
+ 545 0057 3B          		.uleb128 0x3b
+ 546 0058 0B          		.uleb128 0xb
+ 547 0059 49          		.uleb128 0x49
+ 548 005a 13          		.uleb128 0x13
+ 549 005b 0B          		.uleb128 0xb
+ 550 005c 0B          		.uleb128 0xb
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 13
+
+
+ 551 005d 0D          		.uleb128 0xd
+ 552 005e 0B          		.uleb128 0xb
+ 553 005f 0C          		.uleb128 0xc
+ 554 0060 0B          		.uleb128 0xb
+ 555 0061 38          		.uleb128 0x38
+ 556 0062 0A          		.uleb128 0xa
+ 557 0063 00          		.byte	0x0
+ 558 0064 00          		.byte	0x0
+ 559 0065 08          		.uleb128 0x8
+ 560 0066 17          		.uleb128 0x17
+ 561 0067 01          		.byte	0x1
+ 562 0068 0B          		.uleb128 0xb
+ 563 0069 0B          		.uleb128 0xb
+ 564 006a 3A          		.uleb128 0x3a
+ 565 006b 0B          		.uleb128 0xb
+ 566 006c 3B          		.uleb128 0x3b
+ 567 006d 0B          		.uleb128 0xb
+ 568 006e 01          		.uleb128 0x1
+ 569 006f 13          		.uleb128 0x13
+ 570 0070 00          		.byte	0x0
+ 571 0071 00          		.byte	0x0
+ 572 0072 09          		.uleb128 0x9
+ 573 0073 0D          		.uleb128 0xd
+ 574 0074 00          		.byte	0x0
+ 575 0075 49          		.uleb128 0x49
+ 576 0076 13          		.uleb128 0x13
+ 577 0077 00          		.byte	0x0
+ 578 0078 00          		.byte	0x0
+ 579 0079 0A          		.uleb128 0xa
+ 580 007a 0D          		.uleb128 0xd
+ 581 007b 00          		.byte	0x0
+ 582 007c 03          		.uleb128 0x3
+ 583 007d 08          		.uleb128 0x8
+ 584 007e 3A          		.uleb128 0x3a
+ 585 007f 0B          		.uleb128 0xb
+ 586 0080 3B          		.uleb128 0x3b
+ 587 0081 0B          		.uleb128 0xb
+ 588 0082 49          		.uleb128 0x49
+ 589 0083 13          		.uleb128 0x13
+ 590 0084 00          		.byte	0x0
+ 591 0085 00          		.byte	0x0
+ 592 0086 0B          		.uleb128 0xb
+ 593 0087 13          		.uleb128 0x13
+ 594 0088 01          		.byte	0x1
+ 595 0089 03          		.uleb128 0x3
+ 596 008a 08          		.uleb128 0x8
+ 597 008b 0B          		.uleb128 0xb
+ 598 008c 0B          		.uleb128 0xb
+ 599 008d 3A          		.uleb128 0x3a
+ 600 008e 0B          		.uleb128 0xb
+ 601 008f 3B          		.uleb128 0x3b
+ 602 0090 0B          		.uleb128 0xb
+ 603 0091 01          		.uleb128 0x1
+ 604 0092 13          		.uleb128 0x13
+ 605 0093 00          		.byte	0x0
+ 606 0094 00          		.byte	0x0
+ 607 0095 0C          		.uleb128 0xc
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 14
+
+
+ 608 0096 0D          		.uleb128 0xd
+ 609 0097 00          		.byte	0x0
+ 610 0098 03          		.uleb128 0x3
+ 611 0099 08          		.uleb128 0x8
+ 612 009a 3A          		.uleb128 0x3a
+ 613 009b 0B          		.uleb128 0xb
+ 614 009c 3B          		.uleb128 0x3b
+ 615 009d 0B          		.uleb128 0xb
+ 616 009e 49          		.uleb128 0x49
+ 617 009f 13          		.uleb128 0x13
+ 618 00a0 38          		.uleb128 0x38
+ 619 00a1 0A          		.uleb128 0xa
+ 620 00a2 00          		.byte	0x0
+ 621 00a3 00          		.byte	0x0
+ 622 00a4 0D          		.uleb128 0xd
+ 623 00a5 2E          		.uleb128 0x2e
+ 624 00a6 01          		.byte	0x1
+ 625 00a7 3F          		.uleb128 0x3f
+ 626 00a8 0C          		.uleb128 0xc
+ 627 00a9 03          		.uleb128 0x3
+ 628 00aa 08          		.uleb128 0x8
+ 629 00ab 3A          		.uleb128 0x3a
+ 630 00ac 0B          		.uleb128 0xb
+ 631 00ad 3B          		.uleb128 0x3b
+ 632 00ae 0B          		.uleb128 0xb
+ 633 00af 27          		.uleb128 0x27
+ 634 00b0 0C          		.uleb128 0xc
+ 635 00b1 49          		.uleb128 0x49
+ 636 00b2 13          		.uleb128 0x13
+ 637 00b3 11          		.uleb128 0x11
+ 638 00b4 01          		.uleb128 0x1
+ 639 00b5 12          		.uleb128 0x12
+ 640 00b6 01          		.uleb128 0x1
+ 641 00b7 40          		.uleb128 0x40
+ 642 00b8 0A          		.uleb128 0xa
+ 643 00b9 01          		.uleb128 0x1
+ 644 00ba 13          		.uleb128 0x13
+ 645 00bb 00          		.byte	0x0
+ 646 00bc 00          		.byte	0x0
+ 647 00bd 0E          		.uleb128 0xe
+ 648 00be 05          		.uleb128 0x5
+ 649 00bf 00          		.byte	0x0
+ 650 00c0 03          		.uleb128 0x3
+ 651 00c1 08          		.uleb128 0x8
+ 652 00c2 3A          		.uleb128 0x3a
+ 653 00c3 0B          		.uleb128 0xb
+ 654 00c4 3B          		.uleb128 0x3b
+ 655 00c5 0B          		.uleb128 0xb
+ 656 00c6 49          		.uleb128 0x49
+ 657 00c7 13          		.uleb128 0x13
+ 658 00c8 02          		.uleb128 0x2
+ 659 00c9 0A          		.uleb128 0xa
+ 660 00ca 00          		.byte	0x0
+ 661 00cb 00          		.byte	0x0
+ 662 00cc 0F          		.uleb128 0xf
+ 663 00cd 34          		.uleb128 0x34
+ 664 00ce 00          		.byte	0x0
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 15
+
+
+ 665 00cf 03          		.uleb128 0x3
+ 666 00d0 08          		.uleb128 0x8
+ 667 00d1 3A          		.uleb128 0x3a
+ 668 00d2 0B          		.uleb128 0xb
+ 669 00d3 3B          		.uleb128 0x3b
+ 670 00d4 0B          		.uleb128 0xb
+ 671 00d5 49          		.uleb128 0x49
+ 672 00d6 13          		.uleb128 0x13
+ 673 00d7 02          		.uleb128 0x2
+ 674 00d8 0A          		.uleb128 0xa
+ 675 00d9 00          		.byte	0x0
+ 676 00da 00          		.byte	0x0
+ 677 00db 10          		.uleb128 0x10
+ 678 00dc 0B          		.uleb128 0xb
+ 679 00dd 01          		.byte	0x1
+ 680 00de 11          		.uleb128 0x11
+ 681 00df 01          		.uleb128 0x1
+ 682 00e0 12          		.uleb128 0x12
+ 683 00e1 01          		.uleb128 0x1
+ 684 00e2 00          		.byte	0x0
+ 685 00e3 00          		.byte	0x0
+ 686 00e4 11          		.uleb128 0x11
+ 687 00e5 0F          		.uleb128 0xf
+ 688 00e6 00          		.byte	0x0
+ 689 00e7 0B          		.uleb128 0xb
+ 690 00e8 0B          		.uleb128 0xb
+ 691 00e9 49          		.uleb128 0x49
+ 692 00ea 13          		.uleb128 0x13
+ 693 00eb 00          		.byte	0x0
+ 694 00ec 00          		.byte	0x0
+ 695 00ed 12          		.uleb128 0x12
+ 696 00ee 26          		.uleb128 0x26
+ 697 00ef 00          		.byte	0x0
+ 698 00f0 49          		.uleb128 0x49
+ 699 00f1 13          		.uleb128 0x13
+ 700 00f2 00          		.byte	0x0
+ 701 00f3 00          		.byte	0x0
+ 702 00f4 13          		.uleb128 0x13
+ 703 00f5 26          		.uleb128 0x26
+ 704 00f6 00          		.byte	0x0
+ 705 00f7 00          		.byte	0x0
+ 706 00f8 00          		.byte	0x0
+ 707 00f9 00          		.byte	0x0
+ 708 00fa 01 11 00 10 		.section	.debug_pubnames,info
+ 708      06 11 01 12 
+ 708      01 03 08 1B 
+ 708      08 25 08 13 
+ 708      05 00 00 00 
+ 709 0000 2C 00 00 00 		.4byte	0x2c
+ 710 0004 02 00       		.2byte	0x2
+ 711 0006 00 00 00 00 		.4byte	.Ldebug_info0
+ 712 000a 03 04 00 00 		.4byte	0x403
+ 713 000e 5E 03 00 00 		.4byte	0x35e
+ 714 0012 70 72 6F 63 		.asciz	"process_hid_setup_request"
+ 714      65 73 73 5F 
+ 714      68 69 64 5F 
+ 714      73 65 74 75 
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 16
+
+
+ 714      70 5F 72 65 
+ 714      71 75 65 73 
+ 714      74 00 
+ 715 002c 00 00 00 00 		.4byte	0x0
+ 716                 		.section	.debug_pubtypes,info
+ 717 0000 76 00 00 00 		.4byte	0x76
+ 718 0004 02 00       		.2byte	0x2
+ 719 0006 00 00 00 00 		.4byte	.Ldebug_info0
+ 720 000a 03 04 00 00 		.4byte	0x403
+ 721 000e A2 00 00 00 		.4byte	0xa2
+ 722 0012 69 6E 74 31 		.asciz	"int16_t"
+ 722      36 5F 74 00 
+ 723 001a D5 00 00 00 		.4byte	0xd5
+ 724 001e 75 69 6E 74 		.asciz	"uint8_t"
+ 724      38 5F 74 00 
+ 725 0026 F5 00 00 00 		.4byte	0xf5
+ 726 002a 75 69 6E 74 		.asciz	"uint16_t"
+ 726      31 36 5F 74 
+ 726      00 
+ 727 0033 44 01 00 00 		.4byte	0x144
+ 728 0037 53 74 61 6E 		.asciz	"StandardControlRequest"
+ 728      64 61 72 64 
+ 728      43 6F 6E 74 
+ 728      72 6F 6C 52 
+ 728      65 71 75 65 
+ 728      73 74 00 
+ 729 004e 83 02 00 00 		.4byte	0x283
+ 730 0052 73 65 74 75 		.asciz	"setup_packet"
+ 730      70 5F 70 61 
+ 730      63 6B 65 74 
+ 730      00 
+ 731 005f 11 03 00 00 		.4byte	0x311
+ 732 0063 48 49 44 44 		.asciz	"HIDDescriptorTypes"
+ 732      65 73 63 72 
+ 732      69 70 74 6F 
+ 732      72 54 79 70 
+ 732      65 73 00 
+ 733 0076 00 00 00 00 		.4byte	0x0
+ 734                 		.section	.debug_aranges,info
+ 735 0000 14 00 00 00 		.4byte	0x14
+ 736 0004 02 00       		.2byte	0x2
+ 737 0006 00 00 00 00 		.4byte	.Ldebug_info0
+ 738 000a 04          		.byte	0x4
+ 739 000b 00          		.byte	0x0
+ 740 000c 00 00       		.2byte	0x0
+ 741 000e 00 00       		.2byte	0x0
+ 742 0010 00 00 00 00 		.4byte	0x0
+ 743 0014 00 00 00 00 		.4byte	0x0
+ 744 0018 1C 00 00 00 		.section	.debug_line,info
+ 744      02 00 00 00 
+ 744      00 00 04 00 
+ 745 0000 51 01 00 00 		.4byte	.LELT0-.LSLT0
+ 746                 	.LSLT0:
+ 747 0004 02 00       		.2byte	0x2
+ 748 0006 AF 00 00 00 		.4byte	.LELTP0-.LASLTP0
+ 749                 	.LASLTP0:
+ 750 000a 01          		.byte	0x1
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 17
+
+
+ 751 000b 01          		.byte	0x1
+ 752 000c F6          		.byte	0xf6
+ 753 000d F5          		.byte	0xf5
+ 754 000e 0A          		.byte	0xa
+ 755 000f 00          		.byte	0x0
+ 756 0010 01          		.byte	0x1
+ 757 0011 01          		.byte	0x1
+ 758 0012 01          		.byte	0x1
+ 759 0013 01          		.byte	0x1
+ 760 0014 00          		.byte	0x0
+ 761 0015 00          		.byte	0x0
+ 762 0016 00          		.byte	0x0
+ 763 0017 01          		.byte	0x1
+ 764 0018 2F 68 6F 6D 		.ascii	"/home/phil/Projects/phoenix/firmware/bootloader/usb/include"
+ 764      65 2F 70 68 
+ 764      69 6C 2F 50 
+ 764      72 6F 6A 65 
+ 764      63 74 73 2F 
+ 764      70 68 6F 65 
+ 764      6E 69 78 2F 
+ 764      66 69 72 6D 
+ 764      77 61 72 65 
+ 765 0053 00          		.byte 0
+ 766 0054 2F 6F 70 74 		.ascii	"/opt/microchip/xc16/v1.23/bin/bin/../../include"
+ 766      2F 6D 69 63 
+ 766      72 6F 63 68 
+ 766      69 70 2F 78 
+ 766      63 31 36 2F 
+ 766      76 31 2E 32 
+ 766      33 2F 62 69 
+ 766      6E 2F 62 69 
+ 766      6E 2F 2E 2E 
+ 767 0083 00          		.byte 0
+ 768 0084 00          		.byte	0x0
+ 769 0085 75 73 62 5F 		.asciz	"usb_hid.c"
+ 769      68 69 64 2E 
+ 769      63 00 
+ 770 008f 00          		.uleb128 0x0
+ 771 0090 00          		.uleb128 0x0
+ 772 0091 00          		.uleb128 0x0
+ 773 0092 73 74 64 69 		.asciz	"stdint.h"
+ 773      6E 74 2E 68 
+ 773      00 
+ 774 009b 02          		.uleb128 0x2
+ 775 009c 00          		.uleb128 0x0
+ 776 009d 00          		.uleb128 0x0
+ 777 009e 75 73 62 5F 		.asciz	"usb_ch9.h"
+ 777      63 68 39 2E 
+ 777      68 00 
+ 778 00a8 01          		.uleb128 0x1
+ 779 00a9 00          		.uleb128 0x0
+ 780 00aa 00          		.uleb128 0x0
+ 781 00ab 75 73 62 5F 		.asciz	"usb_hid.h"
+ 781      68 69 64 2E 
+ 781      68 00 
+ 782 00b5 01          		.uleb128 0x1
+ 783 00b6 00          		.uleb128 0x0
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 18
+
+
+ 784 00b7 00          		.uleb128 0x0
+ 785 00b8 00          		.byte	0x0
+ 786                 	.LELTP0:
+ 787 00b9 00          		.byte	0x0
+ 788 00ba 05          		.uleb128 0x5
+ 789 00bb 02          		.byte	0x2
+ 790 00bc 00 00 00 00 		.4byte	.Letext0
+ 791 00c0 00          		.byte	0x0
+ 792 00c1 01          		.uleb128 0x1
+ 793 00c2 01          		.byte	0x1
+ 794 00c3 00          		.byte	0x0
+ 795 00c4 05          		.uleb128 0x5
+ 796 00c5 02          		.byte	0x2
+ 797 00c6 00 00 00 00 		.4byte	.LSM0
+ 798 00ca 46          		.byte	0x46
+ 799 00cb 00          		.byte	0x0
+ 800 00cc 05          		.uleb128 0x5
+ 801 00cd 02          		.byte	0x2
+ 802 00ce 00 00 00 00 		.4byte	.LSM1
+ 803 00d2 17          		.byte	0x17
+ 804 00d3 00          		.byte	0x0
+ 805 00d4 05          		.uleb128 0x5
+ 806 00d5 02          		.byte	0x2
+ 807 00d6 00 00 00 00 		.4byte	.LSM2
+ 808 00da 26          		.byte	0x26
+ 809 00db 00          		.byte	0x0
+ 810 00dc 05          		.uleb128 0x5
+ 811 00dd 02          		.byte	0x2
+ 812 00de 00 00 00 00 		.4byte	.LSM3
+ 813 00e2 15          		.byte	0x15
+ 814 00e3 00          		.byte	0x0
+ 815 00e4 05          		.uleb128 0x5
+ 816 00e5 02          		.byte	0x2
+ 817 00e6 00 00 00 00 		.4byte	.LSM4
+ 818 00ea 13          		.byte	0x13
+ 819 00eb 00          		.byte	0x0
+ 820 00ec 05          		.uleb128 0x5
+ 821 00ed 02          		.byte	0x2
+ 822 00ee 00 00 00 00 		.4byte	.LSM5
+ 823 00f2 16          		.byte	0x16
+ 824 00f3 00          		.byte	0x0
+ 825 00f4 05          		.uleb128 0x5
+ 826 00f5 02          		.byte	0x2
+ 827 00f6 00 00 00 00 		.4byte	.LSM6
+ 828 00fa 17          		.byte	0x17
+ 829 00fb 00          		.byte	0x0
+ 830 00fc 05          		.uleb128 0x5
+ 831 00fd 02          		.byte	0x2
+ 832 00fe 00 00 00 00 		.4byte	.LSM7
+ 833 0102 16          		.byte	0x16
+ 834 0103 00          		.byte	0x0
+ 835 0104 05          		.uleb128 0x5
+ 836 0105 02          		.byte	0x2
+ 837 0106 00 00 00 00 		.4byte	.LSM8
+ 838 010a 15          		.byte	0x15
+ 839 010b 00          		.byte	0x0
+ 840 010c 05          		.uleb128 0x5
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 19
+
+
+ 841 010d 02          		.byte	0x2
+ 842 010e 00 00 00 00 		.4byte	.LSM9
+ 843 0112 16          		.byte	0x16
+ 844 0113 00          		.byte	0x0
+ 845 0114 05          		.uleb128 0x5
+ 846 0115 02          		.byte	0x2
+ 847 0116 00 00 00 00 		.4byte	.LSM10
+ 848 011a 15          		.byte	0x15
+ 849 011b 00          		.byte	0x0
+ 850 011c 05          		.uleb128 0x5
+ 851 011d 02          		.byte	0x2
+ 852 011e 00 00 00 00 		.4byte	.LSM11
+ 853 0122 1C          		.byte	0x1c
+ 854 0123 00          		.byte	0x0
+ 855 0124 05          		.uleb128 0x5
+ 856 0125 02          		.byte	0x2
+ 857 0126 00 00 00 00 		.4byte	.LSM12
+ 858 012a 15          		.byte	0x15
+ 859 012b 00          		.byte	0x0
+ 860 012c 05          		.uleb128 0x5
+ 861 012d 02          		.byte	0x2
+ 862 012e 00 00 00 00 		.4byte	.LSM13
+ 863 0132 16          		.byte	0x16
+ 864 0133 00          		.byte	0x0
+ 865 0134 05          		.uleb128 0x5
+ 866 0135 02          		.byte	0x2
+ 867 0136 00 00 00 00 		.4byte	.LSM14
+ 868 013a 15          		.byte	0x15
+ 869 013b 00          		.byte	0x0
+ 870 013c 05          		.uleb128 0x5
+ 871 013d 02          		.byte	0x2
+ 872 013e 00 00 00 00 		.4byte	.LSM15
+ 873 0142 64          		.byte	0x64
+ 874 0143 00          		.byte	0x0
+ 875 0144 05          		.uleb128 0x5
+ 876 0145 02          		.byte	0x2
+ 877 0146 00 00 00 00 		.4byte	.LSM16
+ 878 014a 15          		.byte	0x15
+ 879 014b 00          		.byte	0x0
+ 880 014c 05          		.uleb128 0x5
+ 881 014d 02          		.byte	0x2
+ 882 014e 00 00 00 00 		.4byte	.LFE0
+ 883 0152 00          		.byte	0x0
+ 884 0153 01          		.uleb128 0x1
+ 885 0154 01          		.byte	0x1
+ 886                 	.LELT0:
+ 887 0155 86 00 00 00 		.section	.debug_str,info
+ 887      02 00 1D 00 
+ 887      00 00 01 01 
+ 887      FB 0E 0A 00 
+ 887      01 01 01 01 
+ 887      00 00 00 01 
+ 887      00 75 73 62 
+ 887      5F 68 69 64 
+ 887      2E 73 00 00 
+ 888                 		.section	.text,code
+ 889              	
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 20
+
+
+ 890              		.section __c30_signature, info, data
+ 891 0000 01 00       		.word 0x0001
+ 892 0002 01 00       		.word 0x0001
+ 893 0004 00 00       		.word 0x0000
+ 894                 	
+ 895                 	; MCHP configuration words
+ 896                 	
+ 897                 		.set ___PA___,0
+ 898                 		.end
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 21
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 /home/phil/Projects/phoenix/firmware/bootloader/usb_hid.c
+                            *ABS*:00000001 __C30ELF
+           usb_hid.s:14     .text:00000000 _process_hid_setup_request
+           usb_hid.s:17     *ABS*:00000000 ___PA___
+           usb_hid.s:35     *ABS*:00000000 ___BP___
+           usb_hid.s:887    .debug_line:00000155 .L0
+           usb_hid.s:887    .debug_line:0000017c .L0
+           usb_hid.s:898    .debug_line:000001df .L0
+           usb_hid.s:18     .text:00000000 .L0
+           usb_hid.s:19     .text:00000002 .L0
+           usb_hid.s:18     .text:00000000 .L0
+           usb_hid.s:21     .text:00000004 .L0
+           usb_hid.s:19     .text:00000002 .L0
+           usb_hid.s:22     .text:00000006 .L0
+           usb_hid.s:21     .text:00000004 .L0
+           usb_hid.s:23     .text:00000008 .L0
+           usb_hid.s:22     .text:00000006 .L0
+           usb_hid.s:24     .text:0000000a .L0
+           usb_hid.s:23     .text:00000008 .L0
+           usb_hid.s:25     .text:0000000c .L0
+           usb_hid.s:24     .text:0000000a .L0
+           usb_hid.s:26     .text:0000000e .L0
+           usb_hid.s:25     .text:0000000c .L0
+           usb_hid.s:27     .text:00000010 .L0
+           usb_hid.s:26     .text:0000000e .L0
+           usb_hid.s:28     .text:00000012 .L0
+           usb_hid.s:27     .text:00000010 .L0
+           usb_hid.s:29     .text:00000014 .L0
+           usb_hid.s:28     .text:00000012 .L0
+           usb_hid.s:30     .text:00000016 .L0
+           usb_hid.s:29     .text:00000014 .L0
+           usb_hid.s:32     .text:00000018 .L0
+           usb_hid.s:30     .text:00000016 .L0
+           usb_hid.s:33     .text:0000001a .L0
+           usb_hid.s:32     .text:00000018 .L0
+           usb_hid.s:34     .text:0000001c .L0
+           usb_hid.s:33     .text:0000001a .L0
+           usb_hid.s:36     .text:0000001e .L0
+           usb_hid.s:34     .text:0000001c .L0
+           usb_hid.s:38     .text:00000020 .L0
+           usb_hid.s:36     .text:0000001e .L0
+           usb_hid.s:39     .text:00000022 .L0
+           usb_hid.s:38     .text:00000020 .L0
+           usb_hid.s:41     .text:00000024 .L0
+           usb_hid.s:39     .text:00000022 .L0
+           usb_hid.s:42     .text:00000026 .L0
+           usb_hid.s:41     .text:00000024 .L0
+           usb_hid.s:44     .text:00000028 .L0
+           usb_hid.s:42     .text:00000026 .L0
+           usb_hid.s:47     .text:0000002a .L0
+           usb_hid.s:44     .text:00000028 .L0
+           usb_hid.s:48     .text:0000002c .L0
+           usb_hid.s:47     .text:0000002a .L0
+           usb_hid.s:49     .text:0000002e .L0
+           usb_hid.s:48     .text:0000002c .L0
+           usb_hid.s:50     .text:00000030 .L0
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 22
+
+
+           usb_hid.s:49     .text:0000002e .L0
+           usb_hid.s:51     .text:00000032 .L0
+           usb_hid.s:50     .text:00000030 .L0
+           usb_hid.s:52     .text:00000034 .L0
+           usb_hid.s:51     .text:00000032 .L0
+           usb_hid.s:53     .text:00000036 .L0
+           usb_hid.s:52     .text:00000034 .L0
+           usb_hid.s:54     .text:00000038 .L0
+           usb_hid.s:53     .text:00000036 .L0
+           usb_hid.s:55     .text:0000003a .L0
+           usb_hid.s:54     .text:00000038 .L0
+           usb_hid.s:56     .text:0000003c .L0
+           usb_hid.s:55     .text:0000003a .L0
+           usb_hid.s:57     .text:0000003e .L0
+           usb_hid.s:56     .text:0000003c .L0
+           usb_hid.s:59     .text:00000040 .L0
+           usb_hid.s:57     .text:0000003e .L0
+           usb_hid.s:60     .text:00000042 .L0
+           usb_hid.s:59     .text:00000040 .L0
+           usb_hid.s:62     .text:00000044 .L0
+           usb_hid.s:60     .text:00000042 .L0
+           usb_hid.s:63     .text:00000046 .L0
+           usb_hid.s:62     .text:00000044 .L0
+           usb_hid.s:64     .text:00000048 .L0
+           usb_hid.s:63     .text:00000046 .L0
+           usb_hid.s:66     .text:0000004a .L0
+           usb_hid.s:64     .text:00000048 .L0
+           usb_hid.s:68     .text:0000004c .L0
+           usb_hid.s:66     .text:0000004a .L0
+           usb_hid.s:69     .text:0000004e .L0
+           usb_hid.s:68     .text:0000004c .L0
+           usb_hid.s:70     .text:00000050 .L0
+           usb_hid.s:69     .text:0000004e .L0
+           usb_hid.s:71     .text:00000052 .L0
+           usb_hid.s:70     .text:00000050 .L0
+           usb_hid.s:72     .text:00000054 .L0
+           usb_hid.s:71     .text:00000052 .L0
+           usb_hid.s:73     .text:00000056 .L0
+           usb_hid.s:72     .text:00000054 .L0
+           usb_hid.s:74     .text:00000058 .L0
+           usb_hid.s:73     .text:00000056 .L0
+           usb_hid.s:77     .text:0000005a .L0
+           usb_hid.s:74     .text:00000058 .L0
+           usb_hid.s:78     .text:0000005c .L0
+           usb_hid.s:77     .text:0000005a .L0
+           usb_hid.s:79     .text:0000005e .L0
+           usb_hid.s:78     .text:0000005c .L0
+           usb_hid.s:81     .text:00000060 .L0
+           usb_hid.s:79     .text:0000005e .L0
+           usb_hid.s:83     .text:00000062 .L0
+           usb_hid.s:81     .text:00000060 .L0
+           usb_hid.s:84     .text:00000064 .L0
+           usb_hid.s:83     .text:00000062 .L0
+           usb_hid.s:85     .text:00000066 .L0
+           usb_hid.s:84     .text:00000064 .L0
+           usb_hid.s:86     .text:00000068 .L0
+           usb_hid.s:85     .text:00000066 .L0
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 23
+
+
+           usb_hid.s:87     .text:0000006a .L0
+           usb_hid.s:86     .text:00000068 .L0
+           usb_hid.s:88     .text:0000006c .L0
+           usb_hid.s:87     .text:0000006a .L0
+           usb_hid.s:91     .text:0000006e .L0
+           usb_hid.s:88     .text:0000006c .L0
+           usb_hid.s:92     .text:00000070 .L0
+           usb_hid.s:91     .text:0000006e .L0
+           usb_hid.s:94     .text:00000072 .L0
+           usb_hid.s:92     .text:00000070 .L0
+           usb_hid.s:96     .text:00000074 .L0
+           usb_hid.s:94     .text:00000072 .L0
+           usb_hid.s:97     .text:00000076 .L0
+           usb_hid.s:96     .text:00000074 .L0
+           usb_hid.s:100    .text:00000078 .L0
+           usb_hid.s:97     .text:00000076 .L0
+           usb_hid.s:101    .text:0000007a .L0
+           usb_hid.s:100    .text:00000078 .L0
+           usb_hid.s:102    .text:0000007c .L0
+           usb_hid.s:101    .text:0000007a .L0
+           usb_hid.s:103    .text:0000007e .L0
+           usb_hid.s:102    .text:0000007c .L0
+           usb_hid.s:104    .text:00000080 .L0
+           usb_hid.s:103    .text:0000007e .L0
+           usb_hid.s:105    .text:00000082 .L0
+           usb_hid.s:104    .text:00000080 .L0
+           usb_hid.s:106    .text:00000084 .L0
+           usb_hid.s:105    .text:00000082 .L0
+           usb_hid.s:107    .text:00000086 .L0
+           usb_hid.s:106    .text:00000084 .L0
+           usb_hid.s:108    .text:00000088 .L0
+           usb_hid.s:107    .text:00000086 .L0
+           usb_hid.s:109    .text:0000008a .L0
+           usb_hid.s:108    .text:00000088 .L0
+           usb_hid.s:110    .text:0000008c .L0
+           usb_hid.s:109    .text:0000008a .L0
+           usb_hid.s:112    .text:0000008e .L0
+           usb_hid.s:110    .text:0000008c .L0
+           usb_hid.s:113    .text:00000090 .L0
+           usb_hid.s:112    .text:0000008e .L0
+           usb_hid.s:115    .text:00000092 .L0
+           usb_hid.s:113    .text:00000090 .L0
+           usb_hid.s:116    .text:00000094 .L0
+           usb_hid.s:115    .text:00000092 .L0
+           usb_hid.s:117    .text:00000096 .L0
+           usb_hid.s:116    .text:00000094 .L0
+           usb_hid.s:118    .text:00000098 .L0
+           usb_hid.s:117    .text:00000096 .L0
+           usb_hid.s:119    .text:0000009a .L0
+           usb_hid.s:118    .text:00000098 .L0
+           usb_hid.s:120    .text:0000009c .L0
+           usb_hid.s:119    .text:0000009a .L0
+           usb_hid.s:122    .text:0000009e .L0
+           usb_hid.s:120    .text:0000009c .L0
+           usb_hid.s:123    .text:000000a0 .L0
+           usb_hid.s:122    .text:0000009e .L0
+           usb_hid.s:127    .text:000000a2 .L0
+MPLAB XC16 ASSEMBLY Listing:  usb_hid.s 			page 24
+
+
+           usb_hid.s:123    .text:000000a0 .L0
+           usb_hid.s:130    .text:000000a4 .L0
+           usb_hid.s:127    .text:000000a2 .L0
+           usb_hid.s:131    .text:000000a6 .L0
+           usb_hid.s:130    .text:000000a4 .L0
+           usb_hid.s:132    .text:000000a8 .L0
+           usb_hid.s:131    .text:000000a6 .L0
+           usb_hid.s:890    .text:000000aa .L0
+           usb_hid.s:132    .text:000000a8 .L0
+                            .text:00000000 .L0
+           usb_hid.s:890    .text:000000aa .L0
+           usb_hid.s:457    .debug_info:00000403 .L0
+           usb_hid.s:457    .debug_info:0000048a .L0
+                            .text:000000a2 .L2
+                            .text:0000005a .L3
+                            .text:0000006e .L4
+                            .text:00000078 .L5
+                            .text:000000a4 .L6
+                            .text:00000092 .L7
+                    .debug_abbrev:00000000 .Ldebug_abbrev0
+                            .text:00000000 .Ltext0
+                            .text:000000aa .Letext0
+                      .debug_line:00000000 .Ldebug_line0
+                            .text:00000000 .LFB0
+                            .text:000000aa .LFE0
+                            .text:0000002a .LBB2
+                            .text:000000a2 .LBE2
+                            .text:00000000 .LSM0
+                            .text:00000004 .LSM1
+                            .text:00000018 .LSM2
+                            .text:00000020 .LSM3
+                            .text:00000024 .LSM4
+                            .text:0000002a .LSM5
+                            .text:00000040 .LSM6
+                            .text:00000044 .LSM7
+                            .text:0000004c .LSM8
+                            .text:0000005a .LSM9
+                            .text:00000062 .LSM10
+                            .text:0000006e .LSM11
+                            .text:00000074 .LSM12
+                            .text:00000078 .LSM13
+                            .text:0000009e .LSM14
+                            .text:000000a2 .LSM15
+                            .text:000000a4 .LSM16
+                     .debug_frame:00000000 .Lframe0
+                      .debug_info:00000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+_USB_HID_DESCRIPTOR_FUNC
+_USB_HID_REPORT_DESCRIPTOR_FUNC
+_usb_send_data_stage
+
+EQUATE SYMBOLS
+/home/phil/Projects/phoenix/firmware/bootloader/usb_hid.c = 0x0
+                        __C30ELF = 0x1
+                        ___PA___ = 0x0
+                        ___BP___ = 0x0

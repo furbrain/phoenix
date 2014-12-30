@@ -1,0 +1,11 @@
+MPLAB XC16 ASSEMBLY Listing:  usb/src/usb.s 			page 1
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000001 __C30ELF
+                      .debug_line:00000000 .L0
+                      .debug_line:0000001a .L0
+                      .debug_line:0000001a .L0
+
+NO UNDEFINED SYMBOLS
+

@@ -1,0 +1,1139 @@
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 1
+
+
+   1              		.file "/home/phil/Projects/phoenix/firmware/program/sensors.c"
+   2              		.section	.text,code
+   3              		.file "/home/phil/Projects/phoenix/firmware/program/sensors.h"
+   4              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h"
+   5              		.def	_int8_t
+   6              		.scl	13
+   7              		.type	02
+   8              		.endef
+   9              		.def	_int16_t
+  10              		.scl	13
+  11              		.type	04
+  12              		.endef
+  13              		.def	_int32_t
+  14              		.scl	13
+  15              		.type	05
+  16              		.endef
+  17              		.def	_int64_t
+  18              		.scl	13
+  19              		.type	05
+  20              		.endef
+  21              		.def	_uint8_t
+  22              		.scl	13
+  23              		.type	014
+  24              		.endef
+  25              		.def	_uint16_t
+  26              		.scl	13
+  27              		.type	016
+  28              		.endef
+  29              		.def	_uint32_t
+  30              		.scl	13
+  31              		.type	017
+  32              		.endef
+  33              		.def	_uint64_t
+  34              		.scl	13
+  35              		.type	017
+  36              		.endef
+  37              		.def	_int_least8_t
+  38              		.scl	13
+  39              		.type	02
+  40              		.endef
+  41              		.def	_int_least16_t
+  42              		.scl	13
+  43              		.type	04
+  44              		.endef
+  45              		.def	_int_least24_t
+  46              		.scl	13
+  47              		.type	05
+  48              		.endef
+  49              		.def	_int_least32_t
+  50              		.scl	13
+  51              		.type	05
+  52              		.endef
+  53              		.def	_int_least64_t
+  54              		.scl	13
+  55              		.type	05
+  56              		.endef
+  57              		.def	_uint_least8_t
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 2
+
+
+  58              		.scl	13
+  59              		.type	014
+  60              		.endef
+  61              		.def	_uint_least16_t
+  62              		.scl	13
+  63              		.type	016
+  64              		.endef
+  65              		.def	_uint_least24_t
+  66              		.scl	13
+  67              		.type	05
+  68              		.endef
+  69              		.def	_uint_least32_t
+  70              		.scl	13
+  71              		.type	017
+  72              		.endef
+  73              		.def	_uint_least64_t
+  74              		.scl	13
+  75              		.type	017
+  76              		.endef
+  77              		.def	_int_fast8_t
+  78              		.scl	13
+  79              		.type	04
+  80              		.endef
+  81              		.def	_int_fast16_t
+  82              		.scl	13
+  83              		.type	04
+  84              		.endef
+  85              		.def	_int_fast24_t
+  86              		.scl	13
+  87              		.type	05
+  88              		.endef
+  89              		.def	_int_fast32_t
+  90              		.scl	13
+  91              		.type	05
+  92              		.endef
+  93              		.def	_int_fast64_t
+  94              		.scl	13
+  95              		.type	05
+  96              		.endef
+  97              		.def	_uint_fast8_t
+  98              		.scl	13
+  99              		.type	016
+ 100              		.endef
+ 101              		.def	_uint_fast16_t
+ 102              		.scl	13
+ 103              		.type	016
+ 104              		.endef
+ 105              		.def	_uint_fast24_t
+ 106              		.scl	13
+ 107              		.type	017
+ 108              		.endef
+ 109              		.def	_uint_fast32_t
+ 110              		.scl	13
+ 111              		.type	017
+ 112              		.endef
+ 113              		.def	_uint_fast64_t
+ 114              		.scl	13
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 3
+
+
+ 115              		.type	017
+ 116              		.endef
+ 117              		.def	_intmax_t
+ 118              		.scl	13
+ 119              		.type	05
+ 120              		.endef
+ 121              		.def	_uintmax_t
+ 122              		.scl	13
+ 123              		.type	017
+ 124              		.endef
+ 125              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/stdbool.h"
+ 126              		.def	_RAW_SENSORS
+ 127              		.scl	10
+ 128              		.type	010
+ 129              		.size	22
+ 130              		.endef
+ 131              		.def	_accel
+ 132              		.val	0
+ 133              		.scl	8
+ 134              		.dim	3
+ 135              		.size	6
+ 136              		.type	064
+ 137              		.endef
+ 138              		.def	_temp
+ 139              		.val	6
+ 140              		.scl	8
+ 141              		.type	04
+ 142              		.endef
+ 143              		.def	_gyro
+ 144              		.val	8
+ 145              		.scl	8
+ 146              		.dim	3
+ 147              		.size	6
+ 148              		.type	064
+ 149              		.endef
+ 150              		.def	_mag
+ 151              		.val	14
+ 152              		.scl	8
+ 153              		.dim	3
+ 154              		.size	6
+ 155              		.type	064
+ 156              		.endef
+ 157              		.def	_distance
+ 158              		.val	20
+ 159              		.scl	8
+ 160              		.type	04
+ 161              		.endef
+ 162              		.def	.eos
+ 163              		.val	22
+ 164              		.scl	102
+ 165              		.tag	_RAW_SENSORS
+ 166              		.size	22
+ 167              		.endef
+ 168              		.def	_COOKED_SENSORS
+ 169              		.scl	10
+ 170              		.type	010
+ 171              		.size	44
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 4
+
+
+ 172              		.endef
+ 173              		.def	_accel
+ 174              		.val	0
+ 175              		.scl	8
+ 176              		.dim	3
+ 177              		.size	12
+ 178              		.type	066
+ 179              		.endef
+ 180              		.def	_temp
+ 181              		.val	12
+ 182              		.scl	8
+ 183              		.type	06
+ 184              		.endef
+ 185              		.def	_gyro
+ 186              		.val	16
+ 187              		.scl	8
+ 188              		.dim	3
+ 189              		.size	12
+ 190              		.type	066
+ 191              		.endef
+ 192              		.def	_mag
+ 193              		.val	28
+ 194              		.scl	8
+ 195              		.dim	3
+ 196              		.size	12
+ 197              		.type	066
+ 198              		.endef
+ 199              		.def	_distance
+ 200              		.val	40
+ 201              		.scl	8
+ 202              		.type	06
+ 203              		.endef
+ 204              		.def	.eos
+ 205              		.val	44
+ 206              		.scl	102
+ 207              		.tag	_COOKED_SENSORS
+ 208              		.size	44
+ 209              		.endef
+ 210              		.file "/home/phil/Projects/phoenix/firmware/program/i2c_util.h"
+ 211              		.file "/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h"
+ 212              		.section	.text,code
+ 213              		.align	2
+ 214              		.def	_sensors_init
+ 215              		.val	_sensors_init
+ 216              		.scl	2
+ 217              		.type	041
+ 218              		.endef
+ 219              		.global	_sensors_init	; export
+ 220              	_sensors_init:
+ 221              		.def	.bf
+ 222              		.val	.
+ 223              		.scl	101
+   1:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #include "sensors.h"
+   2:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #include "i2c_util.h"
+   3:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define MPU_ADDRESS 0x68
+   4:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define MPU_COMMAND(command,data) write_i2c_data2(MPU_ADDRESS,command,data)
+   5:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 5
+
+
+   6:/home/phil/Projects/phoenix/firmware/program/sensors.c **** /* MPU configuration macros */
+   7:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define DLPF_CFG 2                             //set 84HZ low pass filter
+   8:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SAMPLE_RATE 20
+   9:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #if DLPF_CFG==7 || DLPF_CFG==0
+  10:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     #define CLOCK 8000
+  11:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #else
+  12:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     #define CLOCK 1000
+  13:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #endif        
+  14:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SMPLRT_DIV  (CLOCK/SAMPLE_RATE)-1
+  15:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define FIFO_LOCK    0x40                      //extra bytes will not be written to FIFO when full 
+  16:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define EXT_SYNC_SET 0
+  17:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define GYRO_FULL_SCALE 250                   // pick from 250,500,1000,2000 degree/second
+  18:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define ACCEL_FULL_SCALE 2                     // pick from 2,4,8,16g
+  19:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define MAG_FULL_SCALE 4912                    // 4912 uT full-scale magnetic range
+  20:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define ACCEL_HPF 0                            // high pass filter. 0 is inactive. 
+  21:/home/phil/Projects/phoenix/firmware/program/sensors.c ****                                                // 1:5Hz, 2:2.5Hz, 3:1.25Hz, 5:0.68Hz, 
+  22:/home/phil/Projects/phoenix/firmware/program/sensors.c ****                                                // 6: differential from previous reading
+  23:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define FIFO_SENSORS    0x79                   // 0x80    temp sensor
+  24:/home/phil/Projects/phoenix/firmware/program/sensors.c ****                                                // 0x40,0x20,0x10    gyros xyz respectively
+  25:/home/phil/Projects/phoenix/firmware/program/sensors.c ****                                                // 0x08    accelerometer
+  26:/home/phil/Projects/phoenix/firmware/program/sensors.c ****                                                // 0x04,0x02,x01    slaves 2,1,0 respectively
+  27:/home/phil/Projects/phoenix/firmware/program/sensors.c ****                                  
+  28:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define INT_CFG    0x20                        //active high(0), push-pull(0), latched(1),cleared o
+  29:/home/phil/Projects/phoenix/firmware/program/sensors.c ****                                                //FSYNC interrupt disables(00),i2c bypass disabled(0
+  30:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define USER_CTRL    0x64                      //enable FIFO and I2C and also reset it
+  31:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         
+  32:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define PWR_MGMT_1    0x0                      //PLL with X-axis gyro as clock. 0x08 disables temp 
+  33:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         
+  34:/home/phil/Projects/phoenix/firmware/program/sensors.c **** //I2C stuff
+  35:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define I2C_MST_CTRL    0x40
+  36:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SLV0_ADDR    0x8C
+  37:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SLV0_REG    0x03
+  38:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SLV0_CTRL    0xD6
+  39:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SLV1_ADDR    0x0C
+  40:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SLV1_REG    0x0A
+  41:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SLV1_CTRL    0x81
+  42:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define SLV1_DO    0x11
+  43:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define I2C_MST_DELAY_CTRL    0x83
+  44:/home/phil/Projects/phoenix/firmware/program/sensors.c **** #define I2C_MST_DELAY    0x01
+  45:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+  46:/home/phil/Projects/phoenix/firmware/program/sensors.c **** void sensors_init() {
+ 224              		.line	46
+ 225              		.endef
+ 226              		.def	.bb
+ 227              		.val	.
+ 228              		.scl	100
+ 229              		.line	46
+ 230              		.endef
+ 231              		.def	_temp
+ 232              		.val	0
+ 233              		.scl	1
+ 234              		.type	014
+ 235              		.endef
+ 236              		.set ___PA___,1
+ 237 000000  02 00 FA 		lnk	#2
+ 238              		.def	___FP
+ 239              		.val	14
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 6
+
+
+ 240              		.scl	4
+ 241              		.type	4
+ 242              		.endef
+  47:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         
+  48:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         //reset FIFO, I2C, signal conditioning...
+  49:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     uint8_t temp;
+  50:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x6A,0);
+ 243              		.ln	50
+ 244 000002  00 41 EB 		clr.b	w2
+ 245 000004  A1 C6 B3 		mov.b	#106,w1
+ 246 000006  80 C6 B3 		mov.b	#104,w0
+ 247 000008  00 00 07 		rcall	_write_i2c_data2
+  51:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x6A,7);
+ 248              		.ln	51
+ 249 00000a  72 C0 B3 		mov.b	#7,w2
+ 250 00000c  A1 C6 B3 		mov.b	#106,w1
+ 251 00000e  80 C6 B3 		mov.b	#104,w0
+ 252 000010  00 00 07 		rcall	_write_i2c_data2
+  52:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+  53:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x19,(uint8_t)(SMPLRT_DIV));
+ 253              		.ln	53
+ 254 000012  12 C3 B3 		mov.b	#49,w2
+ 255 000014  91 C1 B3 		mov.b	#25,w1
+ 256 000016  80 C6 B3 		mov.b	#104,w0
+ 257 000018  00 00 07 		rcall	_write_i2c_data2
+  54:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x1A,FIFO_LOCK | DLPF_CFG | (EXT_SYNC_SET*8));
+ 258              		.ln	54
+ 259 00001a  22 C4 B3 		mov.b	#66,w2
+ 260 00001c  A1 C1 B3 		mov.b	#26,w1
+ 261 00001e  80 C6 B3 		mov.b	#104,w0
+ 262 000020  00 00 07 		rcall	_write_i2c_data2
+  55:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     switch (GYRO_FULL_SCALE){
+  56:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         case 250:
+  57:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             temp=0;
+ 263              		.ln	57
+ 264 000022  00 42 EB 		clr.b	w4
+ 265 000024  04 4F 78 		mov.b	w4,[w14]
+  58:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             break;
+  59:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         case 500:
+  60:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             temp=1;
+  61:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             break;
+  62:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         case 1000:
+  63:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             temp=2;
+  64:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             break;
+  65:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         case 2000:
+  66:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         default:
+  67:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             temp=3;
+  68:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             
+  69:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             break;
+  70:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         }
+  71:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x1B,temp);
+ 266              		.ln	71
+ 267 000026  1E 41 78 		mov.b	[w14],w2
+ 268 000028  B1 C1 B3 		mov.b	#27,w1
+ 269 00002a  80 C6 B3 		mov.b	#104,w0
+ 270 00002c  00 00 07 		rcall	_write_i2c_data2
+  72:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     //set accel full scale and high_pass_filter
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 7
+
+
+  73:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     switch (ACCEL_FULL_SCALE){
+  74:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         case 2:
+  75:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             temp=0;
+ 271              		.ln	75
+ 272 00002e  00 42 EB 		clr.b	w4
+ 273 000030  04 4F 78 		mov.b	w4,[w14]
+  76:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             break;
+  77:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         case 4:
+  78:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             temp=8;
+  79:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             break;
+  80:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         case 8:
+  81:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             temp=16;
+  82:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             break;
+  83:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         case 16:
+  84:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         default:
+  85:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             temp=24;
+  86:/home/phil/Projects/phoenix/firmware/program/sensors.c ****             break;
+  87:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         }
+  88:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x1C,temp | ACCEL_HPF);
+ 274              		.ln	88
+ 275 000032  1E 41 78 		mov.b	[w14],w2
+ 276 000034  C1 C1 B3 		mov.b	#28,w1
+ 277 000036  80 C6 B3 		mov.b	#104,w0
+ 278 000038  00 00 07 		rcall	_write_i2c_data2
+  89:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     //set fifo enablement
+  90:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x23, FIFO_SENSORS);            
+ 279              		.ln	90
+ 280 00003a  92 C7 B3 		mov.b	#121,w2
+ 281 00003c  31 C2 B3 		mov.b	#35,w1
+ 282 00003e  80 C6 B3 		mov.b	#104,w0
+ 283 000040  00 00 07 		rcall	_write_i2c_data2
+  91:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         
+  92:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         //put i2c control stuff here
+  93:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x24, I2C_MST_CTRL);
+ 284              		.ln	93
+ 285 000042  02 C4 B3 		mov.b	#64,w2
+ 286 000044  41 C2 B3 		mov.b	#36,w1
+ 287 000046  80 C6 B3 		mov.b	#104,w0
+ 288 000048  00 00 07 		rcall	_write_i2c_data2
+  94:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x25, SLV0_ADDR);
+ 289              		.ln	94
+ 290 00004a  C2 C8 B3 		mov.b	#-116,w2
+ 291 00004c  51 C2 B3 		mov.b	#37,w1
+ 292 00004e  80 C6 B3 		mov.b	#104,w0
+ 293 000050  00 00 07 		rcall	_write_i2c_data2
+  95:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x26, SLV0_REG);
+ 294              		.ln	95
+ 295 000052  32 C0 B3 		mov.b	#3,w2
+ 296 000054  61 C2 B3 		mov.b	#38,w1
+ 297 000056  80 C6 B3 		mov.b	#104,w0
+ 298 000058  00 00 07 		rcall	_write_i2c_data2
+  96:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x27, SLV0_CTRL);
+ 299              		.ln	96
+ 300 00005a  62 CD B3 		mov.b	#-42,w2
+ 301 00005c  71 C2 B3 		mov.b	#39,w1
+ 302 00005e  80 C6 B3 		mov.b	#104,w0
+ 303 000060  00 00 07 		rcall	_write_i2c_data2
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 8
+
+
+  97:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x28, SLV1_ADDR);
+ 304              		.ln	97
+ 305 000062  C2 C0 B3 		mov.b	#12,w2
+ 306 000064  81 C2 B3 		mov.b	#40,w1
+ 307 000066  80 C6 B3 		mov.b	#104,w0
+ 308 000068  00 00 07 		rcall	_write_i2c_data2
+  98:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x29, SLV1_REG);
+ 309              		.ln	98
+ 310 00006a  A2 C0 B3 		mov.b	#10,w2
+ 311 00006c  91 C2 B3 		mov.b	#41,w1
+ 312 00006e  80 C6 B3 		mov.b	#104,w0
+ 313 000070  00 00 07 		rcall	_write_i2c_data2
+  99:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x2A, SLV1_CTRL);
+ 314              		.ln	99
+ 315 000072  12 C8 B3 		mov.b	#-127,w2
+ 316 000074  A1 C2 B3 		mov.b	#42,w1
+ 317 000076  80 C6 B3 		mov.b	#104,w0
+ 318 000078  00 00 07 		rcall	_write_i2c_data2
+ 100:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x64, SLV1_DO);
+ 319              		.ln	100
+ 320 00007a  12 C1 B3 		mov.b	#17,w2
+ 321 00007c  41 C6 B3 		mov.b	#100,w1
+ 322 00007e  80 C6 B3 		mov.b	#104,w0
+ 323 000080  00 00 07 		rcall	_write_i2c_data2
+ 101:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x34, I2C_MST_DELAY);
+ 324              		.ln	101
+ 325 000082  12 C0 B3 		mov.b	#1,w2
+ 326 000084  41 C3 B3 		mov.b	#52,w1
+ 327 000086  80 C6 B3 		mov.b	#104,w0
+ 328 000088  00 00 07 		rcall	_write_i2c_data2
+ 102:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x67, I2C_MST_DELAY_CTRL);
+ 329              		.ln	102
+ 330 00008a  32 C8 B3 		mov.b	#-125,w2
+ 331 00008c  71 C6 B3 		mov.b	#103,w1
+ 332 00008e  80 C6 B3 		mov.b	#104,w0
+ 333 000090  00 00 07 		rcall	_write_i2c_data2
+ 103:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         
+ 104:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         //enable fifo
+ 105:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+ 106:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x6A, USER_CTRL);
+ 334              		.ln	106
+ 335 000092  42 C6 B3 		mov.b	#100,w2
+ 336 000094  A1 C6 B3 		mov.b	#106,w1
+ 337 000096  80 C6 B3 		mov.b	#104,w0
+ 338 000098  00 00 07 		rcall	_write_i2c_data2
+ 107:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         
+ 108:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     MPU_COMMAND(0x6B, PWR_MGMT_1);
+ 339              		.ln	108
+ 340 00009a  00 41 EB 		clr.b	w2
+ 341 00009c  B1 C6 B3 		mov.b	#107,w1
+ 342 00009e  80 C6 B3 		mov.b	#104,w0
+ 343 0000a0  00 00 07 		rcall	_write_i2c_data2
+ 109:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+ 110:/home/phil/Projects/phoenix/firmware/program/sensors.c **** }
+ 344              		.ln	110
+ 345 0000a2  00 80 FA 		ulnk	
+ 346 0000a4  00 00 06 		return	
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 9
+
+
+ 347              		.set ___PA___,0
+ 348              		.def	.eb
+ 349              		.val	.
+ 350              		.scl	100
+ 351              		.line	110
+ 352              		.endef
+ 353              		.def	.ef
+ 354              		.val	.
+ 355              		.scl	101
+ 356              		.line	110
+ 357              		.endef
+ 358              		.def	_sensors_init
+ 359              		.val	.
+ 360              		.scl	-1
+ 361              		.endef
+ 362              		.align	2
+ 363              		.def	_byte_swap
+ 364              		.val	_byte_swap
+ 365              		.scl	2
+ 366              		.type	041
+ 367              		.endef
+ 368              		.global	_byte_swap	; export
+ 369              	_byte_swap:
+ 370              		.def	.bf
+ 371              		.val	.
+ 372              		.scl	101
+ 111:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+ 112:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+ 113:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+ 114:/home/phil/Projects/phoenix/firmware/program/sensors.c **** void byte_swap(uint16_t *word){
+ 373              		.line	114
+ 374              		.endef
+ 375              		.def	_word
+ 376              		.val	0
+ 377              		.scl	9
+ 378              		.type	036
+ 379              		.endef
+ 380              		.def	.bb
+ 381              		.val	.
+ 382              		.scl	100
+ 383              		.line	114
+ 384              		.endef
+ 385              		.set ___PA___,1
+ 386 0000a6  02 00 FA 		lnk	#2
+ 387 0000a8  00 0F 78 		mov	w0,[w14]
+ 388              		.def	___FP
+ 389              		.val	14
+ 390              		.scl	4
+ 391              		.type	4
+ 392              		.endef
+ 115:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     *word = (*word << 8 | *word >> 8);    
+ 393              		.ln	115
+ 394 0000aa  1E 02 78 		mov	[w14],w4
+ 395 0000ac  14 02 78 		mov	[w4],w4
+ 396 0000ae  C8 22 DD 		sl	w4,#8,w5
+ 397 0000b0  48 22 DE 		lsr	w4,#8,w4
+ 398 0000b2  05 03 78 		mov	w5,w6
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 10
+
+
+ 399 0000b4  04 03 73 		ior	w6,w4,w6
+ 400 0000b6  06 02 78 		mov	w6,w4
+ 401 0000b8  9E 02 78 		mov	[w14],w5
+ 402 0000ba  84 0A 78 		mov	w4,[w5]
+ 116:/home/phil/Projects/phoenix/firmware/program/sensors.c **** }
+ 403              		.ln	116
+ 404 0000bc  00 80 FA 		ulnk	
+ 405 0000be  00 00 06 		return	
+ 406              		.set ___PA___,0
+ 407              		.def	.eb
+ 408              		.val	.
+ 409              		.scl	100
+ 410              		.line	116
+ 411              		.endef
+ 412              		.def	.ef
+ 413              		.val	.
+ 414              		.scl	101
+ 415              		.line	116
+ 416              		.endef
+ 417              		.def	_byte_swap
+ 418              		.val	.
+ 419              		.scl	-1
+ 420              		.endef
+ 421              		.align	2
+ 422              		.def	_sensors_read_raw
+ 423              		.val	_sensors_read_raw
+ 424              		.scl	2
+ 425              		.type	041
+ 426              		.endef
+ 427              		.global	_sensors_read_raw	; export
+ 428              	_sensors_read_raw:
+ 429              		.def	.bf
+ 430              		.val	.
+ 431              		.scl	101
+ 117:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+ 118:/home/phil/Projects/phoenix/firmware/program/sensors.c **** void sensors_read_raw(struct RAW_SENSORS *sensors, bool lidar){
+ 432              		.line	118
+ 433              		.endef
+ 434              		.def	_sensors
+ 435              		.val	2
+ 436              		.scl	9
+ 437              		.tag	_RAW_SENSORS
+ 438              		.size	22
+ 439              		.type	030
+ 440              		.endef
+ 441              		.def	_lidar
+ 442              		.val	4
+ 443              		.scl	9
+ 444              		.type	014
+ 445              		.endef
+ 446              		.def	.bb
+ 447              		.val	.
+ 448              		.scl	100
+ 449              		.line	118
+ 450              		.endef
+ 451              		.def	_i
+ 452              		.val	0
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 11
+
+
+ 453              		.scl	1
+ 454              		.type	04
+ 455              		.endef
+ 456              		.set ___PA___,1
+ 457 0000c0  06 00 FA 		lnk	#6
+ 458 0000c2  10 07 98 		mov	w0,[w14+2]
+ 459 0000c4  41 47 98 		mov.b	w1,[w14+4]
+ 460              		.def	___FP
+ 461              		.val	14
+ 462              		.scl	4
+ 463              		.type	4
+ 464              		.endef
+ 119:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     int i;
+ 120:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     read_i2c_data(MPU_ADDRESS, 0x3B, (uint8_t *)sensors, sizeof(*sensors));
+ 465              		.ln	120
+ 466 0000c6  1E 02 90 		mov	[w14+2],w4
+ 467 0000c8  63 C1 B3 		mov.b	#22,w3
+ 468 0000ca  04 01 78 		mov	w4,w2
+ 469 0000cc  B1 C3 B3 		mov.b	#59,w1
+ 470 0000ce  80 C6 B3 		mov.b	#104,w0
+ 471 0000d0  00 00 07 		rcall	_read_i2c_data
+ 121:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     sensors->distance = lidar ? sensors_read_lidar() : 0; 
+ 472              		.ln	121
+ 473 0000d2  4E 42 90 		mov.b	[w14+4],w4
+ 474 0000d4  E0 4F 52 		sub.b	w4,#0,[w15]
+ 475              		.set ___BP___,0
+ 476 0000d6  00 00 32 		bra	z,.L4
+ 477 0000d8  00 00 07 		rcall	_sensors_read_lidar
+ 478 0000da  00 02 78 		mov	w0,w4
+ 479 0000dc  00 00 37 		bra	.L5
+ 480              	.L4:
+ 481 0000de  00 02 EB 		clr	w4
+ 482              	.L5:
+ 483 0000e0  9E 02 90 		mov	[w14+2],w5
+ 484 0000e2  A4 0A 98 		mov	w4,[w5+20]
+ 122:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     for(i=0; i< 11; ++i) {
+ 485              		.ln	122
+ 486 0000e4  00 02 EB 		clr	w4
+ 487 0000e6  04 0F 78 		mov	w4,[w14]
+ 488 0000e8  00 00 37 		bra	.L6
+ 489              	.L7:
+ 123:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         byte_swap(&((uint16_t*)sensors)[i]);
+ 490              		.ln	123
+ 491 0000ea  9E 02 90 		mov	[w14+2],w5
+ 492 0000ec  1E 02 78 		mov	[w14],w4
+ 493 0000ee  04 02 42 		add	w4,w4,w4
+ 494 0000f0  04 82 42 		add	w5,w4,w4
+ 495 0000f2  04 00 78 		mov	w4,w0
+ 496 0000f4  00 00 07 		rcall	_byte_swap
+ 497              		.ln	122
+ 498 0000f6  1E 0F E8 		inc	[w14],[w14]
+ 499              	.L6:
+ 500 0000f8  1E 02 78 		mov	[w14],w4
+ 501 0000fa  EA 0F 52 		sub	w4,#10,[w15]
+ 502              		.set ___BP___,0
+ 503 0000fc  00 00 34 		bra	le,.L7
+ 124:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     }
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 12
+
+
+ 125:/home/phil/Projects/phoenix/firmware/program/sensors.c **** }
+ 504              		.ln	125
+ 505 0000fe  00 80 FA 		ulnk	
+ 506 000100  00 00 06 		return	
+ 507              		.set ___PA___,0
+ 508              		.def	.eb
+ 509              		.val	.
+ 510              		.scl	100
+ 511              		.line	125
+ 512              		.endef
+ 513              		.def	.ef
+ 514              		.val	.
+ 515              		.scl	101
+ 516              		.line	125
+ 517              		.endef
+ 518              		.def	_sensors_read_raw
+ 519              		.val	.
+ 520              		.scl	-1
+ 521              		.endef
+ 522              		.align	2
+ 523              		.def	_sensors_read_cooked
+ 524              		.val	_sensors_read_cooked
+ 525              		.scl	2
+ 526              		.type	041
+ 527              		.endef
+ 528              		.global	_sensors_read_cooked	; export
+ 529              	_sensors_read_cooked:
+ 530              		.def	.bf
+ 531              		.val	.
+ 532              		.scl	101
+ 126:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+ 127:/home/phil/Projects/phoenix/firmware/program/sensors.c **** void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar) {
+ 533              		.line	127
+ 534              		.endef
+ 535              		.def	_sensors
+ 536              		.val	24
+ 537              		.scl	9
+ 538              		.tag	_COOKED_SENSORS
+ 539              		.size	44
+ 540              		.type	030
+ 541              		.endef
+ 542              		.def	_lidar
+ 543              		.val	26
+ 544              		.scl	9
+ 545              		.type	014
+ 546              		.endef
+ 547              		.def	.bb
+ 548              		.val	.
+ 549              		.scl	100
+ 550              		.line	127
+ 551              		.endef
+ 552              		.def	_raw_sensors
+ 553              		.val	2
+ 554              		.scl	1
+ 555              		.tag	_RAW_SENSORS
+ 556              		.size	22
+ 557              		.type	010
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 13
+
+
+ 558              		.endef
+ 559              		.def	_i
+ 560              		.val	0
+ 561              		.scl	1
+ 562              		.type	04
+ 563              		.endef
+ 564              		.set ___PA___,1
+ 565 000102  1C 00 FA 		lnk	#28
+ 566 000104  40 0F 98 		mov	w0,[w14+24]
+ 567 000106  21 5F 98 		mov.b	w1,[w14+26]
+ 568              		.def	___FP
+ 569              		.val	14
+ 570              		.scl	4
+ 571              		.type	4
+ 572              		.endef
+ 128:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     struct RAW_SENSORS raw_sensors;
+ 129:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     int i;
+ 130:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     sensors_read_raw (&raw_sensors,lidar);
+ 573              		.ln	130
+ 574 000108  0E 82 E8 		inc2	w14,w4
+ 575 00010a  AE 58 90 		mov.b	[w14+26],w1
+ 576 00010c  04 00 78 		mov	w4,w0
+ 577 00010e  00 00 07 		rcall	_sensors_read_raw
+ 131:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     // first convert to doubles with sensible units
+ 132:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     for (i=0; i< 3; ++i) {
+ 578              		.ln	132
+ 579 000110  00 02 EB 		clr	w4
+ 580 000112  04 0F 78 		mov	w4,[w14]
+ 581 000114  00 00 37 		bra	.L9
+ 582              	.L10:
+ 133:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         sensors->accel[i] = raw_sensors.accel[i]*(ACCEL_FULL_SCALE/32768.0);
+ 583              		.ln	133
+ 584 000116  1E 02 78 		mov	[w14],w4
+ 585 000118  04 02 42 		add	w4,w4,w4
+ 586 00011a  04 02 47 		add	w14,w4,w4
+ 587 00011c  14 02 90 		mov	[w4+2],w4
+ 588 00011e  CF A2 DE 		asr	w4,#15,w5
+ 589 000120  04 00 BE 		mov.d	w4,w0
+ 590 000122  00 00 07 		rcall	___floatsisf
+ 591 000124  00 02 BE 		mov.d	w0,w4
+ 592 000126  02 00 20 		mov	#0,w2
+ 593 000128  03 88 23 		mov	#14464,w3
+ 594 00012a  04 00 BE 		mov.d	w4,w0
+ 595 00012c  00 00 07 		rcall	___mulsf3
+ 596 00012e  00 02 BE 		mov.d	w0,w4
+ 597 000130  CE 0B 90 		mov	[w14+24],w7
+ 598 000132  1E 03 78 		mov	[w14],w6
+ 599 000134  42 33 DD 		sl	w6,#2,w6
+ 600 000136  06 83 43 		add	w7,w6,w6
+ 601 000138  04 8B BE 		mov.d	w4,[w6]
+ 134:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         sensors->gyro[i] = raw_sensors.gyro[i]*(GYRO_FULL_SCALE/32768.0);
+ 602              		.ln	134
+ 603 00013a  9E 00 78 		mov	[w14],w1
+ 604 00013c  64 82 40 		add	w1,#4,w4
+ 605 00013e  04 02 42 		add	w4,w4,w4
+ 606 000140  04 02 47 		add	w14,w4,w4
+ 607 000142  14 02 90 		mov	[w4+2],w4
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 14
+
+
+ 608 000144  CF A2 DE 		asr	w4,#15,w5
+ 609 000146  04 00 BE 		mov.d	w4,w0
+ 610 000148  00 00 07 		rcall	___floatsisf
+ 611 00014a  00 02 BE 		mov.d	w0,w4
+ 612 00014c  02 00 20 		mov	#0,w2
+ 613 00014e  A3 BF 23 		mov	#15354,w3
+ 614 000150  04 00 BE 		mov.d	w4,w0
+ 615 000152  00 00 07 		rcall	___mulsf3
+ 616 000154  00 02 BE 		mov.d	w0,w4
+ 617 000156  CE 0B 90 		mov	[w14+24],w7
+ 618 000158  9E 00 78 		mov	[w14],w1
+ 619 00015a  64 83 40 		add	w1,#4,w6
+ 620 00015c  42 33 DD 		sl	w6,#2,w6
+ 621 00015e  06 83 43 		add	w7,w6,w6
+ 622 000160  04 8B BE 		mov.d	w4,[w6]
+ 135:/home/phil/Projects/phoenix/firmware/program/sensors.c ****         sensors->mag[i] = raw_sensors.mag[i]*(MAG_FULL_SCALE/32768.0);
+ 623              		.ln	135
+ 624 000162  9E 02 78 		mov	[w14],w5
+ 625 000164  67 82 42 		add	w5,#7,w4
+ 626 000166  04 02 42 		add	w4,w4,w4
+ 627 000168  04 02 47 		add	w14,w4,w4
+ 628 00016a  14 02 90 		mov	[w4+2],w4
+ 629 00016c  CF A2 DE 		asr	w4,#15,w5
+ 630 00016e  04 00 BE 		mov.d	w4,w0
+ 631 000170  00 00 07 		rcall	___floatsisf
+ 632 000172  00 02 BE 		mov.d	w0,w4
+ 633 000174  02 00 28 		mov	#32768,w2
+ 634 000176  93 E1 23 		mov	#15897,w3
+ 635 000178  04 00 BE 		mov.d	w4,w0
+ 636 00017a  00 00 07 		rcall	___mulsf3
+ 637 00017c  00 02 BE 		mov.d	w0,w4
+ 638 00017e  CE 0B 90 		mov	[w14+24],w7
+ 639 000180  9E 00 78 		mov	[w14],w1
+ 640 000182  67 83 40 		add	w1,#7,w6
+ 641 000184  42 33 DD 		sl	w6,#2,w6
+ 642 000186  06 83 43 		add	w7,w6,w6
+ 643 000188  04 8B BE 		mov.d	w4,[w6]
+ 644              		.ln	132
+ 645 00018a  1E 0F E8 		inc	[w14],[w14]
+ 646              	.L9:
+ 647 00018c  1E 02 78 		mov	[w14],w4
+ 648 00018e  E2 0F 52 		sub	w4,#2,[w15]
+ 649              		.set ___BP___,0
+ 650 000190  00 00 34 		bra	le,.L10
+ 136:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     }
+ 137:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     sensors->temp = (raw_sensors.temp/333.87)+21.0;
+ 651              		.ln	137
+ 652 000192  4E 02 90 		mov	[w14+8],w4
+ 653 000194  CF A2 DE 		asr	w4,#15,w5
+ 654 000196  04 00 BE 		mov.d	w4,w0
+ 655 000198  00 00 07 		rcall	___floatsisf
+ 656 00019a  00 02 BE 		mov.d	w0,w4
+ 657 00019c  C2 F5 2E 		mov	#61276,w2
+ 658 00019e  63 3A 24 		mov	#17318,w3
+ 659 0001a0  04 00 BE 		mov.d	w4,w0
+ 660 0001a2  00 00 07 		rcall	___divsf3
+ 661 0001a4  00 02 BE 		mov.d	w0,w4
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 15
+
+
+ 662 0001a6  02 00 20 		mov	#0,w2
+ 663 0001a8  83 1A 24 		mov	#16808,w3
+ 664 0001aa  04 00 BE 		mov.d	w4,w0
+ 665 0001ac  00 00 07 		rcall	___addsf3
+ 666 0001ae  00 02 BE 		mov.d	w0,w4
+ 667 0001b0  4E 0B 90 		mov	[w14+24],w6
+ 668 0001b2  64 03 98 		mov	w4,[w6+12]
+ 669 0001b4  75 03 98 		mov	w5,[w6+14]
+ 138:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     sensors->distance = raw_sensors.distance/100.0;
+ 670              		.ln	138
+ 671 0001b6  3E 0A 90 		mov	[w14+22],w4
+ 672 0001b8  CF A2 DE 		asr	w4,#15,w5
+ 673 0001ba  04 00 BE 		mov.d	w4,w0
+ 674 0001bc  00 00 07 		rcall	___floatsisf
+ 675 0001be  00 02 BE 		mov.d	w0,w4
+ 676 0001c0  02 00 20 		mov	#0,w2
+ 677 0001c2  83 2C 24 		mov	#17096,w3
+ 678 0001c4  04 00 BE 		mov.d	w4,w0
+ 679 0001c6  00 00 07 		rcall	___divsf3
+ 680 0001c8  00 02 BE 		mov.d	w0,w4
+ 681 0001ca  4E 0B 90 		mov	[w14+24],w6
+ 682 0001cc  44 13 98 		mov	w4,[w6+40]
+ 683 0001ce  55 13 98 		mov	w5,[w6+42]
+ 139:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     //FIXME need to apply calibration here....
+ 140:/home/phil/Projects/phoenix/firmware/program/sensors.c **** }
+ 684              		.ln	140
+ 685 0001d0  00 80 FA 		ulnk	
+ 686 0001d2  00 00 06 		return	
+ 687              		.set ___PA___,0
+ 688              		.def	.eb
+ 689              		.val	.
+ 690              		.scl	100
+ 691              		.line	140
+ 692              		.endef
+ 693              		.def	.ef
+ 694              		.val	.
+ 695              		.scl	101
+ 696              		.line	140
+ 697              		.endef
+ 698              		.def	_sensors_read_cooked
+ 699              		.val	.
+ 700              		.scl	-1
+ 701              		.endef
+ 702              		.align	2
+ 703              		.def	_sensors_read_lidar
+ 704              		.val	_sensors_read_lidar
+ 705              		.scl	2
+ 706              		.type	044
+ 707              		.endef
+ 708              		.global	_sensors_read_lidar	; export
+ 709              	_sensors_read_lidar:
+ 710              		.def	.bf
+ 711              		.val	.
+ 712              		.scl	101
+ 141:/home/phil/Projects/phoenix/firmware/program/sensors.c **** 
+ 142:/home/phil/Projects/phoenix/firmware/program/sensors.c **** int16_t sensors_read_lidar(){
+ 713              		.line	142
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 16
+
+
+ 714              		.endef
+ 715              		.def	.bb
+ 716              		.val	.
+ 717              		.scl	100
+ 718              		.line	142
+ 719              		.endef
+ 720              		.set ___PA___,1
+ 721 0001d4  00 00 FA 		lnk	#0
+ 722              		.def	___FP
+ 723              		.val	14
+ 724              		.scl	4
+ 725              		.type	4
+ 726              		.endef
+ 143:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     //FIXME put lidar read code here
+ 144:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     //just return 10m here
+ 145:/home/phil/Projects/phoenix/firmware/program/sensors.c ****     return 1000;
+ 727              		.ln	145
+ 728 0001d6  84 3E 20 		mov	#1000,w4
+ 146:/home/phil/Projects/phoenix/firmware/program/sensors.c **** }
+ 729              		.ln	146
+ 730 0001d8  04 00 78 		mov	w4,w0
+ 731 0001da  00 80 FA 		ulnk	
+ 732 0001dc  00 00 06 		return	
+ 733              		.set ___PA___,0
+ 734              		.def	.eb
+ 735              		.val	.
+ 736              		.scl	100
+ 737              		.line	146
+ 738              		.endef
+ 739              		.def	.ef
+ 740              		.val	.
+ 741              		.scl	101
+ 742              		.line	146
+ 743              		.endef
+ 744              		.def	_sensors_read_lidar
+ 745              		.val	.
+ 746              		.scl	-1
+ 747              		.endef
+ 748              	
+ 749              		.section __c30_signature, info, data
+ 750 0000 01 00       		.word 0x0001
+ 751 0002 00 00       		.word 0x0000
+ 752 0004 00 00       		.word 0x0000
+ 753                 	
+ 754                 	; MCHP configuration words
+ 755                 	
+ 756                 		.set ___PA___,0
+ 757                 		.end
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h
+                            *ABS*:00000000 /home/phil/Projects/phoenix/firmware/program/i2c_util.h
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/stdbool.h
+                            *ABS*:00000000 /opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h
+                            *ABS*:00000000 /home/phil/Projects/phoenix/firmware/program/sensors.h
+                            *ABS*:00000000 /home/phil/Projects/phoenix/firmware/program/sensors.c
+                            *ABS*:00000001 __C30COFF
+                            *ABS*:00000000 _int8_t
+                            *ABS*:00000000 _int16_t
+                            *ABS*:00000000 _int32_t
+                            *ABS*:00000000 _int64_t
+                            *ABS*:00000000 _uint8_t
+                            *ABS*:00000000 _uint16_t
+                            *ABS*:00000000 _uint32_t
+                            *ABS*:00000000 _uint64_t
+                            *ABS*:00000000 _int_least8_t
+                            *ABS*:00000000 _int_least16_t
+                            *ABS*:00000000 _int_least24_t
+                            *ABS*:00000000 _int_least32_t
+                            *ABS*:00000000 _int_least64_t
+                            *ABS*:00000000 _uint_least8_t
+                            *ABS*:00000000 _uint_least16_t
+                            *ABS*:00000000 _uint_least24_t
+                            *ABS*:00000000 _uint_least32_t
+                            *ABS*:00000000 _uint_least64_t
+                            *ABS*:00000000 _int_fast8_t
+                            *ABS*:00000000 _int_fast16_t
+                            *ABS*:00000000 _int_fast24_t
+                            *ABS*:00000000 _int_fast32_t
+                            *ABS*:00000000 _int_fast64_t
+                            *ABS*:00000000 _uint_fast8_t
+                            *ABS*:00000000 _uint_fast16_t
+                            *ABS*:00000000 _uint_fast24_t
+                            *ABS*:00000000 _uint_fast32_t
+                            *ABS*:00000000 _uint_fast64_t
+                            *ABS*:00000000 _intmax_t
+                            *ABS*:00000000 _uintmax_t
+                            *ABS*:00000000 _RAW_SENSORS
+                            *ABS*:00000000 _accel
+                            *ABS*:00000006 _temp
+                            *ABS*:00000008 _gyro
+                            *ABS*:0000000e _mag
+                            *ABS*:00000014 _distance
+                            *ABS*:00000016 .eos
+                            *ABS*:00000000 _COOKED_SENSORS
+                            *ABS*:00000000 _accel
+                            *ABS*:0000000c _temp
+                            *ABS*:00000010 _gyro
+                            *ABS*:0000001c _mag
+                            *ABS*:00000028 _distance
+                            *ABS*:0000002c .eos
+           sensors.s:220    .text:00000000 _sensors_init
+           sensors.s:222    .text:00000000 .bf
+           sensors.s:227    .text:00000000 .bb
+                            *ABS*:00000000 _temp
+           sensors.s:236    *ABS*:00000000 ___PA___
+MPLAB XC16 ASSEMBLY Listing:  sensors.s 			page 18
+
+
+           sensors.s:237    .text:00000000 $AUTOLINE$
+                            *ABS*:0000000e ___FP
+           sensors.s:349    .text:000000a6 .eb
+           sensors.s:354    .text:000000a6 .ef
+           sensors.s:359    .text:000000a6 _sensors_init
+           sensors.s:369    .text:000000a6 _byte_swap
+           sensors.s:371    .text:000000a6 .bf
+                            *ABS*:00000000 _word
+           sensors.s:381    .text:000000a6 .bb
+                            *ABS*:0000000e ___FP
+           sensors.s:408    .text:000000c0 .eb
+           sensors.s:413    .text:000000c0 .ef
+           sensors.s:418    .text:000000c0 _byte_swap
+           sensors.s:428    .text:000000c0 _sensors_read_raw
+           sensors.s:430    .text:000000c0 .bf
+                            *ABS*:00000002 _sensors
+                            *ABS*:00000004 _lidar
+           sensors.s:447    .text:000000c0 .bb
+                            *ABS*:00000000 _i
+                            *ABS*:0000000e ___FP
+           sensors.s:475    *ABS*:00000000 ___BP___
+           sensors.s:480    .text:000000de .L4
+           sensors.s:482    .text:000000e0 .L5
+           sensors.s:499    .text:000000f8 .L6
+           sensors.s:509    .text:00000102 .eb
+           sensors.s:514    .text:00000102 .ef
+           sensors.s:519    .text:00000102 _sensors_read_raw
+           sensors.s:529    .text:00000102 _sensors_read_cooked
+           sensors.s:531    .text:00000102 .bf
+                            *ABS*:00000018 _sensors
+                            *ABS*:0000001a _lidar
+           sensors.s:548    .text:00000102 .bb
+                            *ABS*:00000002 _raw_sensors
+                            *ABS*:00000000 _i
+                            *ABS*:0000000e ___FP
+           sensors.s:646    .text:0000018c .L9
+           sensors.s:689    .text:000001d4 .eb
+           sensors.s:694    .text:000001d4 .ef
+           sensors.s:699    .text:000001d4 _sensors_read_cooked
+           sensors.s:709    .text:000001d4 _sensors_read_lidar
+           sensors.s:711    .text:000001d4 .bf
+           sensors.s:716    .text:000001d4 .bb
+                            *ABS*:0000000e ___FP
+           sensors.s:735    .text:000001de .eb
+           sensors.s:740    .text:000001de .ef
+           sensors.s:745    .text:000001de _sensors_read_lidar
+                            .text:000000ea .L7
+                            .text:00000116 .L10
+
+UNDEFINED SYMBOLS
+_write_i2c_data2
+_read_i2c_data
+___floatsisf
+___mulsf3
+___divsf3
+___addsf3
+
+EQUATE SYMBOLS
+/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h = 0x0
+/home/phil/Projects/phoenix/firmware/program/i2c_util.h = 0x0
+/opt/microchip/xc16/v1.23/bin/bin/../../include/stdbool.h = 0x0
+/opt/microchip/xc16/v1.23/bin/bin/../../include/stdint.h = 0x0
+/home/phil/Projects/phoenix/firmware/program/sensors.h = 0x0
+/home/phil/Projects/phoenix/firmware/program/sensors.c = 0x0
+                       __C30COFF = 0x1
+                         _int8_t = 0x0
+                        _int16_t = 0x0
+                        _int32_t = 0x0
+                        _int64_t = 0x0
+                        _uint8_t = 0x0
+                       _uint16_t = 0x0
+                       _uint32_t = 0x0
+                       _uint64_t = 0x0
+                   _int_least8_t = 0x0
+                  _int_least16_t = 0x0
+                  _int_least24_t = 0x0
+                  _int_least32_t = 0x0
+                  _int_least64_t = 0x0
+                  _uint_least8_t = 0x0
+                 _uint_least16_t = 0x0
+                 _uint_least24_t = 0x0
+                 _uint_least32_t = 0x0
+                 _uint_least64_t = 0x0
+                    _int_fast8_t = 0x0
+                   _int_fast16_t = 0x0
+                   _int_fast24_t = 0x0
+                   _int_fast32_t = 0x0
+                   _int_fast64_t = 0x0
+                   _uint_fast8_t = 0x0
+                  _uint_fast16_t = 0x0
+                  _uint_fast24_t = 0x0
+                  _uint_fast32_t = 0x0
+                  _uint_fast64_t = 0x0
+                       _intmax_t = 0x0
+                      _uintmax_t = 0x0
+                    _RAW_SENSORS = 0x0
+                          _accel = 0x0
+                           _temp = 0x6
+                           _gyro = 0x8
+                            _mag = 0xe
+                       _distance = 0x14
+                            .eos = 0x16
+                 _COOKED_SENSORS = 0x0
+                          _accel = 0x0
+                           _temp = 0xc
+                           _gyro = 0x10
+                            _mag = 0x1c
+                       _distance = 0x28
+                            .eos = 0x2c
+                           _temp = 0x0
+                        ___PA___ = 0x0
+                           ___FP = 0xe
+                           _word = 0x0
+                           ___FP = 0xe
+                        _sensors = 0x2
+                          _lidar = 0x4
+                              _i = 0x0
+                           ___FP = 0xe
+                        ___BP___ = 0x0
+                        _sensors = 0x18
+                          _lidar = 0x1a
+                    _raw_sensors = 0x2
+                              _i = 0x0
+                           ___FP = 0xe
+                           ___FP = 0xe

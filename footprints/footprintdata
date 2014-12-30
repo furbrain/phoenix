@@ -1,0 +1,35 @@
+# PCB footprints
+# Convert to newlib by using footgen.py
+# This file is not copyrighted
+# You may use these footprints as you wish.
+# There is no guarantee that the data is accurate
+# check the datasheets for your components
+
+elementdir = "."		# where to put generated files
+# put all reference designators 1mm above origin
+
+# 0201, 0402, 0603, ....
+	maskclear = 0.1 mm
+	polyclear  = 6 mil
+	type "twopad"
+	silkboxheight = 0
+	silkboxwidth = 0
+	silkoffset = 6 mil
+	silkwidth = 5 mil
+	silkboxwidth = 6 mm
+	width = 1.6 mm
+	padwidth = 2.0 mm
+	padheight = 2.0 mm
+	silkboxheight = 4.2 mm
+part "5032.fp"
+	type "qfp"
+	width = 2.6 mm
+	height = 2.6 mm
+	padwidth = 0.3 mm
+	padheight = 0.2 mm
+	pitch = 0.4 mm
+	pins = 24
+	ep = 0
+	silkstyle = "outside"
+	silkoffset = 6 mil
+part "QFN24_3.fp"
