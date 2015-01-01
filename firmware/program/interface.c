@@ -94,7 +94,7 @@ void interface_init() {
 /* change notification interrupt */
 void __attribute__ ((interrupt,no_auto_psv,shadow)) _CNInterrupt() {
     InputChange_Clear_Intr_Status_Bit;
-    if (PORTBbits.RB7) {
+    if (!PORTBbits.RB7) {
         /* it's a release */
         /* if timer3 has interrupted, then this was a long click */
         if (IFS0bits.T3IF) {

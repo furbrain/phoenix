@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <dpslp.h>
+#include <Rtcc.h>
 #include "display.h"
 #include "font.h"
 #include "sensors.h"
@@ -21,7 +22,7 @@
 _CONFIG1(WDTPS_PS16 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx3 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
 _CONFIG2(POSCMOD_NONE & I2C1SEL_PRI & IOL1WAY_OFF & OSCIOFNC_OFF & FCKSM_CSDCMD & FNOSC_FRCPLL & PLL96MHZ_ON & PLLDIV_NODIV & IESO_OFF)
 _CONFIG3(WPFP_WPFP0 & SOSCSEL_IO & WUTSEL_LEG & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)
-_CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_SOSC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_OFF)
+_CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_SOSC & RTCOSC_LPRC & DSBOREN_OFF & DSWDTEN_OFF)
 
 
 void main(){
@@ -33,6 +34,9 @@ void main(){
 	const struct GLYPH_DATA *glyph;
 	struct COOKED_SENSORS sensors;
 	//turn on peripherals...
+	RtccInitClock(); //turn on clock source
+	RtccWrOn(); //unlock writes to RTCC control register
+	mRtccOn(); //enable RTCC peripheral
 	ReleaseDeepSleep();
 	peripherals_init();
 	peripherals_on(true);
