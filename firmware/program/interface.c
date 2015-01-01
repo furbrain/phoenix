@@ -8,6 +8,7 @@
 #include "interface.h"
 #include "sensors.h"
 #include "display.h"
+#include "power.h"
 
 #define scroll_text(index,direction) display_scroll_text(2,0,menu_items[index].text,&large_font,direction)
 #define delay_ms(delay) __delay_ms(delay)
@@ -24,7 +25,6 @@ struct menu_entry {
 volatile enum ACTION last_click;
 
 void measure() {}
-void hibernate() {}
 void quick_cal() {}
 void full_cal() {}
 void laser_cal() {}
@@ -86,7 +86,7 @@ void interface_init() {
     OpenTimer3(T3_ON | T3_IDLE_CON | T3_PS_1_256 ,0xFFFF);
     // enable CN23 interrupt
     ConfigIntCN(INT_ENABLE | INT_PRI_3);
-    CNEN2bits.CN23IE = 1;
+    EnableCN23;
     WriteTimer2(0);
     WriteTimer3(0);
 }

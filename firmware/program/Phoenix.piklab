@@ -16,6 +16,12 @@
       <item>sensors.c</item>
       <item>sensors.h</item>
       <item>interface.h</item>
+      <item>power.h</item>
+      <item>power.c</item>
+      <item>config.h</item>
+      <item>config.c</item>
+      <item>peripherals.c</item>
+      <item>peripherals.h</item>
     </files>
     <custom_linker_script>/home/phil/XC16/support/PIC24F/gld/p24FJ64GB002.gld</custom_linker_script>
     <description/>

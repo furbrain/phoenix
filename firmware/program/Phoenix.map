@@ -17,6 +17,9 @@ Command:
   font.o \
   display.o \
   sensors.o \
+  power.o \
+  config.o \
+  peripherals.o \
   --library=c \
   --library=pic30 \
   --library=pPIC24Fxxx \
@@ -56,6 +59,20 @@ Archive member included because of file (symbol)
                               i2c_util.o (StopI2C1)
 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MastergetsI2C1.o)
                               i2c_util.o (MastergetsI2C1)
+/home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(CloseINT0.o)
+                              power.o (CloseINT0)
+/home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(ConfigINT0.o)
+                              power.o (ConfigINT0)
+/home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(GotoDeepSleep_v1_1.o)
+                              power.o (GotoDeepSleep_v1_1)
+/home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(CloseOC3_v4.o)
+                              peripherals.o (CloseOC3_v4)
+/home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC3_v2.o)
+                              peripherals.o (OpenOC3_GB)
+/home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC1_v2.o)
+                              peripherals.o (OpenOC1_GB)
+/home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC2_v2.o)
+                              peripherals.o (OpenOC2_GB)
 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(DataRdyI2C1.o)
                               /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MastergetsI2C1.o) (DataRdyI2C1)
 /home/phil/XC16/lib//libm-coff.a(fgtge.o)
@@ -70,6 +87,14 @@ Archive member included because of file (symbol)
                               sensors.o (__divsf3)
 /home/phil/XC16/lib//libm-coff.a(addsf3.o)
                               sensors.o (__addsf3)
+/home/phil/XC16/lib//libm-coff.a(fixsfsi.o)
+                              peripherals.o (__fixsfsi)
+/home/phil/XC16/lib//libm-coff.a(fixunssfsi.o)
+                              peripherals.o (__fixunssfsi)
+/home/phil/XC16/lib//libm-coff.a(muldi3.o)
+                              peripherals.o (__muldi3)
+/home/phil/XC16/lib//libm-coff.a(divmoddi3.o)
+                              peripherals.o (__udivdi3)
 /home/phil/XC16/lib//libm-coff.a(fcompare.o)
                               /home/phil/XC16/lib//libm-coff.a(fgtge.o) (_fcompare)
 /home/phil/XC16/lib//libm-coff.a(floatdisf.o)
@@ -80,22 +105,24 @@ Archive member included because of file (symbol)
                               /home/phil/XC16/lib//libm-coff.a(mulsf3.o) (_fPropagateNaN)
 /home/phil/XC16/lib//libm-coff.a(fpack.o)
                               /home/phil/XC16/lib//libm-coff.a(mulsf3.o) (_fpack)
+/home/phil/XC16/lib//libm-coff.a(funpack.o)
+                              /home/phil/XC16/lib//libm-coff.a(fixsfsi.o) (_funpack)
+/home/phil/XC16/lib//libm-coff.a(umuldi3.o)
+                              /home/phil/XC16/lib//libm-coff.a(muldi3.o) (__umuldi3)
 /home/phil/XC16/lib//libm-coff.a(floatundisf.o)
                               /home/phil/XC16/lib//libm-coff.a(floatdisf.o) (__floatundisf)
-/home/phil/XC16/lib//libm-coff.a(funpack.o)
-                              /home/phil/XC16/lib//libm-coff.a(funpack2.o) (_funpack)
 
 
 Program Memory  [Origin = 0x200, Length = 0xa9f8]
 
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
-.text                        0x200               0x58c           0x852  (2130)
-.const                       0x78c              0x1e60          0x2d90  (11664)
-.text                       0x25ec               0xe56          0x1581  (5505)
-.dinit                      0x3442                 0xe            0x15  (21)
+.text                        0x200               0x9a6           0xe79  (3705)
+.const                       0xba6              0x1e60          0x2d90  (11664)
+.text                       0x2a06               0xf8c          0x1752  (5970)
+.dinit                      0x3992                0x16            0x21  (33)
 
-                     Total program memory used (bytes):         0x4b78  (19320) 29%
+                     Total program memory used (bytes):         0x537c  (21372) 32%
 
 
 Data Memory  [Origin = 0x800, Length = 0x2000]
@@ -103,8 +130,9 @@ Data Memory  [Origin = 0x800, Length = 0x2000]
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
 .nbss                        0x800                   0           0x40a  (1034)
+.ndata                       0xc0a                   0             0x2  (2)
 
-                        Total data memory used (bytes):          0x40a  (1034) 12%
+                        Total data memory used (bytes):          0x40c  (1036) 12%
 
 
 Dynamic Memory Usage
@@ -112,9 +140,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0xc0a                              0x1bf6  (7158)
+stack                        0xc0c                              0x1bf4  (7156)
 
-                        Maximum dynamic memory (bytes):         0x1bf6  (7158)
+                        Maximum dynamic memory (bytes):         0x1bf4  (7156)
 
 
 External Symbols in Data Memory (by address):
@@ -125,6 +153,7 @@ External Symbols in Data Memory (by address):
                     0x0c04                  _cur_column
                     0x0c06                  _cur_page
                     0x0c08                  _last_click
+                    0x0c0a                  _laser_brightness
 
 External Symbols in Data Memory (by name):
 
@@ -132,6 +161,7 @@ External Symbols in Data Memory (by name):
                     0x0c04                  _cur_column
                     0x0c06                  _cur_page
                     0x0c02                  _display_inverted
+                    0x0c0a                  _laser_brightness
                     0x0c08                  _last_click
                     0x0c00                  _top_page
 
@@ -153,183 +183,229 @@ External Symbols in Program Memory (by address):
                   0x000360                  ___divsf3
                   0x0003e4                  ___subsf3
                   0x0003e6                  ___addsf3
-                  0x0004a0                  __fcompare
-                  0x0004d6                  ___floatdisf
-                  0x0004f6                  __funpack2
-                  0x000506                  __fPropagateNaN
-                  0x000518                  __fbopExit
-                  0x000520                  __fbopReturnNaN
-                  0x000526                  __fpack
-                  0x000572                  ___floatundisf
-                  0x0005d0                  __funpack
-                  0x0005fa                  _memcpy
-                  0x000608                  _memset
-                  0x000616                  _OpenTimer2
-                  0x00062c                  _OpenTimer3_v1
-                  0x000642                  _ConfigIntCN
-                  0x000680                  _WriteTimer2
-                  0x00068c                  _WriteTimer3
-                  0x000698                  _OpenI2C1
-                  0x0006aa                  _IdleI2C1
-                  0x0006e4                  _StartI2C1
-                  0x0006ec                  _MasterWriteI2C1
-                  0x00070c                  _StopI2C1
-                  0x000714                  _MastergetsI2C1
-                  0x00077e                  _DataRdyI2C1
-                  0x00078c                  _large_indices
-                  0x00090c                  _large_bitmaps
-                  0x001cd8                  _large_font
-                  0x001ce0                  _small_indices
-                  0x001e60                  _small_bitmaps
-                  0x002460                  _small_font
-                  0x0024de                  _menu_items
-                  0x0025ec                  _send1
-                  0x002600                  _send2
-                  0x002620                  _display_init
-                  0x002660                  _display_close
-                  0x00266a                  _display_send_data
-                  0x002696                  _set_page
-                  0x0026ae                  _set_column
-                  0x0026dc                  _display_clear_screen
-                  0x002710                  _display_write_text
-                  0x0027ae                  _display_scroll_page
-                  0x0028f0                  _render_text_to_page
-                  0x002984                  _display_scroll_text
-                  0x002a2c                  _display_swipe_pages
-                  0x002b64                  _display_flip
-                  0x002bac                  _display_set_brightness
-                  0x002bba                  _measure
-                  0x002bc0                  _hibernate
-                  0x002bc6                  _quick_cal
-                  0x002bcc                  _full_cal
-                  0x002bd2                  _laser_cal
-                  0x002bd8                  _set_metric
-                  0x002bde                  _set_imperial
-                  0x002be4                  _set_cartesian
-                  0x002bea                  _set_polar
-                  0x002bf0                  _set_grad
-                  0x002bf6                  _set_day
-                  0x002bfc                  _set_night
-                  0x002c02                  _interface_init
-                  0x002c22                  __CNInterrupt
-                  0x002c76                  _get_menu_item_offset
-                  0x002cac                  _get_previous_menu_item
-                  0x002ce2                  _get_next_menu_item
-                  0x002d12                  _get_action
-                  0x002e3a                  _show_menu
-                  0x002f80                  _i2c_init
-                  0x002f8c                  _write_i2c_block
-                  0x002fec                  _write_i2c_command_block
-                  0x003062                  _read_i2c_block
-                  0x0030a2                  _write_i2c_data1
-                  0x0030ba                  _write_i2c_data2
-                  0x0030da                  _read_i2c_data
-                  0x003104                  _write_eeprom_data
-                  0x00317c                  _read_eeprom_data
-                  0x0031b0                  _sensors_init
-                  0x003256                  _byte_swap
-                  0x003270                  _sensors_read_raw
-                  0x0032b2                  _sensors_read_cooked
-                  0x003384                  _sensors_read_lidar
-                  0x00338e                  _main
+                  0x0004a0                  ___fixsfsi
+                  0x0004e2                  ___fixunssfsi
+                  0x000518                  ___muldi3
+                  0x0005d6                  ___udivmoddi3
+                  0x00065e                  ___udivdi3
+                  0x00066c                  ___umoddi3
+                  0x000674                  ___divdi3
+                  0x0006a4                  ___moddi3
+                  0x000778                  __fcompare
+                  0x0007ae                  ___floatdisf
+                  0x0007ce                  __funpack2
+                  0x0007de                  __fPropagateNaN
+                  0x0007f0                  __fbopExit
+                  0x0007f8                  __fbopReturnNaN
+                  0x0007fe                  __fpack
+                  0x00084a                  __funpack
+                  0x000874                  ___umuldi3
+                  0x0008b8                  ___floatundisf
+                  0x000916                  _memcpy
+                  0x000924                  _memset
+                  0x000932                  _OpenTimer2
+                  0x000948                  _OpenTimer3_v1
+                  0x00095e                  _ConfigIntCN
+                  0x00099c                  _WriteTimer2
+                  0x0009a8                  _WriteTimer3
+                  0x0009b4                  _OpenI2C1
+                  0x0009c6                  _IdleI2C1
+                  0x000a00                  _StartI2C1
+                  0x000a08                  _MasterWriteI2C1
+                  0x000a28                  _StopI2C1
+                  0x000a30                  _MastergetsI2C1
+                  0x000a9a                  _CloseINT0
+                  0x000aa4                  _ConfigINT0
+                  0x000af6                  _GotoDeepSleep_v1_1
+                  0x000b0c                  _CloseOC3_v4
+                  0x000b20                  _OpenOC3_GB
+                  0x000b48                  _OpenOC1_GB
+                  0x000b70                  _OpenOC2_GB
+                  0x000b98                  _DataRdyI2C1
+                  0x000ba6                  _large_indices
+                  0x000d26                  _large_bitmaps
+                  0x0020f2                  _large_font
+                  0x0020fa                  _small_indices
+                  0x00227a                  _small_bitmaps
+                  0x00287a                  _small_font
+                  0x0028f8                  _menu_items
+                  0x002a06                  _send1
+                  0x002a1a                  _send2
+                  0x002a3a                  _display_init
+                  0x002a7a                  _display_close
+                  0x002a84                  _display_send_data
+                  0x002ab0                  _set_page
+                  0x002ac8                  _set_column
+                  0x002af6                  _display_clear_screen
+                  0x002b2a                  _display_write_text
+                  0x002bc8                  _display_scroll_page
+                  0x002d0a                  _render_text_to_page
+                  0x002d9e                  _display_scroll_text
+                  0x002e46                  _display_swipe_pages
+                  0x002f7e                  _display_flip
+                  0x002fc6                  _display_set_brightness
+                  0x002fd4                  _measure
+                  0x002fda                  _quick_cal
+                  0x002fe0                  _full_cal
+                  0x002fe6                  _laser_cal
+                  0x002fec                  _set_metric
+                  0x002ff2                  _set_imperial
+                  0x002ff8                  _set_cartesian
+                  0x002ffe                  _set_polar
+                  0x003004                  _set_grad
+                  0x00300a                  _set_day
+                  0x003010                  _set_night
+                  0x003016                  _interface_init
+                  0x003036                  __CNInterrupt
+                  0x003088                  _get_menu_item_offset
+                  0x0030be                  _get_previous_menu_item
+                  0x0030f4                  _get_next_menu_item
+                  0x003124                  _get_action
+                  0x00324c                  _show_menu
+                  0x003392                  _i2c_init
+                  0x00339e                  _write_i2c_block
+                  0x0033fe                  _write_i2c_command_block
+                  0x003474                  _read_i2c_block
+                  0x0034b4                  _write_i2c_data1
+                  0x0034cc                  _write_i2c_data2
+                  0x0034ec                  _read_i2c_data
+                  0x003516                  _write_eeprom_data
+                  0x00358e                  _read_eeprom_data
+                  0x0035c2                  _sensors_init
+                  0x003668                  _byte_swap
+                  0x003682                  _sensors_read_raw
+                  0x0036c4                  _sensors_read_cooked
+                  0x003796                  _sensors_read_lidar
+                  0x0037a0                  _peripherals_init
+                  0x0037d8                  _peripherals_on
+                  0x0037f2                  _laser_on
+                  0x00380c                  _laser_set_brightness
+                  0x003824                  _beep
+                  0x0038ac                  _get_bat_status
+                  0x0038b6                  _get_battery_charge
+                  0x0038c0                  _main
+                  0x003976                  _hibernate
 
 External Symbols in Program Memory (by name):
 
-                  0x000642                  _ConfigIntCN
-                  0x00077e                  _DataRdyI2C1
-                  0x0006aa                  _IdleI2C1
-                  0x0006ec                  _MasterWriteI2C1
-                  0x000714                  _MastergetsI2C1
-                  0x000698                  _OpenI2C1
-                  0x000616                  _OpenTimer2
-                  0x00062c                  _OpenTimer3_v1
-                  0x0006e4                  _StartI2C1
-                  0x00070c                  _StopI2C1
-                  0x000680                  _WriteTimer2
-                  0x00068c                  _WriteTimer3
-                  0x002c22                  __CNInterrupt
+                  0x000a9a                  _CloseINT0
+                  0x000b0c                  _CloseOC3_v4
+                  0x000aa4                  _ConfigINT0
+                  0x00095e                  _ConfigIntCN
+                  0x000b98                  _DataRdyI2C1
+                  0x000af6                  _GotoDeepSleep_v1_1
+                  0x0009c6                  _IdleI2C1
+                  0x000a08                  _MasterWriteI2C1
+                  0x000a30                  _MastergetsI2C1
+                  0x0009b4                  _OpenI2C1
+                  0x000b48                  _OpenOC1_GB
+                  0x000b70                  _OpenOC2_GB
+                  0x000b20                  _OpenOC3_GB
+                  0x000932                  _OpenTimer2
+                  0x000948                  _OpenTimer3_v1
+                  0x000a00                  _StartI2C1
+                  0x000a28                  _StopI2C1
+                  0x00099c                  _WriteTimer2
+                  0x0009a8                  _WriteTimer3
+                  0x003036                  __CNInterrupt
                   0x0002e6                  __DefaultInterrupt
                   0x0003e6                  ___addsf3
                   0x00023c                  ___delay32
+                  0x000674                  ___divdi3
                   0x000360                  ___divsf3
                   0x0002ee                  ___eqsf2
-                  0x0004d6                  ___floatdisf
+                  0x0004a0                  ___fixsfsi
+                  0x0004e2                  ___fixunssfsi
+                  0x0007ae                  ___floatdisf
                   0x0002f2                  ___floatsisf
-                  0x000572                  ___floatundisf
+                  0x0008b8                  ___floatundisf
                   0x0002ea                  ___gesf2
                   0x0002ea                  ___gtsf2
                   0x0002ee                  ___lesf2
                   0x0002ee                  ___ltsf2
+                  0x0006a4                  ___moddi3
+                  0x000518                  ___muldi3
                   0x0002f8                  ___mulsf3
                   0x0003e4                  ___subsf3
+                  0x00065e                  ___udivdi3
+                  0x0005d6                  ___udivmoddi3
+                  0x00066c                  ___umoddi3
+                  0x000874                  ___umuldi3
                   0x000258                  __data_init
                   0x000258                  __data_init_standard
-                  0x000506                  __fPropagateNaN
-                  0x000518                  __fbopExit
-                  0x000520                  __fbopReturnNaN
-                  0x0004a0                  __fcompare
-                  0x000526                  __fpack
-                  0x0005d0                  __funpack
-                  0x0004f6                  __funpack2
+                  0x0007de                  __fPropagateNaN
+                  0x0007f0                  __fbopExit
+                  0x0007f8                  __fbopReturnNaN
+                  0x000778                  __fcompare
+                  0x0007fe                  __fpack
+                  0x00084a                  __funpack
+                  0x0007ce                  __funpack2
                   0x00022c                  __psv_init
                   0x000200                  __resetPRI
-                  0x003256                  _byte_swap
-                  0x0026dc                  _display_clear_screen
-                  0x002660                  _display_close
-                  0x002b64                  _display_flip
-                  0x002620                  _display_init
-                  0x0027ae                  _display_scroll_page
-                  0x002984                  _display_scroll_text
-                  0x00266a                  _display_send_data
-                  0x002bac                  _display_set_brightness
-                  0x002a2c                  _display_swipe_pages
-                  0x002710                  _display_write_text
-                  0x002bcc                  _full_cal
-                  0x002d12                  _get_action
-                  0x002c76                  _get_menu_item_offset
-                  0x002ce2                  _get_next_menu_item
-                  0x002cac                  _get_previous_menu_item
-                  0x002bc0                  _hibernate
-                  0x002f80                  _i2c_init
-                  0x002c02                  _interface_init
-                  0x00090c                  _large_bitmaps
-                  0x001cd8                  _large_font
-                  0x00078c                  _large_indices
-                  0x002bd2                  _laser_cal
-                  0x00338e                  _main
-                  0x002bba                  _measure
-                  0x0005fa                  _memcpy
-                  0x000608                  _memset
-                  0x0024de                  _menu_items
-                  0x002bc6                  _quick_cal
-                  0x00317c                  _read_eeprom_data
-                  0x003062                  _read_i2c_block
-                  0x0030da                  _read_i2c_data
-                  0x0028f0                  _render_text_to_page
-                  0x0025ec                  _send1
-                  0x002600                  _send2
-                  0x0031b0                  _sensors_init
-                  0x0032b2                  _sensors_read_cooked
-                  0x003384                  _sensors_read_lidar
-                  0x003270                  _sensors_read_raw
-                  0x002be4                  _set_cartesian
-                  0x0026ae                  _set_column
-                  0x002bf6                  _set_day
-                  0x002bf0                  _set_grad
-                  0x002bde                  _set_imperial
-                  0x002bd8                  _set_metric
-                  0x002bfc                  _set_night
-                  0x002696                  _set_page
-                  0x002bea                  _set_polar
-                  0x002e3a                  _show_menu
-                  0x001e60                  _small_bitmaps
-                  0x002460                  _small_font
-                  0x001ce0                  _small_indices
-                  0x003104                  _write_eeprom_data
-                  0x002f8c                  _write_i2c_block
-                  0x002fec                  _write_i2c_command_block
-                  0x0030a2                  _write_i2c_data1
-                  0x0030ba                  _write_i2c_data2
+                  0x003824                  _beep
+                  0x003668                  _byte_swap
+                  0x002af6                  _display_clear_screen
+                  0x002a7a                  _display_close
+                  0x002f7e                  _display_flip
+                  0x002a3a                  _display_init
+                  0x002bc8                  _display_scroll_page
+                  0x002d9e                  _display_scroll_text
+                  0x002a84                  _display_send_data
+                  0x002fc6                  _display_set_brightness
+                  0x002e46                  _display_swipe_pages
+                  0x002b2a                  _display_write_text
+                  0x002fe0                  _full_cal
+                  0x003124                  _get_action
+                  0x0038ac                  _get_bat_status
+                  0x0038b6                  _get_battery_charge
+                  0x003088                  _get_menu_item_offset
+                  0x0030f4                  _get_next_menu_item
+                  0x0030be                  _get_previous_menu_item
+                  0x003976                  _hibernate
+                  0x003392                  _i2c_init
+                  0x003016                  _interface_init
+                  0x000d26                  _large_bitmaps
+                  0x0020f2                  _large_font
+                  0x000ba6                  _large_indices
+                  0x002fe6                  _laser_cal
+                  0x0037f2                  _laser_on
+                  0x00380c                  _laser_set_brightness
+                  0x0038c0                  _main
+                  0x002fd4                  _measure
+                  0x000916                  _memcpy
+                  0x000924                  _memset
+                  0x0028f8                  _menu_items
+                  0x0037a0                  _peripherals_init
+                  0x0037d8                  _peripherals_on
+                  0x002fda                  _quick_cal
+                  0x00358e                  _read_eeprom_data
+                  0x003474                  _read_i2c_block
+                  0x0034ec                  _read_i2c_data
+                  0x002d0a                  _render_text_to_page
+                  0x002a06                  _send1
+                  0x002a1a                  _send2
+                  0x0035c2                  _sensors_init
+                  0x0036c4                  _sensors_read_cooked
+                  0x003796                  _sensors_read_lidar
+                  0x003682                  _sensors_read_raw
+                  0x002ff8                  _set_cartesian
+                  0x002ac8                  _set_column
+                  0x00300a                  _set_day
+                  0x003004                  _set_grad
+                  0x002ff2                  _set_imperial
+                  0x002fec                  _set_metric
+                  0x003010                  _set_night
+                  0x002ab0                  _set_page
+                  0x002ffe                  _set_polar
+                  0x00324c                  _show_menu
+                  0x00227a                  _small_bitmaps
+                  0x00287a                  _small_font
+                  0x0020fa                  _small_indices
+                  0x003516                  _write_eeprom_data
+                  0x00339e                  _write_i2c_block
+                  0x0033fe                  _write_i2c_command_block
+                  0x0034b4                  _write_i2c_data1
+                  0x0034cc                  _write_i2c_data2
 
 Memory Configuration
 
@@ -368,7 +444,7 @@ LOAD /home/phil/XC16/lib//libfx-coff.a
                   0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
                   0x000003          0x2 SHORT 0x0
 
-.text             0x000200        0x58c
+.text             0x000200        0x9a6
  *(.init)
  .init            0x000200         0x3c /home/phil/XC16/lib//libpic30-coff.a(crt0_standard.o)
                   0x000200                  _reset
@@ -402,52 +478,80 @@ LOAD /home/phil/XC16/lib//libfx-coff.a
  .libm            0x0003e4         0xbc /home/phil/XC16/lib//libm-coff.a(addsf3.o)
                   0x0003e4                  __subsf3
                   0x0003e6                  __addsf3
- .libm            0x0004a0         0x36 /home/phil/XC16/lib//libm-coff.a(fcompare.o)
-                  0x0004a0                  _fcompare
- .libm            0x0004d6         0x20 /home/phil/XC16/lib//libm-coff.a(floatdisf.o)
-                  0x0004d6                  __floatdisf
- .libm            0x0004f6         0x10 /home/phil/XC16/lib//libm-coff.a(funpack2.o)
-                  0x0004f6                  _funpack2
- .libm            0x000506         0x20 /home/phil/XC16/lib//libm-coff.a(futil.o)
-                  0x000506                  _fPropagateNaN
-                  0x000518                  _fbopExit
-                  0x000520                  _fbopReturnNaN
- .libm            0x000526         0x4c /home/phil/XC16/lib//libm-coff.a(fpack.o)
-                  0x000526                  _fpack
- .libm            0x000572         0x5e /home/phil/XC16/lib//libm-coff.a(floatundisf.o)
-                  0x000572                  __floatundisf
- .libm            0x0005d0         0x2a /home/phil/XC16/lib//libm-coff.a(funpack.o)
-                  0x0005d0                  _funpack
+ .libm            0x0004a0         0x42 /home/phil/XC16/lib//libm-coff.a(fixsfsi.o)
+                  0x0004a0                  __fixsfsi
+ .libm            0x0004e2         0x36 /home/phil/XC16/lib//libm-coff.a(fixunssfsi.o)
+                  0x0004e2                  __fixunssfsi
+ .libm            0x000518         0x52 /home/phil/XC16/lib//libm-coff.a(muldi3.o)
+                  0x000518                  __muldi3
+ .libm            0x00056a        0x20e /home/phil/XC16/lib//libm-coff.a(divmoddi3.o)
+                  0x0005d6                  __udivmoddi3
+                  0x00065e                  __udivdi3
+                  0x00066c                  __umoddi3
+                  0x000674                  __divdi3
+                  0x0006a4                  __moddi3
+ .libm            0x000778         0x36 /home/phil/XC16/lib//libm-coff.a(fcompare.o)
+                  0x000778                  _fcompare
+ .libm            0x0007ae         0x20 /home/phil/XC16/lib//libm-coff.a(floatdisf.o)
+                  0x0007ae                  __floatdisf
+ .libm            0x0007ce         0x10 /home/phil/XC16/lib//libm-coff.a(funpack2.o)
+                  0x0007ce                  _funpack2
+ .libm            0x0007de         0x20 /home/phil/XC16/lib//libm-coff.a(futil.o)
+                  0x0007de                  _fPropagateNaN
+                  0x0007f0                  _fbopExit
+                  0x0007f8                  _fbopReturnNaN
+ .libm            0x0007fe         0x4c /home/phil/XC16/lib//libm-coff.a(fpack.o)
+                  0x0007fe                  _fpack
+ .libm            0x00084a         0x2a /home/phil/XC16/lib//libm-coff.a(funpack.o)
+                  0x00084a                  _funpack
+ .libm            0x000874         0x44 /home/phil/XC16/lib//libm-coff.a(umuldi3.o)
+                  0x000874                  __umuldi3
+ .libm            0x0008b8         0x5e /home/phil/XC16/lib//libm-coff.a(floatundisf.o)
+                  0x0008b8                  __floatundisf
  *(.libdsp)
  *(.lib*)
- .libc.memcpy     0x0005fa          0xe /home/phil/XC16/lib//libc-coff.a(memcpy.o)
-                  0x0005fa                  memcpy
- .libc.memset     0x000608          0xe /home/phil/XC16/lib//libc-coff.a(memset.o)
-                  0x000608                  memset
- .libperi         0x000616         0x16 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenTimer2.o)
-                  0x000616                  OpenTimer2
- .libperi         0x00062c         0x16 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenTimer3_v1.o)
-                  0x00062c                  OpenTimer3_v1
- .libperi         0x000642         0x3e /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(ConfigIntCN.o)
-                  0x000642                  ConfigIntCN
- .libperi         0x000680          0xc /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(WriteTimer2.o)
-                  0x000680                  WriteTimer2
- .libperi         0x00068c          0xc /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(WriteTimer3.o)
-                  0x00068c                  WriteTimer3
- .libperi         0x000698         0x12 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenI2C1.o)
-                  0x000698                  OpenI2C1
- .libperi         0x0006aa         0x3a /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(IdleI2C1.o)
-                  0x0006aa                  IdleI2C1
- .libperi         0x0006e4          0x8 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(StartI2C1.o)
-                  0x0006e4                  StartI2C1
- .libperi         0x0006ec         0x20 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MasterWriteI2C1.o)
-                  0x0006ec                  MasterWriteI2C1
- .libperi         0x00070c          0x8 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(StopI2C1.o)
-                  0x00070c                  StopI2C1
- .libperi         0x000714         0x6a /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MastergetsI2C1.o)
-                  0x000714                  MastergetsI2C1
- .libperi         0x00077e          0xe /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(DataRdyI2C1.o)
-                  0x00077e                  DataRdyI2C1
+ .libc.memcpy     0x000916          0xe /home/phil/XC16/lib//libc-coff.a(memcpy.o)
+                  0x000916                  memcpy
+ .libc.memset     0x000924          0xe /home/phil/XC16/lib//libc-coff.a(memset.o)
+                  0x000924                  memset
+ .libperi         0x000932         0x16 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenTimer2.o)
+                  0x000932                  OpenTimer2
+ .libperi         0x000948         0x16 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenTimer3_v1.o)
+                  0x000948                  OpenTimer3_v1
+ .libperi         0x00095e         0x3e /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(ConfigIntCN.o)
+                  0x00095e                  ConfigIntCN
+ .libperi         0x00099c          0xc /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(WriteTimer2.o)
+                  0x00099c                  WriteTimer2
+ .libperi         0x0009a8          0xc /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(WriteTimer3.o)
+                  0x0009a8                  WriteTimer3
+ .libperi         0x0009b4         0x12 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenI2C1.o)
+                  0x0009b4                  OpenI2C1
+ .libperi         0x0009c6         0x3a /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(IdleI2C1.o)
+                  0x0009c6                  IdleI2C1
+ .libperi         0x000a00          0x8 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(StartI2C1.o)
+                  0x000a00                  StartI2C1
+ .libperi         0x000a08         0x20 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MasterWriteI2C1.o)
+                  0x000a08                  MasterWriteI2C1
+ .libperi         0x000a28          0x8 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(StopI2C1.o)
+                  0x000a28                  StopI2C1
+ .libperi         0x000a30         0x6a /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MastergetsI2C1.o)
+                  0x000a30                  MastergetsI2C1
+ .libperi         0x000a9a          0xa /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(CloseINT0.o)
+                  0x000a9a                  CloseINT0
+ .libperi         0x000aa4         0x52 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(ConfigINT0.o)
+                  0x000aa4                  ConfigINT0
+ .libperi         0x000af6         0x16 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(GotoDeepSleep_v1_1.o)
+                  0x000af6                  GotoDeepSleep_v1_1
+ .libperi         0x000b0c         0x14 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(CloseOC3_v4.o)
+                  0x000b0c                  CloseOC3_v4
+ .libperi         0x000b20         0x28 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC3_v2.o)
+                  0x000b20                  OpenOC3_GB
+ .libperi         0x000b48         0x28 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC1_v2.o)
+                  0x000b48                  OpenOC1_GB
+ .libperi         0x000b70         0x28 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC2_v2.o)
+                  0x000b70                  OpenOC2_GB
+ .libperi         0x000b98          0xe /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(DataRdyI2C1.o)
+                  0x000b98                  DataRdyI2C1
 
 usercode
  *(usercode)
@@ -530,7 +634,7 @@ __CONFIG1         0x00abfe          0x2
                   0x000034          0x4 LONG 0x2e6 DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000036          0x4 LONG 0x2e6 DEFINED (__MI2C1Interrupt)?ABSOLUTE (__MI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000038          0x4 LONG 0x2e6 DEFINED (__CompInterrupt)?ABSOLUTE (__CompInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00003a          0x4 LONG 0x2c22 DEFINED (__CNInterrupt)?ABSOLUTE (__CNInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00003a          0x4 LONG 0x3036 DEFINED (__CNInterrupt)?ABSOLUTE (__CNInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00003c          0x4 LONG 0x2e6 DEFINED (__INT1Interrupt)?ABSOLUTE (__INT1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00003e          0x4 LONG 0x2e6 DEFINED (__Interrupt21)?ABSOLUTE (__Interrupt21):ABSOLUTE (__DefaultInterrupt)
                   0x000040          0x4 LONG 0x2e6 DEFINED (__Interrupt22)?ABSOLUTE (__Interrupt22):ABSOLUTE (__DefaultInterrupt)
@@ -658,7 +762,7 @@ __CONFIG1         0x00abfe          0x2
                   0x000134          0x4 LONG 0x2e6 DEFINED (__AltSI2C1Interrupt)?ABSOLUTE (__AltSI2C1Interrupt):DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000136          0x4 LONG 0x2e6 DEFINED (__AltMI2C1Interrupt)?ABSOLUTE (__AltMI2C1Interrupt):DEFINED (__MI2C1Interrupt)?ABSOLUTE (__MI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000138          0x4 LONG 0x2e6 DEFINED (__AltCompInterrupt)?ABSOLUTE (__AltCompInterrupt):DEFINED (__CompInterrupt)?ABSOLUTE (__CompInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00013a          0x4 LONG 0x2c22 DEFINED (__AltCNInterrupt)?ABSOLUTE (__AltCNInterrupt):DEFINED (__CNInterrupt)?ABSOLUTE (__CNInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00013a          0x4 LONG 0x3036 DEFINED (__AltCNInterrupt)?ABSOLUTE (__AltCNInterrupt):DEFINED (__CNInterrupt)?ABSOLUTE (__CNInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00013c          0x4 LONG 0x2e6 DEFINED (__AltINT1Interrupt)?ABSOLUTE (__AltINT1Interrupt):DEFINED (__INT1Interrupt)?ABSOLUTE (__INT1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00013e          0x4 LONG 0x2e6 DEFINED (__AltInterrupt21)?ABSOLUTE (__AltInterrupt21):DEFINED (__Interrupt21)?ABSOLUTE (__Interrupt21):ABSOLUTE (__DefaultInterrupt)
                   0x000140          0x4 LONG 0x2e6 DEFINED (__AltInterrupt22)?ABSOLUTE (__AltInterrupt22):DEFINED (__Interrupt22)?ABSOLUTE (__Interrupt22):ABSOLUTE (__DefaultInterrupt)
@@ -1582,6 +1686,9 @@ LOAD i2c_util.o
 LOAD font.o
 LOAD display.o
 LOAD sensors.o
+LOAD power.o
+LOAD config.o
+LOAD peripherals.o
 LOAD /home/phil/XC16/lib//libc-coff.a
 LOAD /home/phil/XC16/lib//libpic30-coff.a
 LOAD /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a
@@ -1592,7 +1699,7 @@ LOAD data_init
 LOAD default_isr
 
 __c30_signature
-                  0x000000         0xd8
+                  0x000000        0x132
  __c30_signature
                   0x000000          0x6 Phoenix.o
  __c30_signature
@@ -1606,65 +1713,95 @@ __c30_signature
  __c30_signature
                   0x00001e          0x6 sensors.o
  __c30_signature
-                  0x000024          0x6 /home/phil/XC16/lib//libc-coff.a(memcpy.o)
+                  0x000024          0x6 power.o
  __c30_signature
-                  0x00002a          0x6 /home/phil/XC16/lib//libc-coff.a(memset.o)
+                  0x00002a          0x6 config.o
  __c30_signature
-                  0x000030          0x6 /home/phil/XC16/lib//libpic30-coff.a(crt0_standard.o)
+                  0x000030          0x6 peripherals.o
  __c30_signature
-                  0x000036          0x6 /home/phil/XC16/lib//libpic30-coff.a(delay32.o)
+                  0x000036          0x6 /home/phil/XC16/lib//libc-coff.a(memcpy.o)
  __c30_signature
-                  0x00003c          0x6 /home/phil/XC16/lib//libpic30-coff.a(data_init_standard.o)
+                  0x00003c          0x6 /home/phil/XC16/lib//libc-coff.a(memset.o)
  __c30_signature
-                  0x000042          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenTimer2.o)
+                  0x000042          0x6 /home/phil/XC16/lib//libpic30-coff.a(crt0_standard.o)
  __c30_signature
-                  0x000048          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenTimer3_v1.o)
+                  0x000048          0x6 /home/phil/XC16/lib//libpic30-coff.a(delay32.o)
  __c30_signature
-                  0x00004e          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(ConfigIntCN.o)
+                  0x00004e          0x6 /home/phil/XC16/lib//libpic30-coff.a(data_init_standard.o)
  __c30_signature
-                  0x000054          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(WriteTimer2.o)
+                  0x000054          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenTimer2.o)
  __c30_signature
-                  0x00005a          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(WriteTimer3.o)
+                  0x00005a          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenTimer3_v1.o)
  __c30_signature
-                  0x000060          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenI2C1.o)
+                  0x000060          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(ConfigIntCN.o)
  __c30_signature
-                  0x000066          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(IdleI2C1.o)
+                  0x000066          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(WriteTimer2.o)
  __c30_signature
-                  0x00006c          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(StartI2C1.o)
+                  0x00006c          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(WriteTimer3.o)
  __c30_signature
-                  0x000072          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MasterWriteI2C1.o)
+                  0x000072          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenI2C1.o)
  __c30_signature
-                  0x000078          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(StopI2C1.o)
+                  0x000078          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(IdleI2C1.o)
  __c30_signature
-                  0x00007e          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MastergetsI2C1.o)
+                  0x00007e          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(StartI2C1.o)
  __c30_signature
-                  0x000084          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(DataRdyI2C1.o)
+                  0x000084          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MasterWriteI2C1.o)
  __c30_signature
-                  0x00008a          0x6 /home/phil/XC16/lib//libm-coff.a(fgtge.o)
+                  0x00008a          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(StopI2C1.o)
  __c30_signature
-                  0x000090          0x6 /home/phil/XC16/lib//libm-coff.a(feqltle.o)
+                  0x000090          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(MastergetsI2C1.o)
  __c30_signature
-                  0x000096          0x6 /home/phil/XC16/lib//libm-coff.a(floatsisf.o)
+                  0x000096          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(CloseINT0.o)
  __c30_signature
-                  0x00009c          0x6 /home/phil/XC16/lib//libm-coff.a(mulsf3.o)
+                  0x00009c          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(ConfigINT0.o)
  __c30_signature
-                  0x0000a2          0x6 /home/phil/XC16/lib//libm-coff.a(divsf3.o)
+                  0x0000a2          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(GotoDeepSleep_v1_1.o)
  __c30_signature
-                  0x0000a8          0x6 /home/phil/XC16/lib//libm-coff.a(addsf3.o)
+                  0x0000a8          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(CloseOC3_v4.o)
  __c30_signature
-                  0x0000ae          0x6 /home/phil/XC16/lib//libm-coff.a(fcompare.o)
+                  0x0000ae          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC3_v2.o)
  __c30_signature
-                  0x0000b4          0x6 /home/phil/XC16/lib//libm-coff.a(floatdisf.o)
+                  0x0000b4          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC1_v2.o)
  __c30_signature
-                  0x0000ba          0x6 /home/phil/XC16/lib//libm-coff.a(funpack2.o)
+                  0x0000ba          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(OpenOC2_v2.o)
  __c30_signature
-                  0x0000c0          0x6 /home/phil/XC16/lib//libm-coff.a(futil.o)
+                  0x0000c0          0x6 /home/phil/XC16/lib/PIC24F//libpPIC24Fxxx-coff.a(DataRdyI2C1.o)
  __c30_signature
-                  0x0000c6          0x6 /home/phil/XC16/lib//libm-coff.a(fpack.o)
+                  0x0000c6          0x6 /home/phil/XC16/lib//libm-coff.a(fgtge.o)
  __c30_signature
-                  0x0000cc          0x6 /home/phil/XC16/lib//libm-coff.a(floatundisf.o)
+                  0x0000cc          0x6 /home/phil/XC16/lib//libm-coff.a(feqltle.o)
  __c30_signature
-                  0x0000d2          0x6 /home/phil/XC16/lib//libm-coff.a(funpack.o)
+                  0x0000d2          0x6 /home/phil/XC16/lib//libm-coff.a(floatsisf.o)
+ __c30_signature
+                  0x0000d8          0x6 /home/phil/XC16/lib//libm-coff.a(mulsf3.o)
+ __c30_signature
+                  0x0000de          0x6 /home/phil/XC16/lib//libm-coff.a(divsf3.o)
+ __c30_signature
+                  0x0000e4          0x6 /home/phil/XC16/lib//libm-coff.a(addsf3.o)
+ __c30_signature
+                  0x0000ea          0x6 /home/phil/XC16/lib//libm-coff.a(fixsfsi.o)
+ __c30_signature
+                  0x0000f0          0x6 /home/phil/XC16/lib//libm-coff.a(fixunssfsi.o)
+ __c30_signature
+                  0x0000f6          0x6 /home/phil/XC16/lib//libm-coff.a(muldi3.o)
+ __c30_signature
+                  0x0000fc          0x6 /home/phil/XC16/lib//libm-coff.a(divmoddi3.o)
+ __c30_signature
+                  0x000102          0x6 /home/phil/XC16/lib//libm-coff.a(fcompare.o)
+ __c30_signature
+                  0x000108          0x6 /home/phil/XC16/lib//libm-coff.a(floatdisf.o)
+ __c30_signature
+                  0x00010e          0x6 /home/phil/XC16/lib//libm-coff.a(funpack2.o)
+ __c30_signature
+                  0x000114          0x6 /home/phil/XC16/lib//libm-coff.a(futil.o)
+ __c30_signature
+                  0x00011a          0x6 /home/phil/XC16/lib//libm-coff.a(fpack.o)
+ __c30_signature
+                  0x000120          0x6 /home/phil/XC16/lib//libm-coff.a(funpack.o)
+ __c30_signature
+                  0x000126          0x6 /home/phil/XC16/lib//libm-coff.a(umuldi3.o)
+ __c30_signature
+                  0x00012c          0x6 /home/phil/XC16/lib//libm-coff.a(floatundisf.o)
 
 .nbss               0x0800        0x40a
  .nbss              0x0800        0x408 display.o
@@ -1676,73 +1813,86 @@ __c30_signature
  .nbss              0x0c08          0x2 interface.o
                     0x0c08                  last_click
 
-.const              0x878c       0x1e60 load address 0x00078c  
- .const             0x878c       0x1cdc font.o
-                    0x878c                  large_indices
-                    0x890c                  large_bitmaps
-                    0x9cd8                  large_font
-                    0x9ce0                  small_indices
-                    0x9e60                  small_bitmaps
-                    0xa460                  small_font
- .const             0xa468        0x13e interface.o
-                    0xa4de                  menu_items
- .const             0xa5a6         0x46 Phoenix.o
+.ndata              0x0c0a          0x2
+ .ndata             0x0c0a          0x2 peripherals.o
+                    0x0c0a                  laser_brightness
 
-.text             0x0025ec        0xe56
- .text            0x0025ec        0x5ce display.o
-                  0x0025ec                  send1
-                  0x002600                  send2
-                  0x002620                  display_init
-                  0x002660                  display_close
-                  0x00266a                  display_send_data
-                  0x002696                  set_page
-                  0x0026ae                  set_column
-                  0x0026dc                  display_clear_screen
-                  0x002710                  display_write_text
-                  0x0027ae                  display_scroll_page
-                  0x0028f0                  render_text_to_page
-                  0x002984                  display_scroll_text
-                  0x002a2c                  display_swipe_pages
-                  0x002b64                  display_flip
-                  0x002bac                  display_set_brightness
- .text            0x002bba        0x3c6 interface.o
-                  0x002bba                  measure
-                  0x002bc0                  hibernate
-                  0x002bc6                  quick_cal
-                  0x002bcc                  full_cal
-                  0x002bd2                  laser_cal
-                  0x002bd8                  set_metric
-                  0x002bde                  set_imperial
-                  0x002be4                  set_cartesian
-                  0x002bea                  set_polar
-                  0x002bf0                  set_grad
-                  0x002bf6                  set_day
-                  0x002bfc                  set_night
-                  0x002c02                  interface_init
-                  0x002c22                  _CNInterrupt
-                  0x002c76                  get_menu_item_offset
-                  0x002cac                  get_previous_menu_item
-                  0x002ce2                  get_next_menu_item
-                  0x002d12                  get_action
-                  0x002e3a                  show_menu
- .text            0x002f80        0x230 i2c_util.o
-                  0x002f80                  i2c_init
-                  0x002f8c                  write_i2c_block
-                  0x002fec                  write_i2c_command_block
-                  0x003062                  read_i2c_block
-                  0x0030a2                  write_i2c_data1
-                  0x0030ba                  write_i2c_data2
-                  0x0030da                  read_i2c_data
-                  0x003104                  write_eeprom_data
-                  0x00317c                  read_eeprom_data
- .text            0x0031b0        0x1de sensors.o
-                  0x0031b0                  sensors_init
-                  0x003256                  byte_swap
-                  0x003270                  sensors_read_raw
-                  0x0032b2                  sensors_read_cooked
-                  0x003384                  sensors_read_lidar
- .text            0x00338e         0xb4 Phoenix.o
-                  0x00338e                  main
+.const              0x8ba6       0x1e60 load address 0x000ba6  
+ .const             0x8ba6       0x1cdc font.o
+                    0x8ba6                  large_indices
+                    0x8d26                  large_bitmaps
+                    0xa0f2                  large_font
+                    0xa0fa                  small_indices
+                    0xa27a                  small_bitmaps
+                    0xa87a                  small_font
+ .const             0xa882        0x13e interface.o
+                    0xa8f8                  menu_items
+ .const             0xa9c0         0x46 Phoenix.o
 
-.dinit            0x003442          0xe
- .dinit           0x003442          0xe data_init
+.text             0x002a06        0xf8c
+ .text            0x002a06        0x5ce display.o
+                  0x002a06                  send1
+                  0x002a1a                  send2
+                  0x002a3a                  display_init
+                  0x002a7a                  display_close
+                  0x002a84                  display_send_data
+                  0x002ab0                  set_page
+                  0x002ac8                  set_column
+                  0x002af6                  display_clear_screen
+                  0x002b2a                  display_write_text
+                  0x002bc8                  display_scroll_page
+                  0x002d0a                  render_text_to_page
+                  0x002d9e                  display_scroll_text
+                  0x002e46                  display_swipe_pages
+                  0x002f7e                  display_flip
+                  0x002fc6                  display_set_brightness
+ .text            0x002fd4        0x3be interface.o
+                  0x002fd4                  measure
+                  0x002fda                  quick_cal
+                  0x002fe0                  full_cal
+                  0x002fe6                  laser_cal
+                  0x002fec                  set_metric
+                  0x002ff2                  set_imperial
+                  0x002ff8                  set_cartesian
+                  0x002ffe                  set_polar
+                  0x003004                  set_grad
+                  0x00300a                  set_day
+                  0x003010                  set_night
+                  0x003016                  interface_init
+                  0x003036                  _CNInterrupt
+                  0x003088                  get_menu_item_offset
+                  0x0030be                  get_previous_menu_item
+                  0x0030f4                  get_next_menu_item
+                  0x003124                  get_action
+                  0x00324c                  show_menu
+ .text            0x003392        0x230 i2c_util.o
+                  0x003392                  i2c_init
+                  0x00339e                  write_i2c_block
+                  0x0033fe                  write_i2c_command_block
+                  0x003474                  read_i2c_block
+                  0x0034b4                  write_i2c_data1
+                  0x0034cc                  write_i2c_data2
+                  0x0034ec                  read_i2c_data
+                  0x003516                  write_eeprom_data
+                  0x00358e                  read_eeprom_data
+ .text            0x0035c2        0x1de sensors.o
+                  0x0035c2                  sensors_init
+                  0x003668                  byte_swap
+                  0x003682                  sensors_read_raw
+                  0x0036c4                  sensors_read_cooked
+                  0x003796                  sensors_read_lidar
+ .text            0x0037a0        0x120 peripherals.o
+                  0x0037a0                  peripherals_init
+                  0x0037d8                  peripherals_on
+                  0x0037f2                  laser_on
+                  0x00380c                  laser_set_brightness
+                  0x003824                  beep
+                  0x0038ac                  get_bat_status
+                  0x0038b6                  get_battery_charge
+ .text            0x0038c0         0xb6 Phoenix.o
+                  0x0038c0                  main
+ .text            0x003976         0x1c power.o
+                  0x003976                  hibernate
+
+.dinit            0x003992         0x16
+ .dinit           0x003992         0x16 data_init
