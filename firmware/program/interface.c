@@ -145,38 +145,38 @@ int16_t get_next_menu_item(int16_t index) {
 }
 
 enum ACTION get_action() {
-    struct COOKED_SENSORS sensors;
-    enum ACTION temp;
-    while (true) {
-        delay_ms(30);
-        sensors_read_cooked(&sensors,false);
-        /* look for "flip" movements */
-        if (sensors.gyro[0]>40.0) {
-            return display_inverted? FLIP_LEFT : FLIP_RIGHT;
-        }
-        if (sensors.gyro[0]<-40.0) {
-            return display_inverted? FLIP_RIGHT : FLIP_LEFT;
-        }
-        if (sensors.gyro[1]>40.0) {
-            return display_inverted? FLIP_DOWN : FLIP_UP;
-        }
-        if (sensors.gyro[1]<-40.0) {
-            return display_inverted? FLIP_UP : FLIP_DOWN;
-        }
-        /* check to see if display needs flipping */
-        /* use 0.5g - gives a hysteresis of about +/- 30 degrees */
-        if ((sensors.accel[0]>0.5) && display_inverted) display_flip(false);
-        if ((sensors.accel[0]<-0.5) && !display_inverted) display_flip(true);
-        /* search for a click */
-        if (last_click != NONE) {
-            /* momentarily disable interrupts */
-            __builtin_disi(0x0100);
-            temp = last_click;
-            last_click = NONE;
-            __builtin_disi(0x0000);
-            return temp;
-        }
-    }
+	struct COOKED_SENSORS sensors;
+	enum ACTION temp;
+	
+	sensors_read_cooked(&sensors,false);
+	/* look for "flip" movements */
+	if (sensors.gyro[0]>40.0) {
+		return display_inverted? FLIP_LEFT : FLIP_RIGHT;
+	}
+	if (sensors.gyro[0]<-40.0) {
+		return display_inverted? FLIP_RIGHT : FLIP_LEFT;
+	}
+	if (sensors.gyro[1]>40.0) {
+		return display_inverted? FLIP_DOWN : FLIP_UP;
+	}
+	if (sensors.gyro[1]<-40.0) {
+		return display_inverted? FLIP_UP : FLIP_DOWN;
+	}
+	/* check to see if display needs flipping */
+	/* use 0.5g - gives a hysteresis of about +/- 30 degrees */
+	if ((sensors.accel[0]>0.5) && display_inverted) display_flip(false);
+	if ((sensors.accel[0]<-0.5) && !display_inverted) display_flip(true);
+	/* search for a click */
+	if (last_click != NONE) {
+		/* momentarily disable interrupts */
+		__builtin_disi(0x0100);
+		temp = last_click;
+		last_click = NONE;
+		__builtin_disi(0x0000);
+		return temp;
+	}
+	//nothing else found - so return NONE
+	return NONE;
 }
 
 bool show_menu(int16_t index, bool first_time) {

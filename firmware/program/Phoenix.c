@@ -8,10 +8,13 @@
 #include <xc.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <dpslp.h>
 #include "display.h"
 #include "font.h"
 #include "sensors.h"
 #include "interface.h"
+#include "peripherals.h"
 
 /* ----------------------------------------------------------------------- */
 /* Configuration bits: adapt to your setup and needs */
@@ -30,46 +33,43 @@ void main(){
 	const struct GLYPH_DATA *glyph;
 	struct COOKED_SENSORS sensors;
 	//turn on peripherals...
-	TRISBbits.TRISB14 = 0;
-	TRISBbits.TRISB3 = 0;
-	TRISBbits.TRISB1 = 0;
-	LATBbits.LATB14 = 0;
-	LATBbits.LATB3 = 0;
-	LATBbits.LATB1 = 0;
+	ReleaseDeepSleep();
+	peripherals_init();
+	peripherals_on(true);
 	__delay_ms(3);
 	i2c_init();
 	display_init();
 	sensors_init();
 	interface_init();
 	display_clear_screen();
- 	while (true) {
- 		action = get_action();
-    	display_clear_screen();
- 		switch (action){
- 			case FLIP_UP:
- 				display_write_text(2,0,"FLIP_UP",&large_font,false);
- 				break;
- 			case FLIP_DOWN:
- 				display_write_text(2,0,"FLIP_DOWN",&large_font,false);
- 				break;
- 			case FLIP_LEFT:
- 				display_write_text(2,0,"FLIP_LEFT",&large_font,false);
- 				break;
- 			case FLIP_RIGHT:
- 				display_write_text(2,0,"FLIP_RIGHT",&large_font,false);
- 				break;
- 			case SINGLE_CLICK:
- 				display_write_text(2,0,"SGL_CLICK",&large_font,false);
- 				break;
- 			case DOUBLE_CLICK:
- 				display_write_text(2,0,"DBL_CLICK",&large_font,false);
- 				break;
- 			case LONG_CLICK:
- 				display_write_text(2,0,"LNG_CLICK",&large_font,false);
- 				break;
- 		}
- 		__delay_ms(700);
- 	}
+//  	while (true) {
+//  		action = get_action();
+// 		display_clear_screen();
+//  		switch (action){
+//  			case FLIP_UP:
+//  				display_write_text(2,0,"FLIP_UP",&large_font,false);
+//  				break;
+//  			case FLIP_DOWN:
+//  				display_write_text(2,0,"FLIP_DOWN",&large_font,false);
+//  				break;
+//  			case FLIP_LEFT:
+//  				display_write_text(2,0,"FLIP_LEFT",&large_font,false);
+//  				break;
+//  			case FLIP_RIGHT:
+//  				display_write_text(2,0,"FLIP_RIGHT",&large_font,false);
+//  				break;
+//  			case SINGLE_CLICK:
+//  				display_write_text(2,0,"SGL_CLICK",&large_font,false);
+//  				break;
+//  			case DOUBLE_CLICK:
+//  				display_write_text(2,0,"DBL_CLICK",&large_font,false);
+//  				break;
+//  			case LONG_CLICK:
+//  				display_write_text(2,0,"LNG_CLICK",&large_font,false);
+//  				break;
+//  		}
+//  		__delay_ms(700);
+//  	}
 	show_menu(FIRST_MENU_ITEM,true);
 	while(true) Nop();
 }

@@ -1,3 +1,4 @@
+#define USE_AND_OR
 #include "config.h"
 #include "peripherals.h"
 #include <outcompare.h>
@@ -46,7 +47,7 @@ void peripherals_init() {
 }
 
 void peripherals_on(bool on) {
-	LAT_PERIPHERALS = on;
+	LAT_PERIPHERALS = !on;
 }
 
 void laser_on(bool on) {
