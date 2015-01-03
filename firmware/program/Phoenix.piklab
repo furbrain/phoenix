@@ -22,6 +22,8 @@
       <item>config.c</item>
       <item>peripherals.c</item>
       <item>peripherals.h</item>
+      <item>ftoa.h</item>
+      <item>ftoa.c</item>
     </files>
     <custom_linker_script>/home/phil/XC16/support/PIC24F/gld/p24FJ64GB002.gld</custom_linker_script>
     <description/>

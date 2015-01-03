@@ -52,6 +52,13 @@ void display_send_data(uint8_t *data, uint8_t length) {
 	write_i2c_command_block(DISPLAY_ADDRESS,0x40,data,length);
 }
 
+void render_data_to_page(uint8_t page, uint8_t column, const char* data, uint8_t length) {
+    page = (page+top_page)%8;
+    set_page(page);
+    set_column(column);
+    display_send_data(data,length);
+}
+
 void set_page(int page) {
 	send1(page+0xB0);
 	cur_page = page;
@@ -62,13 +69,18 @@ void set_column(int column) {
 	send1(16+((column+2)/16));
 	cur_column = column;
 }
+
+void display_clear_page(uint8_t page) {
+	page = (page+top_page)%8;
+	memset(buffer[page],0,128);
+	set_column(0);
+	set_page(page);
+	write_i2c_command_block(DISPLAY_ADDRESS,0x40,buffer[page],128);
+}
 void display_clear_screen() {
 	int x = 0;
-	memset(buffer,0,128*8);
 	for(x=0;x<8;++x) {
-		set_column(0);
-		set_page(x);
-		write_i2c_command_block(DISPLAY_ADDRESS,0x40,buffer[0],128);
+		display_clear_page(x);
 	}
 }
 
@@ -76,6 +88,7 @@ void display_write_text(int page, int column, const char* text, const struct FON
     int i = 0;
     int end_col;
     uint8_t temp_buffer[128];
+    page = (page+top_page)%8;
     while (i<font->max_pages) {
         memset(temp_buffer,0,128);
         set_page(page+i);
@@ -170,7 +183,7 @@ void display_scroll_text(int page, int column, const char *text, const struct FO
     int i;
     if (up) {
         i = 0;
-        while ((9-i)>page) {
+        while ((8-i)>page) {
             memset(temp_buffer,0,128);
             if (i < font->max_pages) render_text_to_page(temp_buffer,i,column,text,font);
             display_scroll_page(temp_buffer,up);

@@ -75,8 +75,8 @@ const struct FONT ${name}_font = {$advance,$max_pages,$max_width,${name}_indices
     
 if __name__=="__main__":
     big_face = freetype.Face('/usr/share/fonts/truetype/droid/DroidSans.ttf')
-    big_face.set_char_size(32*64)
-    little_face = freetype.Face('/usr/share/fonts/X11/misc/ter-u16b_unicode.pcf.gz')
+    big_face.set_char_size(26*64)
+    little_face = freetype.Face('/usr/share/fonts/X11/misc/ter-u16n_unicode.pcf.gz')
     little_face.set_char_size(little_face.available_sizes[0].size)
     #print len(indices),indices
     #print bitmaps

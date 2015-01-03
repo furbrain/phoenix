@@ -10,11 +10,15 @@ void display_init();
 
 void display_close();
 
+void display_clear_page(uint8_t page);
+
 void display_clear_screen();
 
 void display_write_text(int page, int column, const char* text, const struct FONT *font, bool right_justify);
 
 int render_text_to_page(uint8_t *buffer, int page, int column, const char *text, const struct FONT *font);
+
+void render_data_to_page(uint8_t page, uint8_t column, const char* data, uint8_t length);
 
 void display_scroll_page(uint8_t *data, bool up);
 

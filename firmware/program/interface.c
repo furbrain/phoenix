@@ -5,6 +5,8 @@
 #include <timer.h>
 #include <ports.h>
 #include <stdio.h>
+#include <string.h>
+#include <Rtcc.h>
 #include "interface.h"
 #include "sensors.h"
 #include "display.h"
@@ -179,6 +181,48 @@ enum ACTION get_action() {
 	return NONE;
 }
 
+uint8_t bcdtobyte(uint8_t x) {
+	return (x & 0xf) + (10* (x>>4));
+}
+
+unsigned char reverse(unsigned char b) {
+   b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+   b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+   b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+   return b;
+}
+
+void show_status(){
+	char header[17];
+	char footer[17];
+	int x;
+	rtccTime time;
+	rtccDate date;
+	/* batt icon 50% charge: 0x1f,0x20,0x2f*9,0x20*9,0x20,0x1f,0x04,0x03 */
+	/* reverse bit order for second line */
+	char bat_status[24];
+	uint8_t bat_charge = 12;
+	bat_status[0] = 0xf8;
+	bat_status[1] = 0x04;
+	memset(&bat_status[2],0xf4,bat_charge);
+	memset(&bat_status[2+bat_charge],0x04,19-bat_charge);
+	bat_status[21] = 0xf8;
+	bat_status[22] = 0x20;
+	bat_status[23] = 0xC0;
+	RtccReadDate(&date);
+	RtccReadTime(&time);
+	strcpy(footer,"Metric     Polar");
+	sprintf(header,"%02d:%02d:%02d     ",
+		bcdtobyte(time.f.hour),	bcdtobyte(time.f.min),bcdtobyte(time.f.sec));
+	display_write_text(0,0,header,&small_font,false);
+	display_write_text(6,0,footer,&small_font,false);
+	render_data_to_page(0,104,bat_status,24);
+	for (x=0; x< 24; ++x) {
+	    bat_status[x] = reverse(bat_status[x]);
+	}
+	render_data_to_page(1,104,bat_status,24);
+}
+
 bool show_menu(int16_t index, bool first_time) {
     enum ACTION action;
     bool result;
@@ -188,7 +232,8 @@ bool show_menu(int16_t index, bool first_time) {
         scroll_text(index,true);
     }
     while(true) {
-        delay_ms(700);
+        delay_ms(50);
+	show_status();
         action = get_action();
         switch(action){
             case FLIP_DOWN:
@@ -226,6 +271,13 @@ bool show_menu(int16_t index, bool first_time) {
             case FLIP_LEFT:
                 if (!first_time) return false;
                 break;
+	    case DOUBLE_CLICK:
+		hibernate();
+		break;
             }   
+        if (action!=NONE) {
+		show_status();
+		delay_ms(300);
+	}
     }
 }
