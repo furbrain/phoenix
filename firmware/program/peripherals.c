@@ -69,11 +69,3 @@ void beep(double freq, uint16_t ms) {
 	OpenOC2(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_OC1 | OC_OUT_INVERT, freq, duty);
 	__delay_ms(ms);
 }
-
-enum BAT_STATUS get_bat_status() {
-	return BAT_NO_CHARGE;
-}
-
-uint8_t get_battery_charge() {
-	return 0x20;
-}

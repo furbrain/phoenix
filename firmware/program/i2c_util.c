@@ -6,7 +6,7 @@ void i2c_init(){
 	OpenI2C1(I2C_ON,37);
 }
 
-int8_t write_i2c_block(uint8_t address, uint8_t *data, uint8_t length) {
+int8_t write_i2c_block(uint8_t address, const uint8_t *data, uint8_t length) {
 	IdleI2C1();
 	StartI2C1();
 	IdleI2C1();  //Wait till Start sequence is completed
@@ -30,7 +30,7 @@ fallover:
 	return -1;
 }
 
-int8_t write_i2c_command_block(uint8_t address, uint8_t command, uint8_t *data, uint8_t length) {
+int8_t write_i2c_command_block(uint8_t address, uint8_t command, const uint8_t *data, uint8_t length) {
 	IdleI2C1();
 	StartI2C1();
 	IdleI2C1();  //Wait till Start sequence is completed
@@ -90,7 +90,7 @@ int8_t read_i2c_data(uint8_t address, uint8_t command, uint8_t *data, uint8_t le
 	return read_i2c_block(address,data,length);
 }
 
-int8_t write_eeprom_data(uint16_t address, uint8_t *data, uint8_t length) {
+int8_t write_eeprom_data(uint16_t address, const uint8_t *data, uint8_t length) {
 	IdleI2C1();
 	StartI2C1();
 	IdleI2C1();  //Wait till Start sequence is completed

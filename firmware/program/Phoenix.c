@@ -16,6 +16,7 @@
 #include "sensors.h"
 #include "interface.h"
 #include "peripherals.h"
+#include "battery.h"
 
 /* ----------------------------------------------------------------------- */
 /* Configuration bits: adapt to your setup and needs */
@@ -46,6 +47,11 @@ void main(){
 	sensors_init();
 	interface_init();
 	display_clear_screen();
+	while (true){
+		__delay_ms(500);
+		sprintf(text,"%f",get_bat_charge());
+		display_write_text(2,0,text,&large_font,false);
+	}
 //  	while (true) {
 //  		action = get_action();
 // 		display_clear_screen();

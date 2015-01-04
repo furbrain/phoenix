@@ -237,6 +237,7 @@ int main(void)
 	CONFIG_WORDS_TOP = LINKER_VAR(CONFIG_WORDS_TOP);
 	/* setup ports */
 	/* enable peripherals */
+	/* first look to see if we should be running bootloader at all... */
 	TRISBbits.TRISB14 = 0;
 	TRISBbits.TRISB3 = 0;
 	LATBbits.LATB14 = 0;

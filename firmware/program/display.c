@@ -47,18 +47,6 @@ void display_close() {
 	send1(0xAE);
 }
 
-void display_send_data(uint8_t *data, uint8_t length) {
-	memcpy(&(buffer[cur_page][cur_column]),data,length);
-	write_i2c_command_block(DISPLAY_ADDRESS,0x40,data,length);
-}
-
-void render_data_to_page(uint8_t page, uint8_t column, const char* data, uint8_t length) {
-    page = (page+top_page)%8;
-    set_page(page);
-    set_column(column);
-    display_send_data(data,length);
-}
-
 void set_page(int page) {
 	send1(page+0xB0);
 	cur_page = page;
@@ -69,6 +57,19 @@ void set_column(int column) {
 	send1(16+((column+2)/16));
 	cur_column = column;
 }
+
+void display_send_data(const uint8_t *data, uint8_t length) {
+	memcpy(&(buffer[cur_page][cur_column]),data,length);
+	write_i2c_command_block(DISPLAY_ADDRESS,0x40,data,length);
+}
+
+void render_data_to_page(uint8_t page, uint8_t column, const uint8_t *data, uint8_t length) {
+    page = (page+top_page)%8;
+    set_page(page);
+    set_column(column);
+    display_send_data(data,length);
+}
+
 
 void display_clear_page(uint8_t page) {
 	page = (page+top_page)%8;
