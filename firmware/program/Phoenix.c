@@ -47,11 +47,23 @@ void main(){
 	sensors_init();
 	interface_init();
 	display_clear_screen();
-	while (true){
-		__delay_ms(500);
-		sprintf(text,"%f",get_bat_charge());
-		display_write_text(2,0,text,&large_font,false);
-	}
+// 	while (true){
+// 		__delay_ms(500);
+// 		sprintf(text,"%f",get_bat_charge());
+// 		display_write_text(2,0,text,&large_font,false);
+// 		__delay_ms(500);		
+// 		switch(get_bat_status()) {
+// 			case DISCHARGING:
+// 				display_write_text(2,0,"DISCHARG  ",&large_font,false);
+// 				break;
+// 			case CHARGING:
+// 				display_write_text(2,0,"CHGING    ",&large_font,false);
+// 				break;
+// 			case CHARGED:
+// 				display_write_text(2,0,"CHRGED  ",&large_font,false);
+// 				break;
+// 		}
+// 	}
 //  	while (true) {
 //  		action = get_action();
 // 		display_clear_screen();
@@ -80,6 +92,6 @@ void main(){
 //  		}
 //  		__delay_ms(700);
 //  	}
-	show_menu(FIRST_MENU_ITEM,true);
-	while(true) Nop();
+	
+	while(true) show_menu(FIRST_MENU_ITEM,true);
 }

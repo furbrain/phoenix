@@ -9,7 +9,9 @@
 #define DISPLAY_ADDRESS 0x3c
 #define NUM_PAGES 8
 
+#ifndef BOOTLOADER
 uint8_t buffer[NUM_PAGES][128];
+#endif
 
 int top_page = 0;
 bool display_inverted = false;
@@ -59,7 +61,9 @@ void set_column(int column) {
 }
 
 void display_send_data(const uint8_t *data, uint8_t length) {
+#ifndef BOOTLOADER
 	memcpy(&(buffer[cur_page][cur_column]),data,length);
+#endif
 	write_i2c_command_block(DISPLAY_ADDRESS,0x40,data,length);
 }
 
@@ -73,10 +77,16 @@ void render_data_to_page(uint8_t page, uint8_t column, const uint8_t *data, uint
 
 void display_clear_page(uint8_t page) {
 	page = (page+top_page)%8;
-	memset(buffer[page],0,128);
 	set_column(0);
 	set_page(page);
+#ifdef BOOTLOADER
+	uint8_t buffer[128];
+	memset(buffer,0,128);
+	write_i2c_command_block(DISPLAY_ADDRESS,0x40,buffer,128);
+#else
+	memset(buffer[page],0,128);
 	write_i2c_command_block(DISPLAY_ADDRESS,0x40,buffer[page],128);
+#endif
 }
 void display_clear_screen() {
 	int x = 0;
@@ -85,6 +95,11 @@ void display_clear_screen() {
 	}
 }
 
+void display_set_brightness(uint8_t brightness){
+	send2(0x81,brightness);
+}
+
+#ifndef BOOTLOADER
 void display_write_text(int page, int column, const char* text, const struct FONT *font, bool right_justify) {
     int i = 0;
     int end_col;
@@ -256,6 +271,4 @@ void display_flip(bool invert) {
 	
 }
 
-void display_set_brightness(uint8_t brightness){
-	send2(0x81,brightness);
-}
+#endif

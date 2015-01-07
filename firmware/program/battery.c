@@ -1,14 +1,12 @@
 #define USE_AND_OR
-#include "config.h"
-
-#define USE_AND_OR
+#define FCY 16000000
 #include <libpic30.h>
 #include "battery.h"
 #include <adc.h>
 #include <stdint.h>
-#define TRIS_BAT_STATUS TRISBbits.TRISB5
-#define LAT_BAT_STATUS LATBbits.LATB5
-#define PORT_BAT_STATUS PORTBbits.RB5
+#define TRIS_BAT_STATUS TRISAbits.TRISA4
+#define LAT_BAT_STATUS LATAbits.LATA4
+#define PORT_BAT_STATUS PORTAbits.RA4
 
 #define TRIS_BAT_CHARGE TRISBbits.TRISB13
 #define ADC_BAT_CHARGE 11
@@ -16,11 +14,23 @@
 
 enum BAT_STATUS get_bat_status(){
 	TRIS_BAT_STATUS = 1;
+	if (U1OTGSTATbits.SESVD) {
+		if (PORT_BAT_STATUS) {
+			return CHARGED;
+		} else {
+			return CHARGING;
+		}
+	} else {
+		return DISCHARGING;
+	}
+	
 	if (PORT_BAT_STATUS) {
 		/* either discharging or fully charged */
-		TRIS_BAT_STATUS = 0;
 		LAT_BAT_STATUS = 0;
+		TRIS_BAT_STATUS = 0;
+		Nop();
 		TRIS_BAT_STATUS = 1;
+		__delay_us(30);
 		if (PORT_BAT_STATUS) {
 			/* fully charged */
 			return CHARGED;
@@ -29,9 +39,11 @@ enum BAT_STATUS get_bat_status(){
 		}
 	} else {
 		/* either discharging or charging */
-		TRIS_BAT_STATUS = 0;
 		LAT_BAT_STATUS = 1;
+		TRIS_BAT_STATUS = 0;
+		Nop();
 		TRIS_BAT_STATUS = 1;
+		__delay_us(30);
 		if (!PORT_BAT_STATUS) {
 			/* fully charged */
 			return CHARGING;
@@ -41,6 +53,7 @@ enum BAT_STATUS get_bat_status(){
 	}
 }
 
+#ifndef BOOTLOADER
 double get_bat_charge(){
 	uint16_t ports = 0x7FFF; //enable band-gap reference
 	uint16_t scans;
@@ -65,5 +78,7 @@ double get_bat_charge(){
 	while(BusySampADC1); /*wait till conversion complete*/
 	bg = ReadADC10(1);
 	CloseADC10();
+	return (bat_voltage*2.0*3.3/1024.0);
 	return (2.0*bat_voltage)/(bg/1.2); //multiply by two as voltage has been halved, 1.2 is bandgap voltage.
 }
+#endif

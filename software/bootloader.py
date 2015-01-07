@@ -3,6 +3,7 @@
 import re
 import operator
 import usb
+import struct
 
 # plans...
 # load in hex file - possibly munged to separate out the flash bits etc...
@@ -24,21 +25,18 @@ CHECK_I2C_READY = 112
 def clean_list(buffer):
     for i in range(0,len(buffer)):
         if buffer[i] is None:
-            buffer[i] = 0
+            buffer[i] = 0x00
 
 class HexFileError(Exception):
-    def _init__(self,value):
-        self.value = value
-    def __str__(self):
-        return repr(self.value)
+        def _init__(self,value):
+            self.value = value
+        def __str__(self):
+            return repr(self.value)
 
 class HexFile:
     def __init__(self,fname):
-        self.program = [None] * 0x10000
-        self.config = [None] * 0x10
-        self.eeprom = [None] * 0x100
-        self.devid = [None] * 0x08
-        active = self.program
+        self.program = [None] * 0x40000
+        page = 0;
         f = file(fname,"rU")
         for s in f:
             if (s[0] == ":"):
@@ -59,7 +57,7 @@ class HexFile:
                 # rectype not known. Fall over
                 raise HexFileError("Unknown record format")
             if (rectype == 0):
-                active[offset:offset+reclen] = data
+                self.program[page+offset:page+offset+reclen] = data
             if (rectype == 1):
                 #end of file
                 return None
@@ -70,22 +68,13 @@ class HexFile:
                 if reclen != 2:
                     #incorrect length
                     raise HexFileError("Bad format")
-                if data[1]==0x00:
-                    active = self.program
-                if data[1]==0x20:
-                    active = self.devid
-                if data[1]==0x30:
-                    active = self.config
-                if data[1]==0xf0:
-                    active = self.eeprom
+                page = data[1]*0x10000;
+                if page>0x40000:
+                    raise HexFileError("Page %d out of range" % page)
 
 
 class ProgrammerError(Exception):
-    def _init__(self,value):
-        self.value = value
-    def __str__(self):
-        return repr(self.value)
-
+    pass
 class Programmer:
     def __init__(self,vID = 0xa0a0, pID = 0x0002, configuration = 0, interface = 0):
         for bus in usb.busses():
@@ -95,66 +84,64 @@ class Programmer:
                     handle.setConfiguration(configuration)
                     #handle.claimInterface(interface)
                     self.handle = handle
+                    chip_info = self.read_data(GET_CHIP_INFO,0,20)
+                    chip_info = struct.pack('20B',*chip_info)
+                    chip_data = struct.unpack('4I2B2x',chip_info)
+                    self.user_range = chip_data[0:2]
+                    self.config_range = chip_data[2:4]
+                    self.bytes_per_row = chip_data[4]*chip_data[5]
                     return None
         raise ProgrammerError("Bootloader not found")
         
-    def read_data(self,command,address,size):
+    def read_data(self,command,address,size,timeout=100):
         index = 0
         if address > 0xFFFF:
             index = address >> 16
             address = address & 0xFFFF
-        buf = self.handle.controlMsg(usb.ENDPOINT_IN | usb.TYPE_VENDOR | usb.RECIP_OTHER,command,size,value=address,index=index)
+        buf = self.handle.controlMsg(usb.ENDPOINT_IN | usb.TYPE_VENDOR | usb.RECIP_OTHER,command,size,value=address,index=index,timeout=timeout)
         if len(buf) != size:
-            raise ProgrammerError("Error reading data")
+            print len(buf)
+            raise ProgrammerError("Error reading data : only got %d bytes, expecting %d" % (len(buf),size))
         return buf
 
-    def write_data(self,command,address,data):
+    def write_data(self,command,address,data,timeout=100):
     #construct data package - size is 64 bits...
         index = 0
         if address > 0xFFFF:
             index = address >> 16
             address = address & 0xFFFF
-        r = self.handle.controlMsg(usb.ENDPOINT_OUT | usb.TYPE_VENDOR | usb.RECIP_OTHER,command,data,value=address,index=index)
+        r = self.handle.controlMsg(usb.ENDPOINT_OUT | usb.TYPE_VENDOR | usb.RECIP_OTHER,command,data,value=address,index=index,timeout=timeout)
         if r != len(data):
             raise ProgrammerError("Error writing data")
         return r
 
     def write_program(self,hexfile,set_range=None,set_progress=None):
         #this is to write 64 byte blocks...
+        self.write_data(CLEAR_FLASH,0,[],timeout=10000)
         if set_range:
             set_range(len(hexfile.program))
-        for i in range(0,len(hexfile.program),64):
+        for i in range(self.user_range[0],self.user_range[1],self.bytes_per_row):
             #check to see if there is any data...
-            subset = hexfile.program[i:i+64]
-            if subset.count(None) < 64:
+            subset = hexfile.program[i:i+self.bytes_per_row]
+            if subset.count(None) < self.bytes_per_row:
                 clean_list(subset)
-                self.write_data(ERASE_FLASH,i,[1])
-                for j in range(0,64,16):
-                    self.write_data(WRITE_FLASH,i+j,subset[j:j+16])
+                self.write_data(SEND_DATA,i,subset)
+           
             if set_progress:
                 set_progress(i)
 
-    def write_config(self,hexfile):
-        subset = hexfile.config[0:16]
-        if subset.count(None) < len(subset):
-            self.write_data(ERASE_FLASH,0x300000,[1])
-            self.write_data(WRITE_CONFIG,0x300000,subset)
-
-    def write_devid(self,hexfile):
-        subset = hexfile.config[0:8]
-        if subset.count(None) < len(subset):
-            clean_list(subset)
-            self.write_data(ERASE_FLASH,0x200000,[1])
-            self.write_data(WRITE_CONFIG,0x200000,subset)
-
-    def write_flash(self,hexfile,set_range=None,set_progress=None):
+    def verify_program(self,hexfile,set_range=None,set_progress=None):
         if set_range:
-            set_range(256)
-	for i in range(0,256,16):
-            subset = hexfile.eeprom[i:i+16]
-            if subset.count(None) < 16:
+            set_range(len(hexfile.program))
+        for i in range(self.user_range[0],self.user_range[1],self.bytes_per_row):
+            #check to see if there is any data...
+            subset = hexfile.program[i:i+self.bytes_per_row]
+            if subset.count(None) < self.bytes_per_row:
                 clean_list(subset)
-                self.write_data(WRITE_EEDATA,i,subset)
+                pic_data = self.read_data(REQUEST_DATA,i,self.bytes_per_row)
+                for j in range(self.bytes_per_row):
+                    if (pic_data[j]!=subset[j]):
+                        raise ProgrammerError("Mismatch found at 0x%X (0x%x != 0x%x)" % (i+j,pic_data[j],subset[j]))
             if set_progress:
                 set_progress(i)
 

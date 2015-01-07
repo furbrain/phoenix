@@ -33,9 +33,12 @@
 #include <PPS.h>
 #include <outcompare.h>
 #include <libpic30.h>
+#include <dpslp.h>
+#include <stdint.h>
 #include "i2c_util.h"
 #include "usb_config.h"
 #include "usb_ch9.h"
+#include "battery.h"
 
 _CONFIG1(WDTPS_PS16 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx3 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
 _CONFIG2(POSCMOD_NONE & I2C1SEL_PRI & IOL1WAY_OFF & OSCIOFNC_OFF & FCKSM_CSDCMD & FNOSC_FRCPLL & PLL96MHZ_ON & PLLDIV_NODIV & IESO_OFF)
@@ -226,8 +229,52 @@ static int8_t check_i2c_ready(uint8_t device_address) {
 	return 0;
 }
 
+
+uint8_t reverse(uint8_t b) {
+   b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+   b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+   b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+   return b;
+}
+
+void display_show_bat(int charge) {
+	static int counter = 0;
+	int i;
+	// set page and column to top right
+	char bat_status[24];
+	if (charge==-1) {
+		charge = counter;
+		counter++;
+		if (counter>18) counter = 0;
+	}
+	bat_status[0] = 0xf8;
+	bat_status[1] = 0x04;
+	memset(&bat_status[2],0xf4,charge);
+	memset(&bat_status[2+charge],0x04,19-charge);
+	bat_status[21] = 0xf8;
+	bat_status[22] = 0x20;
+	bat_status[23] = 0xC0;
+	render_data_to_page(0,104,bat_status,24);
+	for (i = 0; i< 24; ++i) {
+		bat_status[i] = reverse(bat_status[i]);
+	}
+	render_data_to_page(1,104,bat_status,24);
+}
+
+
+void __attribute__ ((interrupt,no_auto_psv,shadow)) _USB1Interrupt() {
+	U1OTGIEbits.SESVDIE = 0;
+	IEC5bits.USB1IE = 0;
+	__asm__("reset");
+}
+
 int main(void)
 {
+	uint32_t pll_startup_counter = 600;
+	int display_initialised = 0;
+	int counter = 0;
+	enum BAT_STATUS bat_status;
+	
 	IVT_MAP_BASE = LINKER_VAR(IVT_MAP_BASE);
 	APP_BASE = LINKER_VAR(APP_BASE);
 	APP_LENGTH = LINKER_VAR(APP_LENGTH);
@@ -235,79 +282,43 @@ int main(void)
 	FLASH_TOP = LINKER_VAR(FLASH_TOP);
 	CONFIG_WORDS_BASE = LINKER_VAR(CONFIG_WORDS_BASE);
 	CONFIG_WORDS_TOP = LINKER_VAR(CONFIG_WORDS_TOP);
+	ReleaseDeepSleep();
 	/* setup ports */
 	/* enable peripherals */
-	/* first look to see if we should be running bootloader at all... */
 	TRISBbits.TRISB14 = 0;
-	TRISBbits.TRISB3 = 0;
 	LATBbits.LATB14 = 0;
-	LATBbits.LATB3 = 0;
-	/* setup PWM outputs*/
-	iPPSOutput(OUT_PIN_PPS_RP1,OUT_FN_PPS_OC3);
-	iPPSOutput(OUT_PIN_PPS_RP0,OUT_FN_PPS_OC1);
-	iPPSOutput(OUT_PIN_PPS_RP3,OUT_FN_PPS_OC2);
-	/* set OC1 (RB1) to have an output of 125kHz with a half duty cycle */
-	OpenOC3(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, 0x7F,0x3F);
-	OpenOC1(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, 0x1FFF,0xffF);
-	__delay_ms(3000);
-	OpenOC2(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_OC1 | OC_OUT_INVERT, 0x1FFF,0xfFF);
-	__delay_ms(3000);
-	CloseOC1();
-	CloseOC2();
-	CloseOC3();
-	LATBbits.LATB14 = 1;
+	TRISBbits.TRISB1 = 0;
 	LATBbits.LATB1 = 0;
-	i2c_init();
 
-	
-
-#if defined(__PIC24FJ64GB002__) || defined(__PIC24FJ256DA206__)
-	uint32_t pll_startup_counter = 600;
+	/* first look to see if we should be running bootloader at all... */
 	CLKDIVbits.PLLEN = 1;
 	while(pll_startup_counter--);
-#elif _18F46J50
-	unsigned int pll_startup = 600;
-	OSCTUNEbits.PLLEN = 1;
-	while (pll_startup--)
-		;
-#endif
 
-#if defined(USB_USE_INTERRUPTS) && defined (_PIC18)
-	INTCONbits.PEIE = 1;
-	INTCONbits.GIE = 1;
-#endif
-
-	if (!(RCONbits.POR || RCONbits.BOR)) {
-		/* Jump to application */
-		__asm__("goto %0"
-		        : /* no outputs */
-			: "r" (IVT_MAP_BASE)
-			: /* no clobber*/);
-	}
-	RCONbits.POR = 0;
-	RCONbits.BOR = 0;
-	
-	/*hello world stuff */
-	/*TRISBbits.TRISB0 = 0;
-	while (1) {
-		LATBbits.LATB0 = 0;
-		pll_startup_counter=0xFFFFF;
-		while(pll_startup_counter--){
-			Nop();
-		}
-		LATBbits.LATB0 = 1;
-		pll_startup_counter=0xFFFFF;
-		while(pll_startup_counter--){
-			Nop();
-		}
-	}*/
+	i2c_init();
+	display_init();
+	display_clear_screen();
 	usb_init();
-	
+	__delay_ms(3);
 	while (1) {
-		#ifndef USB_USE_INTERRUPTS
+		bat_status = get_bat_status();
+		if (bat_status==DISCHARGING) break;
+		counter++;
+		if ((counter & 0x3fff)==0) {
+			// only update display every 32 cycles
+			if (bat_status==CHARGING) display_show_bat(-1);
+			if (bat_status==CHARGED) display_show_bat(18);
+		}
 		usb_service();
-		#endif
 	}
+	LATBbits.LATB1 = 1; //turn laser on to indicate startup...
+	/* set up a reset that will fire when USB connected... */
+	U1OTGIEbits.SESVDIE = 1;
+	IEC5bits.USB1IE = 1;
+	/* Jump to application */
+	__asm__("goto %0"
+		: /* no outputs */
+		: "r" (IVT_MAP_BASE)
+		: /* no clobber*/);
 
 	return 0;
 }

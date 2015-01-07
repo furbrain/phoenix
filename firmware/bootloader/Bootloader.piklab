@@ -17,16 +17,14 @@
       <item>i2c_util.h</item>
       <item>battery.c</item>
       <item>battery.h</item>
+      <item>usb.h</item>
+      <item>display.c</item>
+      <item>display.h</item>
     </files>
     <description/>
     <version>0.1</version>
     <output_type>executable</output_type>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/bootloader/gld/pic24fj64gb002-bootloader.gld</custom_linker_script>
-    <opened_files>
-      <item>main.c</item>
-      <item>battery.h</item>
-      <item>/home/phil/Projects/phoenix/firmware/program/battery.c</item>
-    </opened_files>
   </general>
   <compiler>
     <has_custom_arguments>false</has_custom_arguments>
@@ -61,7 +59,7 @@
   <linker>
     <has_custom_arguments>false</has_custom_arguments>
     <custom_options>-DBOOTLOADER -omf=coff</custom_options>
-    <custom_libraries>-lc -lpic30 -lpPIC24Fxxx</custom_libraries>
+    <custom_libraries>-lc -lpic30 -lpPIC24Fxxx -lm</custom_libraries>
     <custom_arguments>
       <item>-Map</item>
       <item>%MAP</item>

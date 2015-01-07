@@ -287,10 +287,10 @@ def vert_line(column):
         disp.set_column(column)
         disp.send_data([0xFF])
 
-face = freetype.Face('/usr/share/fonts/X11/misc/ter-u32n_unicode.pcf.gz')
-face.set_char_size(face.available_sizes[0].size)
-#face = freetype.Face('/usr/share/fonts/truetype/droid/DroidSans.ttf')
-#face.set_char_size(32*64)
+#face = freetype.Face('/usr/share/fonts/X11/misc/ter-u32n_unicode.pcf.gz')
+#face.set_char_size(face.available_sizes[0].size)
+face = freetype.Face('/usr/share/fonts/truetype/droid/DroidSans.ttf')
+face.set_char_size(24*64)
 all_glyphs = dict((x,Glyph(x,face)) for x in string.printable)
 
 if __name__=="__main__":
