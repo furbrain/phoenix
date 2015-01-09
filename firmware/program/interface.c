@@ -11,6 +11,7 @@
 #include "sensors.h"
 #include "display.h"
 #include "power.h"
+#include "config.h"
 
 #define scroll_text(index,direction) display_scroll_text(2,0,menu_items[index].text,&large_font,direction)
 #define delay_ms(delay) __delay_ms(delay)
@@ -30,15 +31,10 @@ void measure() {}
 void quick_cal() {}
 void full_cal() {}
 void laser_cal() {}
-void set_metric() {}
-void set_imperial() {}
-void set_cartesian() {}
-void set_polar() {}
-void set_grad() {}
-void set_day() {}
-void set_night() {}
 
 /* a null-terminated list of menu_entries */
+
+
 const struct menu_entry menu_items[] = {
 	/* main menu */
 	{-2,NULL,0,NULL},
@@ -84,7 +80,7 @@ const struct menu_entry menu_items[] = {
 /* Timer 2 is click-to-click counter */
 /* timer 3 is click length counter */
 void interface_init() {
-    OpenTimer2(T2_ON | T2_IDLE_CON | T2_PS_1_256 | T2_32BIT_MODE_OFF,0xFFFF);
+    OpenTimer2(T2_ON | T2_IDLE_CON | T2_PS_1_256 | T2_32BIT_MODE_OFF,0x1FFF);
     OpenTimer3(T3_ON | T3_IDLE_CON | T3_PS_1_256 ,0xFFFF);
     // enable CN23 interrupt
     ConfigIntCN(INT_ENABLE | INT_PRI_3);
@@ -118,6 +114,15 @@ void __attribute__ ((interrupt,no_auto_psv,shadow)) _CNInterrupt() {
         T2_Clear_Intr_Status_Bit;
         T3_Clear_Intr_Status_Bit;
     }
+}
+
+void swipe_text(uint8_t index, bool left) {
+    uint8_t buffer[4][128];
+    int page;
+    for (page=0; page < 4; page++) {
+        render_text_to_page(buffer[page],page,0,menu_items[index].text,&large_font);
+    }
+    display_swipe_pages(2,&buffer[page][0],4,left);
 }
 
 /* get the offset of the menu_item with the specified index */
@@ -202,38 +207,40 @@ void show_status(){
 	/* reverse bit order for second line */
 	char bat_status[24];
 	uint8_t bat_charge = 12;
-	bat_status[0] = 0xf8;
-	bat_status[1] = 0x04;
-	memset(&bat_status[2],0xf4,bat_charge);
-	memset(&bat_status[2+bat_charge],0x04,19-bat_charge);
-	bat_status[21] = 0xf8;
-	bat_status[22] = 0x20;
-	bat_status[23] = 0xC0;
-	RtccReadDate(&date);
-	RtccReadTime(&time);
-	strcpy(footer,"Metric     Polar");
-	sprintf(header,"%02d:%02d:%02d     ",
-		bcdtobyte(time.f.hour),	bcdtobyte(time.f.min),bcdtobyte(time.f.sec));
-	display_write_text(0,0,header,&small_font,false);
-	display_write_text(6,0,footer,&small_font,false);
-	render_data_to_page(0,104,bat_status,24);
-	for (x=0; x< 24; ++x) {
-	    bat_status[x] = reverse(bat_status[x]);
-	}
-	render_data_to_page(1,104,bat_status,24);
+	if (!day) {
+	    bat_status[0] = 0xf8;
+	    bat_status[1] = 0x04;
+	    memset(&bat_status[2],0xf4,bat_charge);
+	    memset(&bat_status[2+bat_charge],0x04,19-bat_charge);
+	    bat_status[21] = 0xf8;
+	    bat_status[22] = 0x20;
+	    bat_status[23] = 0xC0;
+	    RtccReadDate(&date);
+	    RtccReadTime(&time);
+	    strcpy(footer,"Metric     Polar");
+	    sprintf(header,"%02d:%02d:%02d     ",
+		    bcdtobyte(time.f.hour),	bcdtobyte(time.f.min),bcdtobyte(time.f.sec));
+	    display_write_text(0,0,header,&small_font,false);
+	    display_write_text(6,0,footer,&small_font,false);
+	    render_data_to_page(0,104,bat_status,24);
+	    for (x=0; x< 24; ++x) {
+	        bat_status[x] = reverse(bat_status[x]);
+	    }
+	    render_data_to_page(1,104,bat_status,24);
+    }
 }
 
 bool show_menu(int16_t index, bool first_time) {
     enum ACTION action;
     bool result;
     if (first_time) {
-        scroll_text(index,true);
+        swipe_text(index,true);
     } else {
-        scroll_text(index,true);
+        swipe_text(index,true);
     }
     while(true) {
         delay_ms(50);
-	show_status();
+	    show_status();
         action = get_action();
         switch(action){
             case FLIP_DOWN:
@@ -248,8 +255,6 @@ bool show_menu(int16_t index, bool first_time) {
             case SINGLE_CLICK:
                 if (menu_items[index].next_menu != -1) {
                     result = show_menu(get_menu_item_offset(menu_items[index].next_menu),false);
-                    //display_scroll_text(2,0,"ACTION",&large_font,false);
-                    //result = false;
                 } else {
                     if (action==SINGLE_CLICK){
                         menu_items[index].action();
@@ -265,19 +270,19 @@ bool show_menu(int16_t index, bool first_time) {
                         return true;   
                     }
                 } else {
-                    //FIXME swipe_text(index,false);
+                    swipe_text(index,false);
                 }
                 break;
             case FLIP_LEFT:
                 if (!first_time) return false;
                 break;
-	    case DOUBLE_CLICK:
-		hibernate();
-		break;
+	        case DOUBLE_CLICK:
+		        hibernate();
+		        break;
             }   
         if (action!=NONE) {
-		show_status();
-		delay_ms(300);
-	}
+		    show_status();
+		    delay_ms(500);
+	    }
     }
 }

@@ -1,5 +1,6 @@
 #include "config.h"
 #include "i2c_util.h"
+#include "display.h"
 #include <libpic30.h>
 
 /*define eeprom memory type*/
@@ -24,6 +25,8 @@ struct CONFIG config = {
 //so we'll just have to access it manually
 EEPROM_VAR(struct CONFIG config_store,2); //have config_store in bottom part of ram
 EEPROM_VAR(struct LEG leg_store[LEG_COUNT],LEG_STORE_ADDRESS);
+
+bool day;
 
 /* eeprom access functions */
 void __read_external(unsigned int address, unsigned int memory_space, void *buffer, unsigned int len) {
@@ -81,8 +84,45 @@ void config_init(){
     }
 
 }
+
 void config_save(){
     config_store = config;
+}
+
+/* config management */
+void set_metric() {
+    config.length_units = METRIC;
+    config_save();
+}
+
+void set_imperial() {
+    config.length_units = IMPERIAL;
+    config_save();
+}
+
+void set_cartesian() {
+    config.display_style = CARTESIAN;
+    config_save();
+}
+
+void set_polar() {
+    config.display_style = POLAR;
+    config_save();
+}
+
+void set_grad() {
+    config.display_style = GRAD;
+    config_save();
+}
+
+void set_day() {
+    day = true;
+    display_set_day(day);
+}
+
+void set_night() {
+    day = false;
+    display_set_day(day);
 }
     
     

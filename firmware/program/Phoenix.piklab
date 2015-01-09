@@ -31,16 +31,6 @@
     <description/>
     <version>0.1</version>
     <output_type>executable</output_type>
-    <opened_files>
-      <item>ftoa.h</item>
-      <item>ftoa.c</item>
-      <item>Phoenix.c</item>
-      <item>battery.h</item>
-      <item>battery.c</item>
-      <item>standalone.gld</item>
-      <item>Phoenix.hex</item>
-      <item>Phoenix.map</item>
-    </opened_files>
   </general>
   <editors/>
   <compiler>

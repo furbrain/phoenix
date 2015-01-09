@@ -1,4 +1,5 @@
 #include "display.h"
+#include "config.h"
 #include "i2c_util.h"
 #define FCY 16000000
 #include <libpic30.h>
@@ -42,6 +43,7 @@ void display_init() {
 	send1(0xC0);
 	display_set_brightness(0xFF);
 	send2(0xD3,0);
+	send1(0x40);
 	send1(0xA6);
 }
 
@@ -139,7 +141,7 @@ void display_scroll_page(uint8_t *data,  bool up){
         display_send_data(temp_buffer,128);
         // now rotate it
         for(i=0;i<8;++i) {
-            send2(0xD3,(top_page*NUM_PAGES+i+1) % 64);
+            send1(0x40 | (top_page*NUM_PAGES+i+1) % 64);
 	        set_column(0);
 	        mask = ((1<<(i+1))-1);
 	        for(j=0;j<128;++j){
@@ -155,7 +157,7 @@ void display_scroll_page(uint8_t *data,  bool up){
         display_send_data(temp_buffer,128);
         // now rotate it
 	    for(i=0;i<8;++i){
-            send2(0xD3,(top_page*NUM_PAGES-(i+1)) % 64);
+            send1(0x40 | (top_page*NUM_PAGES-(i+1)) % 64);
 	        set_column(0);
 	        mask = (256-(1<<(NUM_PAGES-i)));
 	        for(j=0;j<128;++j){
@@ -197,6 +199,11 @@ int render_text_to_page(uint8_t *buffer, int page, int column, const char *text,
 void display_scroll_text(int page, int column, const char *text, const struct FONT *font, bool up) {
     uint8_t temp_buffer[128];
     int i;
+    if (day) {
+        page -=2;
+        page = (page+8) % 8;
+    }
+    
     if (up) {
         i = 0;
         while ((8-i)>page) {
@@ -269,6 +276,16 @@ void display_flip(bool invert) {
 	    display_send_data(buffer[i],128);
 	}
 	
+}
+
+void display_set_day(bool day) {
+    if (day) {
+        send2(0xA8,0x1F);
+        send2(0xD3,0x30);
+    } else {
+       	send2(0xA8,0x3F);
+        send2(0xD3,0x00);
+    }
 }
 
 #endif

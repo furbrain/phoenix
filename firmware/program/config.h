@@ -5,6 +5,7 @@
 
 #define FIRMWARE_VERSION 1
 #include <stdint.h>
+#include <stdbool.h>
 
 enum DISPLAY_STYLE {
     UNINITIALISED = 0,
@@ -50,7 +51,18 @@ extern struct CONFIG config;
 
 extern uint16_t current_leg;
 
+extern bool day;
+
 void config_init();
 void config_save();
+
+void set_metric();
+void set_imperial();
+void set_cartesian();
+void set_polar();
+void set_grad();
+void set_day();
+void set_night();
+
 #endif
 #endif

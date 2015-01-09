@@ -2,7 +2,6 @@
 #define INTERFACE_H
 #include <stdint.h>
 #include <stdbool.h>
-#define FIRST_MENU_ITEM 1
 enum ACTION {
     NONE = 0,
     FLIP_DOWN,
@@ -14,7 +13,7 @@ enum ACTION {
     DOUBLE_CLICK
 };
 
-
+#define FIRST_MENU_ITEM 1
 enum ACTION get_action();
 bool show_menu(int16_t index, bool first_time);
 #endif

@@ -30,5 +30,8 @@ void display_swipe_pages(int start_page, uint8_t *data, int page_count, bool lef
 void display_scroll_text(int page, int column, const char *text, const struct FONT *font, bool up);
 
 void display_flip(bool invert);
+
+void display_set_day(bool day);
+
 #endif
 #endif
