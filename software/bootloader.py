@@ -169,18 +169,8 @@ if __name__=="__main__":
     EEPROM=0x50
     MPU = 0x68
     p = Programmer()
-    print p.check_i2c(MPU)
-    print p.read_data(REQUEST_DATA,0x0100,2)
-    p.write_i2c(MPU,[0x0e])
-    print p.read_i2c(MPU,2)
-    #print p.check_i2c(EEPROM)
-    time.sleep(0.1)
-    print p.check_i2c(EEPROM)
-    print p.write_i2c(EEPROM,(0x00,0x10,0xde,0xad,0xbe,0xe5))
-    time.sleep(0.1)
-    print p.check_i2c(EEPROM)
-    time.sleep(0.1)
-    p.write_i2c(EEPROM,[0x00,0x10])
-    time.sleep(0.1)
-    print ([hex(x) for x in p.read_i2c(EEPROM,4)])
+    p.write_i2c(EEPROM,[0x00,0x00])
+    buff = p.read_i2c(EEPROM,80)
+    buff = struct.pack('80B',*buff)
+    print struct.unpack('<H9f9f1fBB',buff)
 

@@ -5,6 +5,7 @@
 #include <ports.h>
 #include <PPS.h>
 #include <libpic30.h>
+#include <Rtcc.h>
 
 #define TRIS_PERIPHERALS TRISBbits.TRISB14
 #define LAT_PERIPHERALS LATBbits.LATB14
@@ -43,6 +44,11 @@ void peripherals_init() {
 	iPPSOutput(RP_LASER,OUT_FN_PPS_OC3);
 	iPPSOutput(RP_BUZZER_A,OUT_FN_PPS_OC1);
 	iPPSOutput(RP_BUZZER_B,OUT_FN_PPS_OC2);
+	
+	//turn on clock
+	RtccInitClock(); //turn on clock source
+	RtccWrOn(); //unlock writes to RTCC control register
+	mRtccOn(); //enable RTCC peripheral
 
 }
 

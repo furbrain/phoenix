@@ -25,6 +25,10 @@
     <version>0.1</version>
     <output_type>executable</output_type>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/bootloader/gld/pic24fj64gb002-bootloader.gld</custom_linker_script>
+    <opened_files>
+      <item>main.c</item>
+      <item>gld/pic24fj64gb002-bootloader.gld</item>
+    </opened_files>
   </general>
   <compiler>
     <has_custom_arguments>false</has_custom_arguments>

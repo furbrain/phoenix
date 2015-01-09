@@ -5,12 +5,6 @@
 
 #define USE_AND_OR
 #include <libpic30.h>
-#include <xc.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <dpslp.h>
-#include <Rtcc.h>
 #include "display.h"
 #include "font.h"
 #include "sensors.h"
@@ -18,80 +12,18 @@
 #include "peripherals.h"
 #include "battery.h"
 
-/* ----------------------------------------------------------------------- */
-/* Configuration bits: adapt to your setup and needs */
-_CONFIG1(WDTPS_PS16 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx3 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
-_CONFIG2(POSCMOD_NONE & I2C1SEL_PRI & IOL1WAY_OFF & OSCIOFNC_OFF & FCKSM_CSDCMD & FNOSC_FRCPLL & PLL96MHZ_ON & PLLDIV_NODIV & IESO_OFF)
-_CONFIG3(WPFP_WPFP0 & SOSCSEL_IO & WUTSEL_LEG & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)
-_CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_SOSC & RTCOSC_LPRC & DSBOREN_OFF & DSWDTEN_OFF)
 
 
 void main(){
-	char text[12];
-	float temperature;
-	int i,j,offset;
-	uint8_t temp_buffer[128];
-	enum ACTION action;
-	const struct GLYPH_DATA *glyph;
-	struct COOKED_SENSORS sensors;
-	//turn on peripherals...
-	RtccInitClock(); //turn on clock source
-	RtccWrOn(); //unlock writes to RTCC control register
-	mRtccOn(); //enable RTCC peripheral
-	ReleaseDeepSleep();
+    //various init functions
 	peripherals_init();
 	peripherals_on(true);
-	__delay_ms(3);
 	i2c_init();
+	config_init();
 	display_init();
 	sensors_init();
 	interface_init();
 	display_clear_screen();
-// 	while (true){
-// 		__delay_ms(500);
-// 		sprintf(text,"%f",get_bat_charge());
-// 		display_write_text(2,0,text,&large_font,false);
-// 		__delay_ms(500);		
-// 		switch(get_bat_status()) {
-// 			case DISCHARGING:
-// 				display_write_text(2,0,"DISCHARG  ",&large_font,false);
-// 				break;
-// 			case CHARGING:
-// 				display_write_text(2,0,"CHGING    ",&large_font,false);
-// 				break;
-// 			case CHARGED:
-// 				display_write_text(2,0,"CHRGED  ",&large_font,false);
-// 				break;
-// 		}
-// 	}
-//  	while (true) {
-//  		action = get_action();
-// 		display_clear_screen();
-//  		switch (action){
-//  			case FLIP_UP:
-//  				display_write_text(2,0,"FLIP_UP",&large_font,false);
-//  				break;
-//  			case FLIP_DOWN:
-//  				display_write_text(2,0,"FLIP_DOWN",&large_font,false);
-//  				break;
-//  			case FLIP_LEFT:
-//  				display_write_text(2,0,"FLIP_LEFT",&large_font,false);
-//  				break;
-//  			case FLIP_RIGHT:
-//  				display_write_text(2,0,"FLIP_RIGHT",&large_font,false);
-//  				break;
-//  			case SINGLE_CLICK:
-//  				display_write_text(2,0,"SGL_CLICK",&large_font,false);
-//  				break;
-//  			case DOUBLE_CLICK:
-//  				display_write_text(2,0,"DBL_CLICK",&large_font,false);
-//  				break;
-//  			case LONG_CLICK:
-//  				display_write_text(2,0,"LNG_CLICK",&large_font,false);
-//  				break;
-//  		}
-//  		__delay_ms(700);
-//  	}
 	
 	while(true) show_menu(FIRST_MENU_ITEM,true);
 }
