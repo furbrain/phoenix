@@ -1,4 +1,6 @@
 #define USE_AND_OR
+#include "config.h"
+#include <libpic30.h>
 #include <dpslp.h>
 #include <ports.h>
 #include "power.h"
@@ -10,6 +12,8 @@ void hibernate() {
 	//turn off peripherals
 	peripherals_on(false);
 	//enable INT0
+	__delay_ms(2000);
+	//wait a little to avoid any extra button presses etc.
 	CloseINT0();
 	ConfigINT0(INT_ENABLE | RISING_EDGE_INT | INT_PRI_1);
 	// and snoooooze

@@ -13,7 +13,6 @@
 #include "power.h"
 #include "config.h"
 
-#define scroll_text(index,direction) display_scroll_text(2,0,menu_items[index].text,&large_font,direction)
 #define delay_ms(delay) __delay_ms(delay)
 
 
@@ -80,7 +79,7 @@ const struct menu_entry menu_items[] = {
 /* Timer 2 is click-to-click counter */
 /* timer 3 is click length counter */
 void interface_init() {
-    OpenTimer2(T2_ON | T2_IDLE_CON | T2_PS_1_256 | T2_32BIT_MODE_OFF,0x1FFF);
+    OpenTimer2(T2_ON | T2_IDLE_CON | T2_PS_1_256 | T2_32BIT_MODE_OFF,0x7FFF);
     OpenTimer3(T3_ON | T3_IDLE_CON | T3_PS_1_256 ,0xFFFF);
     // enable CN23 interrupt
     ConfigIntCN(INT_ENABLE | INT_PRI_3);
@@ -92,37 +91,55 @@ void interface_init() {
 /* change notification interrupt */
 void __attribute__ ((interrupt,no_auto_psv,shadow)) _CNInterrupt() {
     InputChange_Clear_Intr_Status_Bit;
-    if (!PORTBbits.RB7) {
-        /* it's a release */
-        /* if timer3 has interrupted, then this was a long click */
-        if (IFS0bits.T3IF) {
-            last_click = LONG_CLICK;
-        }        
-    } else {
-        /* it's a press */
-        /* if timer2 has *not* interrupted then this is a double click */
-        if (!IFS0bits.T2IF) {
-            last_click = DOUBLE_CLICK;
+    //put some delay in to prevent any bouncing on the inputs...
+    if (ReadTimer2()>0x0800) {
+        if (!PORTBbits.RB7) {
+            /* it's a release */
+            /* if timer3 has interrupted, then this was a long click */
+            if (IFS0bits.T3IF) {
+                last_click = LONG_CLICK;
+            }        
         } else {
-            /* if it has interrupted already, then we are looking at a new single click */
-            /* which could alter become a double click */
-            last_click = SINGLE_CLICK;
-        }        
-        /* reset timers */
-        WriteTimer2(0);
-        WriteTimer3(0);
-        T2_Clear_Intr_Status_Bit;
-        T3_Clear_Intr_Status_Bit;
+            /* it's a press */
+            /* if timer2 has *not* interrupted then this is a double click */
+            if (!IFS0bits.T2IF) {
+                last_click = DOUBLE_CLICK;
+            } else {
+                /* if it has interrupted already, then we are looking at a new single click */
+                /* which could alter become a double click */
+                last_click = SINGLE_CLICK;
+            }        
+            /* reset timers */
+            WriteTimer2(0);
+            WriteTimer3(0);
+            T2_Clear_Intr_Status_Bit;
+            T3_Clear_Intr_Status_Bit;
+        }
     }
 }
 
 void swipe_text(uint8_t index, bool left) {
-    uint8_t buffer[4][128];
+    uint8_t my_buffer[4*128];
     int page;
+    memset(my_buffer,0,128*4);
     for (page=0; page < 4; page++) {
-        render_text_to_page(buffer[page],page,0,menu_items[index].text,&large_font);
+        //memset(&my_buffer[page*128],0xaa,128);
+        render_text_to_page(&(my_buffer[page*128]),page,0,menu_items[index].text,&large_font);
     }
-    display_swipe_pages(2,&buffer[page][0],4,left);
+    display_swipe_pages(day?0:2,my_buffer,4,left);
+}
+
+void scroll_text(uint8_t index, bool up) {
+    if (!day) {
+        if (up) {
+            display_clear_page(6);
+            display_clear_page(7);
+        } else {
+            display_clear_page(0);
+            display_clear_page(1);
+        }
+    }
+    display_scroll_text(day?0:2,0,menu_items[index].text,&large_font,up);
 }
 
 /* get the offset of the menu_item with the specified index */
@@ -234,7 +251,7 @@ bool show_menu(int16_t index, bool first_time) {
     enum ACTION action;
     bool result;
     if (first_time) {
-        swipe_text(index,true);
+        swipe_text(index,false);
     } else {
         swipe_text(index,true);
     }
@@ -282,7 +299,7 @@ bool show_menu(int16_t index, bool first_time) {
             }   
         if (action!=NONE) {
 		    show_status();
-		    delay_ms(500);
+		    delay_ms(300);
 	    }
     }
 }

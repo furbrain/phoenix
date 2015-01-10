@@ -199,11 +199,6 @@ int render_text_to_page(uint8_t *buffer, int page, int column, const char *text,
 void display_scroll_text(int page, int column, const char *text, const struct FONT *font, bool up) {
     uint8_t temp_buffer[128];
     int i;
-    if (day) {
-        page -=2;
-        page = (page+8) % 8;
-    }
-    
     if (up) {
         i = 0;
         while ((8-i)>page) {
@@ -229,14 +224,14 @@ void display_swipe_pages(int start_page, uint8_t *data, int page_count, bool lef
     int offset;
     int page, real_page;
     uint8_t temp_buffer[128];
-    if (left){
+   if (left){
         for(offset=0;offset<128;offset+=SWIPE_STEP){
             for(page=0;page<page_count;++page){
                 memset(temp_buffer,0,128);
                 real_page = (start_page+top_page+page) % 8;
                 // copy from current buffer over into temp_buffer, 
                 memcpy(temp_buffer,&buffer[real_page][SWIPE_STEP],128-SWIPE_STEP-offset);
-                memcpy(&temp_buffer[128-offset],&data[page*128],offset);
+                memcpy(&temp_buffer[128-SWIPE_STEP-offset],&data[page*128],offset);
                 set_page(real_page);
                 set_column(0);
                 display_send_data(temp_buffer,128);
@@ -244,13 +239,13 @@ void display_swipe_pages(int start_page, uint8_t *data, int page_count, bool lef
             __delay_ms(SCROLL_RATE);
         }
     } else {
-        for(offset=128;offset>0;offset-=SWIPE_STEP){
+        for(offset=0;offset<128;offset+=SWIPE_STEP){
             for(page=0;page<page_count;++page){
                 memset(temp_buffer,0,128);
                 real_page = (start_page+top_page+page) % 8;
                 // copy from current buffer over into temp_buffer, 
-                memcpy(&temp_buffer[128+SWIPE_STEP-offset],&buffer[real_page][128-offset],offset-SWIPE_STEP);
-                memcpy(temp_buffer,&data[page*128+offset],128-offset);
+                memcpy(&temp_buffer[SWIPE_STEP],&buffer[real_page][0],128-SWIPE_STEP);
+                memcpy(temp_buffer,&data[page*128+128-SWIPE_STEP-offset],SWIPE_STEP);
                 set_page(real_page);
                 set_column(0);
                 display_send_data(temp_buffer,128);

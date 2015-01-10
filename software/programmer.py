@@ -30,7 +30,7 @@ try:
     prog.verify_program(hexfile,set_progress=show_progress)
     disp.clear_screen()
     write_text(disp,"Done   ",2,2)
-    time.sleep(2)
+    time.sleep(1)
     disp.clear_screen()
 except bootloader.ProgrammerError as e:
     print e
