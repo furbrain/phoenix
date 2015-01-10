@@ -216,7 +216,8 @@ unsigned char reverse(unsigned char b) {
 
 void show_status(){
 	char header[17];
-	char footer[17];
+	char footer[17] = "                "; //16 spaces
+	#define FOOTER_LENGTH 16
 	int x;
 	rtccTime time;
 	rtccDate date;
@@ -234,8 +235,26 @@ void show_status(){
 	    bat_status[23] = 0xC0;
 	    RtccReadDate(&date);
 	    RtccReadTime(&time);
-	    strcpy(footer,"Metric     Polar");
-	    sprintf(header,"%02d:%02d:%02d     ",
+	    switch (config.length_units) {
+	        case METRIC:
+	            memcpy(footer,"Metric",6);
+	            break;
+	        case IMPERIAL:
+	            memcpy(footer,"Imp.",4);
+	            break;
+	    }
+	    switch (config.display_style) {
+	        case POLAR:
+	            memcpy(&footer[FOOTER_LENGTH-5],"Polar",5);
+	            break;
+	        case GRAD:
+	            memcpy(&footer[FOOTER_LENGTH-5],"Grad.",5);
+	            break;
+	        case CARTESIAN:
+	            memcpy(&footer[FOOTER_LENGTH-5],"Cart.",5);
+	            break;
+	    }
+	    sprintf(header,"%02d:%02d        ",
 		    bcdtobyte(time.f.hour),	bcdtobyte(time.f.min),bcdtobyte(time.f.sec));
 	    display_write_text(0,0,header,&small_font,false);
 	    display_write_text(6,0,footer,&small_font,false);
