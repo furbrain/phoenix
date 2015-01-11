@@ -5,6 +5,7 @@
 
 #define USE_AND_OR
 #include <libpic30.h>
+#include <timer.h>
 #include "display.h"
 #include "font.h"
 #include "sensors.h"
@@ -15,12 +16,25 @@
 
 
 void main(){
+	TRIS_BUTTON = 1;
+	OpenTimer45(T45_ON | T45_IDLE_CON | T45_PS_1_256 | T4_32BIT_MODE_ON,0xFFFFFFFFL);
+	WriteTimer45(0);
+	interface_init();
+	while (last_click==NONE) {
+		if (ReadTimer45()>0x20000L) {
+			/* has taken too long to release the button */
+			hibernate();
+		}
+	}
+	last_click = NONE;
+	CloseTimer45();
+    //make sure we get a second confirmation press...
     //various init functions
 	peripherals_init();
 	peripherals_on(true);
 	i2c_init();
 	config_init();
-	display_init();
+	//display_init();
 	sensors_init();
 	interface_init();
 	display_clear_screen();

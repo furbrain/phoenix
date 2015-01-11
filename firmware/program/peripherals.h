@@ -9,7 +9,7 @@ void peripherals_on(bool on);
 
 void laser_on(bool on);
 
-void laser_set_brightness(uint8_t brightness);
+void laser_set_day(bool day);
 
 void beep(double freq, uint16_t ms);
 

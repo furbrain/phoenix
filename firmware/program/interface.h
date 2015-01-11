@@ -2,6 +2,9 @@
 #define INTERFACE_H
 #include <stdint.h>
 #include <stdbool.h>
+
+#define TRIS_BUTTON TRISBbits.TRISB7
+#define PORT_BUTTON PORTBbits.RB7
 enum ACTION {
     NONE = 0,
     FLIP_DOWN,
@@ -15,5 +18,6 @@ enum ACTION {
 
 #define FIRST_MENU_ITEM 1
 enum ACTION get_action();
+extern volatile enum ACTION last_click;
 bool show_menu(int16_t index, bool first_time);
 #endif

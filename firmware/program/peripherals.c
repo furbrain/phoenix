@@ -11,6 +11,7 @@
 #define LAT_PERIPHERALS LATBbits.LATB14
 
 #define TRIS_LASER TRISBbits.TRISB1
+#define LAT_LASER LATBbits.LATB1
 #define RP_LASER OUT_PIN_PPS_RP1
 #define PWM_LASER OUT_FN_PPS_OC3
 
@@ -28,12 +29,17 @@
 #define TRIS_NC_1 TRISBbits.TRISB2
 #define TRIS_NC_2 TRISBbits.TRISB4
 #define TRIS_NC_3 TRISAbits.TRISA4
-uint8_t laser_brightness = 0x30;
+
+#define LASER_DAY_BRIGHTNESS 0xff
+#define LASER_NIGHT_BRIGHTNESS 0x30
+
+uint8_t laser_brightness = LASER_NIGHT_BRIGHTNESS;
 
 void peripherals_init() {
 	//set TRIS settings
 	TRIS_PERIPHERALS  = 0;
 	TRIS_LASER = 0;
+	LAT_LASER = 0;
 	TRIS_BUZZER_A = 0;
 	TRIS_BUZZER_B = 0;
 	TRIS_BAT_STATUS = 1;
@@ -49,6 +55,8 @@ void peripherals_init() {
 	RtccInitClock(); //turn on clock source
 	RtccWrOn(); //unlock writes to RTCC control register
 	mRtccOn(); //enable RTCC peripheral
+	
+	laser_on(true);
 
 }
 
@@ -58,13 +66,19 @@ void peripherals_on(bool on) {
 
 void laser_on(bool on) {
 	if (on) {
-		laser_set_brightness(laser_brightness);
+		OpenOC3(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, 0xFF,laser_brightness);
 	} else {
 		CloseOC3();
+		LAT_LASER = 0;
 	}
 }
 
-void laser_set_brightness(uint8_t brightness){
+void laser_set_day(bool day){
+	if (day) {
+		laser_brightness = LASER_DAY_BRIGHTNESS;
+	} else {
+		laser_brightness = LASER_NIGHT_BRIGHTNESS;
+	}
 	OpenOC3(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, 0xFF,laser_brightness);
 }
 
@@ -74,4 +88,6 @@ void beep(double freq, uint16_t ms) {
 	OpenOC1(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, freq, duty);
 	OpenOC2(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_OC1 | OC_OUT_INVERT, freq, duty);
 	__delay_ms(ms);
+	CloseOC1();
+	CloseOC2();
 }

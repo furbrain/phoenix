@@ -43,6 +43,7 @@ class Glyph(object):
 def get_font_data(face,name,advance):
     all_glyphs = dict((x,Glyph(x,face)) for x in string.printable)
     all_glyphs['`'] = Glyph(chr(0xB0),face)
+    all_glyphs['>'] = Glyph(chr(0xBB),face)
     bitmap_index = 0
     bitmaps = ""
     indices = ""

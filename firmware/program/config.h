@@ -1,7 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 #define USE_AND_OR
-#define FCY 16000000
+#define FCY 16000000L
+#define FCY_PER_MS 16000L //this is useful where working with 16-bit numbers
 
 #define FIRMWARE_VERSION 1
 #include <stdint.h>

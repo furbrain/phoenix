@@ -1,6 +1,7 @@
 #include "config.h"
 #include "i2c_util.h"
 #include "display.h"
+#include "peripherals.h"
 #include <libpic30.h>
 
 /*define eeprom memory type*/
@@ -118,11 +119,13 @@ void set_grad() {
 void set_day() {
     day = true;
     display_set_day(day);
+    laser_set_day(day);
 }
 
 void set_night() {
     day = false;
     display_set_day(day);
+    laser_set_day(day);
 }
     
     

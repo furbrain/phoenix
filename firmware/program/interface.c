@@ -1,5 +1,5 @@
 #define USE_AND_OR
-#define FCY 16000000
+#include "config.h"
 #include <libpic30.h>
 #include <stdint.h>
 #include <timer.h>
@@ -11,7 +11,6 @@
 #include "sensors.h"
 #include "display.h"
 #include "power.h"
-#include "config.h"
 
 #define delay_ms(delay) __delay_ms(delay)
 
@@ -24,98 +23,107 @@ struct menu_entry {
 };
 
 
-volatile enum ACTION last_click;
+volatile enum ACTION last_click = NONE;
 
 void measure() {}
 void quick_cal() {}
 void full_cal() {}
 void laser_cal() {}
+void set_date() {}
+void set_time() {}
 
 /* a null-terminated list of menu_entries */
+#define FUNCTION -1
+#define BACK -2
 
 
 const struct menu_entry menu_items[] = {
 	/* main menu */
 	{-2,NULL,0,NULL},
-	{0,"Measure",-1,measure},
-	{1,"Calibrate",10,NULL},
-	{2,"Settings",20,NULL},
+	{0,"Measure",FUNCTION,measure},
+	{1,"Calibrate  >",10,NULL},
+	{2,"Settings  >",20,NULL},
 	{3,"Off",-1,hibernate},
 	{4,NULL,0,NULL},
 	
 	/* calibrate menu */
-	{10,"Quick",-1,quick_cal},
-	{11,"Laser",-1,laser_cal},
-	{12,"Full",-1,full_cal},
-	{13,NULL,10,NULL},
+	{10,"Quick",FUNCTION,quick_cal},
+	{11,"Laser",FUNCTION,laser_cal},
+	{12,"Full",FUNCTION,full_cal},
+	{13,"Back",BACK,NULL},
+	{14,NULL,10,NULL},
 	
 	/* settings menu */
-	{20,"Units",30,NULL},
-	{21,"Function",40,NULL},
-	{22,"Display",50,NULL},
-	{23,NULL,20,NULL},
+	{20,"Units  >",30,NULL},
+	{21,"Function  >",40,NULL},
+	{22,"Display  >",50,NULL},
+	{23,"Set  Date",FUNCTION,set_date},
+	{24,"Set  Time",FUNCTION,set_time},
+	{25,"Back",BACK,NULL},
+	{26,NULL,20,NULL},
 	
 	/* Units menu */
-	{30,"Metric",-1,set_metric},
-	{31,"Imperial",-1,set_imperial},
-	{32,NULL,30,NULL},
+	{30,"Metric",FUNCTION,set_metric},
+	{31,"Imperial",FUNCTION,set_imperial},
+	{32,"Back",BACK,NULL},
+	{33,NULL,30,NULL},
 	
 	/* Function menu */
-	{40,"Cartesian",-1,set_cartesian},
-	{41,"Polar",-1,set_polar},
-	{42,"Grad",-1,set_grad},
-	{43,NULL,40,NULL},
+	{40,"Cartesian",FUNCTION,set_cartesian},
+	{41,"Polar",FUNCTION,set_polar},
+	{42,"Grad",FUNCTION,set_grad},
+	{43,"Back",BACK,NULL},
+	{44,NULL,40,NULL},
 	
 	/* Display menu */
-	{50,"Day",-1,set_day},
-	{51,"Night",-1,set_night},
-	{52,NULL,50,NULL},
+	{50,"Day",FUNCTION,set_day},
+	{51,"Night",FUNCTION,set_night},
+	{52,"Back",BACK,NULL},
+	{53,NULL,50,NULL},
 	
 	/*end */
 	{-1,NULL,-1,NULL}
 };
 
 /* set up timer interrupts etc */
-/* Timer 2 is click-to-click counter */
+/* Timer 2 is our input poller counter */
 /* timer 3 is click length counter */
+/* timer 2 delay: 2ms  = */
+#define CLICKS_PER_MS (FCY_PER_MS/256)
+#define T2_DELAY (2*CLICKS_PER_MS)
+
 void interface_init() {
-    OpenTimer2(T2_ON | T2_IDLE_CON | T2_PS_1_256 | T2_32BIT_MODE_OFF,0x7FFF);
-    OpenTimer3(T3_ON | T3_IDLE_CON | T3_PS_1_256 ,0xFFFF);
+    OpenTimer2(T2_ON | T2_IDLE_CON | T2_PS_1_256 | T2_32BIT_MODE_OFF,T2_DELAY);
+    OpenTimer3(T3_ON | T3_IDLE_CON | T3_PS_1_256 ,1000*CLICKS_PER_MS);
     // enable CN23 interrupt
-    ConfigIntCN(INT_ENABLE | INT_PRI_3);
-    EnableCN23;
+    ConfigIntTimer2(T2_INT_ON | T2_INT_PRIOR_3);
     WriteTimer2(0);
     WriteTimer3(0);
 }
 
 /* change notification interrupt */
-void __attribute__ ((interrupt,no_auto_psv,shadow)) _CNInterrupt() {
-    InputChange_Clear_Intr_Status_Bit;
-    //put some delay in to prevent any bouncing on the inputs...
-    if (ReadTimer2()>0x0800) {
-        if (!PORTBbits.RB7) {
-            /* it's a release */
-            /* if timer3 has interrupted, then this was a long click */
-            if (IFS0bits.T3IF) {
-                last_click = LONG_CLICK;
-            }        
+void __attribute__ ((interrupt,no_auto_psv,shadow)) _T2Interrupt() {
+    static uint16_t state;
+    T2_Clear_Intr_Status_Bit;
+    state = ((state << 1) | PORT_BUTTON) & 0x0fff;
+    if (state == 0x07ff) {
+        /* we have just transitioned to a '1' and held it for 11 T2 cycles*/
+        if (IFS0bits.T3IF || (ReadTimer3()>(400*CLICKS_PER_MS))) {
+            /* it's been more than a quarter second since the last press started */
+            last_click = SINGLE_CLICK;
         } else {
-            /* it's a press */
-            /* if timer2 has *not* interrupted then this is a double click */
-            if (!IFS0bits.T2IF) {
-                last_click = DOUBLE_CLICK;
-            } else {
-                /* if it has interrupted already, then we are looking at a new single click */
-                /* which could alter become a double click */
-                last_click = SINGLE_CLICK;
-            }        
-            /* reset timers */
-            WriteTimer2(0);
-            WriteTimer3(0);
-            T2_Clear_Intr_Status_Bit;
-            T3_Clear_Intr_Status_Bit;
+            last_click = DOUBLE_CLICK;
         }
+        T3_Clear_Intr_Status_Bit;
+        WriteTimer3(0);
+   }
+    if (state == 0x0800) {
+        /* we have justtransitiioned to a '0' and held it for 11 T2 cycles */
+         if (IFS0bits.T3IF) {
+            last_click = LONG_CLICK;
+        }        
     }
+    WriteTimer2(0);
 }
 
 void swipe_text(uint8_t index, bool left) {
@@ -287,18 +295,23 @@ bool show_menu(int16_t index, bool first_time) {
                 index = get_next_menu_item(index);
                 scroll_text(index,true);
                 break;
-            case FLIP_RIGHT:
+            //case FLIP_RIGHT:
             case SINGLE_CLICK:
-                if (menu_items[index].next_menu != -1) {
-                    result = show_menu(get_menu_item_offset(menu_items[index].next_menu),false);
-                } else {
-                    if (action==SINGLE_CLICK){
-                        menu_items[index].action();
-                        result = true;
-                    } else continue;
-                }
+		switch (menu_items[index].next_menu) {
+			case FUNCTION:
+				menu_items[index].action();
+				result = true;
+				break;
+			case BACK:
+				if (!first_time) return false;
+				break;
+			default:
+				result = show_menu(get_menu_item_offset(menu_items[index].next_menu),false);
+				break;
+		}
                 if (result) {
                     if (first_time) {
+			/* we have got back to the root screen */
                         index = FIRST_MENU_ITEM;
                         display_clear_screen();
                         scroll_text(index,true);
@@ -306,15 +319,16 @@ bool show_menu(int16_t index, bool first_time) {
                         return true;   
                     }
                 } else {
+		    /* sub-menu: back selected */	
                     swipe_text(index,false);
                 }
                 break;
-            case FLIP_LEFT:
-                if (!first_time) return false;
-                break;
-	        case DOUBLE_CLICK:
-		        hibernate();
-		        break;
+//             case FLIP_LEFT:
+//                 if (!first_time) return false;
+//                 break;
+	    case DOUBLE_CLICK:
+		hibernate();
+		break;
             }   
         if (action!=NONE) {
 		    show_status();

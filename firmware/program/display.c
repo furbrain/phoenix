@@ -1,7 +1,6 @@
 #include "display.h"
 #include "config.h"
 #include "i2c_util.h"
-#define FCY 16000000
 #include <libpic30.h>
 #include <string.h>
 
