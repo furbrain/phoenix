@@ -11,6 +11,6 @@ void laser_on(bool on);
 
 void laser_set_day(bool day);
 
-void beep(double freq, uint16_t ms);
+void beep(uint16_t freq, uint16_t ms);
 
 #endif

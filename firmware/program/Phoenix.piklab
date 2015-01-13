@@ -31,13 +31,6 @@
     <description/>
     <version>0.1</version>
     <output_type>executable</output_type>
-    <opened_files>
-      <item>ftoa.h</item>
-      <item>config.c</item>
-      <item>interface.c</item>
-      <item>config.h</item>
-      <item>display.c</item>
-    </opened_files>
   </general>
   <editors/>
   <compiler>

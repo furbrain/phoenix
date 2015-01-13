@@ -297,6 +297,7 @@ bool show_menu(int16_t index, bool first_time) {
                 break;
             //case FLIP_RIGHT:
             case SINGLE_CLICK:
+		beep(3600,20);   
 		switch (menu_items[index].next_menu) {
 			case FUNCTION:
 				menu_items[index].action();
@@ -331,8 +332,9 @@ bool show_menu(int16_t index, bool first_time) {
 		break;
             }   
         if (action!=NONE) {
-		    show_status();
-		    delay_ms(300);
+		show_status();
+		beep(3600,20);   
+		delay_ms(300);
 	    }
     }
 }

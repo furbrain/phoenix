@@ -1,12 +1,13 @@
 #define USE_AND_OR
 #include "config.h"
-#include "peripherals.h"
 #include <outcompare.h>
 #include <ports.h>
 #include <PPS.h>
 #include <libpic30.h>
 #include <Rtcc.h>
-
+#include <stdio.h>
+#include "peripherals.h"
+#include "font.h"
 #define TRIS_PERIPHERALS TRISBbits.TRISB14
 #define LAT_PERIPHERALS LATBbits.LATB14
 
@@ -82,11 +83,18 @@ void laser_set_day(bool day){
 	OpenOC3(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, 0xFF,laser_brightness);
 }
 
-void beep(double freq, uint16_t ms) {
-	int period = FCY/freq;
-	int duty = period/2;
-	OpenOC1(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, freq, duty);
-	OpenOC2(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_OC1 | OC_OUT_INVERT, freq, duty);
+void beep(uint16_t freq, uint16_t ms) {
+	uint16_t period;
+	uint16_t duty;
+	char text[16];
+	sprintf(text,"%d %d %d",freq, period,duty);
+	display_write_text(0,0,text,&small_font,false);
+	period =(uint16_t)(FCY/freq);
+	duty = period/2;
+	sprintf(text,"%d %d %d",freq, period,duty);
+	display_write_text(6,0,text,&small_font,false);
+	OpenOC1(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, period, duty);
+	OpenOC2(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_OC1 | OC_OUT_INVERT, period, duty);
 	__delay_ms(ms);
 	CloseOC1();
 	CloseOC2();
