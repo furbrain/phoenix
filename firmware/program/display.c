@@ -126,6 +126,26 @@ void display_write_text(int page, int column, const char* text, const struct FON
     }
 }
 
+void display_write_multiline(int page,const char* text, const struct FONT *font) {
+	char buf[17];
+	int i = 0;
+	while (text) {
+		if (*text=='\n') {
+			if (i<17) {
+				buf[i] = 0;
+				display_write_text(page,0,buf,font,false);
+				i = 0;
+				page+=2;
+			}
+		} else {
+			if (i<17) {
+				buf[i] = *text;
+				i++;
+			}
+		}
+		text++;
+	}
+}
 
 /* scroll a page of data onto the screen either up or down */
 void display_scroll_page(uint8_t *data,  bool up){

@@ -11,6 +11,7 @@
 #include "sensors.h"
 #include "display.h"
 #include "power.h"
+#include "calibrate.h"
 
 #define delay_ms(delay) __delay_ms(delay)
 
@@ -26,9 +27,6 @@ struct menu_entry {
 volatile enum ACTION last_click = NONE;
 
 void measure() {}
-void quick_cal() {}
-void full_cal() {}
-void laser_cal() {}
 void set_date() {}
 void set_time() {}
 
@@ -49,9 +47,10 @@ const struct menu_entry menu_items[] = {
 	/* calibrate menu */
 	{10,"Quick",FUNCTION,quick_cal},
 	{11,"Laser",FUNCTION,laser_cal},
-	{12,"Full",FUNCTION,full_cal},
-	{13,"Back",BACK,NULL},
-	{14,NULL,10,NULL},
+	{12,"Align",FUNCTION,align_cal},
+	{13,"Full",FUNCTION,full_cal},
+	{14,"Back",BACK,NULL},
+	{15,NULL,10,NULL},
 	
 	/* settings menu */
 	{20,"Units  >",30,NULL},
@@ -182,17 +181,17 @@ enum ACTION get_action() {
 	
 	sensors_read_cooked(&sensors,false);
 	/* look for "flip" movements */
-	if (sensors.gyro[0]>80.0) {
-		return display_inverted? FLIP_LEFT : FLIP_RIGHT;
-	}
-	if (sensors.gyro[0]<-80.0) {
-		return display_inverted? FLIP_RIGHT : FLIP_LEFT;
-	}
 	if (sensors.gyro[1]>80.0) {
 		return display_inverted? FLIP_DOWN : FLIP_UP;
 	}
 	if (sensors.gyro[1]<-80.0) {
 		return display_inverted? FLIP_UP : FLIP_DOWN;
+	}
+	if (sensors.gyro[0]>80.0) {
+		return display_inverted? FLIP_LEFT : FLIP_RIGHT;
+	}
+	if (sensors.gyro[0]<-80.0) {
+		return display_inverted? FLIP_RIGHT : FLIP_LEFT;
 	}
 	/* check to see if display needs flipping */
 	/* use 0.5g - gives a hysteresis of about +/- 30 degrees */
@@ -278,7 +277,7 @@ bool show_menu(int16_t index, bool first_time) {
     enum ACTION action;
     bool result;
     if (first_time) {
-        swipe_text(index,false);
+        scroll_text(index,true);
     } else {
         swipe_text(index,true);
     }

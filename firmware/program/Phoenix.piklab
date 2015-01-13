@@ -3,7 +3,7 @@
   <general>
     <device>24FJ64GB002</device>
     <tool>pic30</tool>
-    <programmer>icd2</programmer>
+    <programmer>custom</programmer>
     <files>
       <item>Phoenix.c</item>
       <item>interface.c</item>
@@ -22,13 +22,13 @@
       <item>config.c</item>
       <item>peripherals.c</item>
       <item>peripherals.h</item>
-      <item>ftoa.h</item>
-      <item>ftoa.c</item>
       <item>battery.c</item>
       <item>battery.h</item>
+      <item>calibrate.c</item>
+      <item>calibrate.h</item>
     </files>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/program/bootloader.gld</custom_linker_script>
-    <description/>
+    <description></description>
     <version>0.1</version>
     <output_type>executable</output_type>
   </general>

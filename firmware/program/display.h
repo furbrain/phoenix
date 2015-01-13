@@ -21,6 +21,8 @@ void render_data_to_page(uint8_t page, uint8_t column, const uint8_t* data, uint
 #include <font.h>
 void display_write_text(int page, int column, const char* text, const struct FONT *font, bool right_justify);
 
+void display_write_multiline(int page,const char* text, const struct FONT *font);
+
 int render_text_to_page(uint8_t *buffer, int page, int column, const char *text, const struct FONT *font);
 
 void display_scroll_page(uint8_t *data, bool up);
