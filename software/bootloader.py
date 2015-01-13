@@ -36,6 +36,8 @@ class HexFileError(Exception):
 class HexFile:
     def __init__(self,fname):
         self.program = [None] * 0x40000
+        self.min_address = 0x40000;
+        self.max_address = 0x0
         page = 0;
         f = file(fname,"rU")
         for s in f:
@@ -57,6 +59,8 @@ class HexFile:
                 # rectype not known. Fall over
                 raise HexFileError("Unknown record format")
             if (rectype == 0):
+                self.min_address = min(self.min_address,page+offset)
+                self.max_address = max(self.max_address,page+offset+reclen)
                 self.program[page+offset:page+offset+reclen] = data
             if (rectype == 1):
                 #end of file
@@ -71,7 +75,9 @@ class HexFile:
                 page = data[1]*0x10000;
                 if page>0x40000:
                     raise HexFileError("Page %d out of range" % page)
-
+                    
+    def __len__(self):
+        return self.max_address-self.min_address
 
 class ProgrammerError(Exception):
     pass

@@ -86,13 +86,8 @@ void laser_set_day(bool day){
 void beep(uint16_t freq, uint16_t ms) {
 	uint16_t period;
 	uint16_t duty;
-	char text[16];
-	sprintf(text,"%d %d %d",freq, period,duty);
-	display_write_text(0,0,text,&small_font,false);
 	period =(uint16_t)(FCY/freq);
 	duty = period/2;
-	sprintf(text,"%d %d %d",freq, period,duty);
-	display_write_text(6,0,text,&small_font,false);
 	OpenOC1(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, period, duty);
 	OpenOC2(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_OC1 | OC_OUT_INVERT, period, duty);
 	__delay_ms(ms);

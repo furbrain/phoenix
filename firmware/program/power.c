@@ -7,6 +7,12 @@
 #include "peripherals.h"
 
 void hibernate() {
+	//swansong
+	beep(5000,50);
+	beep(4000,50);
+	beep(3000,50);
+	beep(2000,50);
+	
 	//turn off laser
 	laser_on(false);
 	//turn off peripherals

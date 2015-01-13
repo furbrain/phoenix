@@ -38,6 +38,11 @@ void main(){
 	sensors_init();
 	interface_init();
 	display_clear_screen();
+	//hello
+	beep(1000,50);
+	beep(2000,50);
+	beep(3000,50);
+	beep(4000,50);
 	
 	while(true) show_menu(FIRST_MENU_ITEM,true);
 }

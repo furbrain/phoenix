@@ -20,18 +20,25 @@ def show_progress(i):
         disp.send_data(page)
         show_progress.counter = i
 try:
+    print "Connecting to device"
     prog = bootloader.Programmer()
+    print "Device found"
     disp = SH1106.Display(prog)
     write_text(disp,"Loading",2,2)
+    print "Loading hexfile"
     hexfile  = bootloader.HexFile(sys.argv[1])
+    print "Programming %d bytes" % len(hexfile)
     prog.write_program(hexfile,set_progress=show_progress)
     disp.clear_screen()
     write_text(disp,"Verify",2,2)
+    print "Verifying %d bytes" % len(hexfile)
     prog.verify_program(hexfile,set_progress=show_progress)
     disp.clear_screen()
+    print "Programming complete"
     write_text(disp,"Done   ",2,2)
     time.sleep(1)
     disp.clear_screen()
 except bootloader.ProgrammerError as e:
     print e
-    
+    sys.exit(1)
+sys.exit(0)

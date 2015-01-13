@@ -182,16 +182,16 @@ enum ACTION get_action() {
 	
 	sensors_read_cooked(&sensors,false);
 	/* look for "flip" movements */
-	if (sensors.gyro[0]>40.0) {
+	if (sensors.gyro[0]>80.0) {
 		return display_inverted? FLIP_LEFT : FLIP_RIGHT;
 	}
-	if (sensors.gyro[0]<-40.0) {
+	if (sensors.gyro[0]<-80.0) {
 		return display_inverted? FLIP_RIGHT : FLIP_LEFT;
 	}
-	if (sensors.gyro[1]>40.0) {
+	if (sensors.gyro[1]>80.0) {
 		return display_inverted? FLIP_DOWN : FLIP_UP;
 	}
-	if (sensors.gyro[1]<-40.0) {
+	if (sensors.gyro[1]<-80.0) {
 		return display_inverted? FLIP_UP : FLIP_DOWN;
 	}
 	/* check to see if display needs flipping */
