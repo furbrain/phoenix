@@ -28,6 +28,7 @@
     <opened_files>
       <item>main.c</item>
       <item>gld/pic24fj64gb002-bootloader.gld</item>
+      <item>i2c_util.c</item>
     </opened_files>
   </general>
   <compiler>

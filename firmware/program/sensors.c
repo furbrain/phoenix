@@ -1,5 +1,13 @@
+#define USE_AND_OR
+#include "config.h"
+#include <incap.h>
+#include <ports.h>
+#include <PPS.h>
+#include <timer.h>
 #include "sensors.h"
 #include "i2c_util.h"
+/*LIDAR defines */
+
 #define MPU_ADDRESS 0x68
 #define MPU_COMMAND(command,data) write_i2c_data2(MPU_ADDRESS,command,data)
 
@@ -107,6 +115,14 @@ void sensors_init() {
         
     MPU_COMMAND(0x6B, PWR_MGMT_1);
 
+    #ifdef LIDAR_TESTING
+    /* connect IC3 to detect the rising edge of the LIDAR pulse */
+	//iPPSInput(IN_FN_PPS_IC3,IN_PIN_PPS_RP4);
+	/* connect IC12 to detect the falling edge */
+	iPPSInput(IN_FN_PPS_IC1,IN_PIN_PPS_RP4);
+
+    #else
+    #endif
 }
 
 
@@ -139,8 +155,54 @@ void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar) {
     //FIXME need to apply calibration here....
 }
 
-int16_t sensors_read_lidar(){
-    //FIXME put lidar read code here
-    //just return 10m here
-    return 1000;
+#ifdef LIDAR_TESTING
+#define LIDAR_AVERAGE_COUNT 32
+volatile uint32_t lidar_accumulator;
+volatile uint32_t lidar_last_reading;
+volatile int lidar_accumulator_count;
+volatile uint32_t last_start;
+
+uint32_t sensors_read_lidar(){
+    //FIXME put lidar calibration code here
+    uint32_t latest_lidar = lidar_last_reading;
+    latest_lidar /= LIDAR_AVERAGE_COUNT;
+    latest_lidar /= 16; //gives result in mm
+    return latest_lidar;
 }
+
+
+void __attribute__ ((interrupt,no_auto_psv,)) _IC1Interrupt() {
+    uint32_t reading;
+    int i=0;
+    IC1_Clear_Intr_Status_Bit;
+    reading = (uint32_t)IC1BUF + ((uint32_t)IC2BUF << 16);
+    if (PORTBbits.RB4) {
+	    last_start = reading;
+    } else {
+	lidar_accumulator += (reading - last_start);
+	lidar_accumulator_count++;
+	if (lidar_accumulator_count>=LIDAR_AVERAGE_COUNT) {
+		lidar_accumulator_count=0;
+		lidar_last_reading = lidar_accumulator;
+		lidar_accumulator=0;
+		LATBbits.LATB1 = !LATBbits.LATB1;
+	}
+    }
+}
+
+void sensors_enable_lidar(bool on) {
+    if (on) {
+	lidar_accumulator_count=0;
+	lidar_last_reading = lidar_accumulator = 0;
+	OpenCapture12(IC_IDLE_CON | IC_SYSCLK_SRC | IC_EVERY_EDGE | IC_INT_1CAPTURE,
+		      IC_CASCADE_ENABLE | IC_SYNC_ENABLE | IC_SYNC_TRIG_IN_DISABLE);
+	//IC2CON2bits.ICTRIG=0;
+        ConfigIntCapture1(IC_INT_ON | IC_INT_PRIOR_2);
+        EnableIntIC1;
+    } else {
+        DisableIntIC1;
+        CloseCapture12();
+    }
+}
+#endif
+

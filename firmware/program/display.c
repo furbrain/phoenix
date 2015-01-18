@@ -63,7 +63,9 @@ void set_column(int column) {
 
 void display_send_data(const uint8_t *data, uint8_t length) {
 #ifndef BOOTLOADER
-	memcpy(&(buffer[cur_page][cur_column]),data,length);
+	if (length+cur_column<=128) { 
+		memcpy(&(buffer[cur_page][cur_column]),data,length);
+	}
 #endif
 	write_i2c_command_block(DISPLAY_ADDRESS,0x40,data,length);
 }
@@ -164,7 +166,7 @@ void display_scroll_page(uint8_t *data,  bool up){
 	        set_column(0);
 	        mask = ((1<<(i+1))-1);
 	        for(j=0;j<128;++j){
-		        temp_buffer[i] = data[i] & mask;
+		        temp_buffer[j] = data[j] & mask;
 	        }
 	        display_send_data(temp_buffer,128);
 	        __delay_ms(SCROLL_RATE);
@@ -180,7 +182,7 @@ void display_scroll_page(uint8_t *data,  bool up){
 	        set_column(0);
 	        mask = (256-(1<<(NUM_PAGES-i)));
 	        for(j=0;j<128;++j){
-		        temp_buffer[i] = data[i] & mask;
+		        temp_buffer[j] = data[j] & mask;
 	        }
 	        display_send_data(temp_buffer,128);
             __delay_ms(SCROLL_RATE);

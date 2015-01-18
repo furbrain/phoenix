@@ -26,7 +26,20 @@ struct menu_entry {
 
 volatile enum ACTION last_click = NONE;
 
-void measure() {}
+void measure() {
+    char result[16];
+    int32_t lid;
+    int i;
+    laser_on(false);
+    sensors_enable_lidar(true);
+    for(i=0;i<12;i++) {
+        delay_ms(500);
+        lid = sensors_read_lidar();
+        sprintf(result,"%ld     ",lid);
+        display_write_text(2,0,result,&small_font,false);
+    }
+    sensors_enable_lidar(false);
+}
 void set_date() {}
 void set_time() {}
 

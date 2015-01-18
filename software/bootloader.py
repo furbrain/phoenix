@@ -174,9 +174,13 @@ if __name__=="__main__":
     import time
     EEPROM=0x50
     MPU = 0x68
+    LIDAR = 0x62
     p = Programmer()
+    print p.check_i2c(MPU)
+    print p.check_i2c(LIDAR)
+    print p.check_i2c(EEPROM)
     p.write_i2c(EEPROM,[0x00,0x00])
     buff = p.read_i2c(EEPROM,80)
     buff = struct.pack('80B',*buff)
     print struct.unpack('<H9f9f1fBB',buff)
-
+    

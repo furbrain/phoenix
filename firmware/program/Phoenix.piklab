@@ -26,16 +26,18 @@
       <item>battery.h</item>
       <item>calibrate.c</item>
       <item>calibrate.h</item>
+      <item>debug.c</item>
+      <item>debug.h</item>
     </files>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/program/bootloader.gld</custom_linker_script>
-    <description></description>
+    <description/>
     <version>0.1</version>
     <output_type>executable</output_type>
   </general>
   <editors/>
   <compiler>
     <has_custom_arguments>false</has_custom_arguments>
-    <custom_options>-omf=coff</custom_options>
+    <custom_options>-omf=coff -DDEBUG</custom_options>
     <custom_arguments>
       <item>-S</item>
       <item>-mcpu=%DEVICE</item>

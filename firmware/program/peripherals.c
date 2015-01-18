@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "peripherals.h"
 #include "font.h"
+#include "debug.h"
 #define TRIS_PERIPHERALS TRISBbits.TRISB14
 #define LAT_PERIPHERALS LATBbits.LATB14
 
@@ -45,7 +46,7 @@ void peripherals_init() {
 	TRIS_BUZZER_B = 0;
 	TRIS_BAT_STATUS = 1;
 	TRIS_NC_1 = 0;
-	TRIS_NC_2 = 0;
+	TRIS_NC_2 = 1;
 	TRIS_NC_3 = 0;
 	//connect peripherals
 	iPPSOutput(RP_LASER,OUT_FN_PPS_OC3);
@@ -88,6 +89,7 @@ void beep(uint16_t freq, uint16_t ms) {
 	uint16_t duty;
 	period =(uint16_t)(FCY/freq);
 	duty = period/2;
+	debug("%d %d",duty,period);
 	OpenOC1(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, period, duty);
 	OpenOC2(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_OC1 | OC_OUT_INVERT, period, duty);
 	__delay_ms(ms);

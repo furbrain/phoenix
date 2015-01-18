@@ -2,6 +2,7 @@
 #define SENSORS_H
 #include <stdint.h>
 #include <stdbool.h>
+#define LIDAR_TESTING
 
 struct RAW_SENSORS {
     int16_t accel[3];
@@ -25,5 +26,7 @@ void sensors_read_raw(struct RAW_SENSORS *sensors, bool lidar);
 
 void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar);
 
-int16_t sensors_read_lidar();
+uint32_t sensors_read_lidar();
+
+void sensors_enable_lidar(bool on);
 #endif
