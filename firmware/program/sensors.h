@@ -25,7 +25,7 @@ void sensors_init();
 void sensors_read_raw(struct RAW_SENSORS *sensors, bool lidar);
 
 void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar);
-
+extern volatile int lidar_average_count;
 uint32_t sensors_read_lidar();
 
 void sensors_enable_lidar(bool on);

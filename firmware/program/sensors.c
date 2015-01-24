@@ -151,12 +151,13 @@ void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar) {
         sensors->mag[i] = raw_sensors.mag[i]*(MAG_FULL_SCALE/32768.0);
     }
     sensors->temp = (raw_sensors.temp/333.87)+21.0;
-    sensors->distance = raw_sensors.distance/100.0;
+    sensors->distance = raw_sensors.distance/1000.0;
     //FIXME need to apply calibration here....
 }
 
 #ifdef LIDAR_TESTING
-#define LIDAR_AVERAGE_COUNT 32
+#define LIDAR_AVERAGE_COUNT
+volatile int lidar_average_count = 32;
 volatile uint32_t lidar_accumulator;
 volatile uint32_t lidar_last_reading;
 volatile int lidar_accumulator_count;
@@ -165,7 +166,7 @@ volatile uint32_t last_start;
 uint32_t sensors_read_lidar(){
     //FIXME put lidar calibration code here
     uint32_t latest_lidar = lidar_last_reading;
-    latest_lidar /= LIDAR_AVERAGE_COUNT;
+    latest_lidar /= lidar_average_count;
     latest_lidar /= 16; //gives result in mm
     return latest_lidar;
 }
@@ -181,7 +182,7 @@ void __attribute__ ((interrupt,no_auto_psv,)) _IC1Interrupt() {
     } else {
 	lidar_accumulator += (reading - last_start);
 	lidar_accumulator_count++;
-	if (lidar_accumulator_count>=LIDAR_AVERAGE_COUNT) {
+	if (lidar_accumulator_count>=lidar_average_count) {
 		lidar_accumulator_count=0;
 		lidar_last_reading = lidar_accumulator;
 		lidar_accumulator=0;

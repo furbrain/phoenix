@@ -3,7 +3,7 @@
 #include "i2c_util.h"
 
 void i2c_init(){
-	OpenI2C1(I2C_ON,157);
+	OpenI2C1(I2C_ON,37);
 }
 
 int8_t write_i2c_block(uint8_t address, const uint8_t *data, uint8_t length) {

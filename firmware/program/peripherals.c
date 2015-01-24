@@ -84,15 +84,23 @@ void laser_set_day(bool day){
 	OpenOC3(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, 0xFF,laser_brightness);
 }
 
-void beep(uint16_t freq, uint16_t ms) {
+void beep_on(uint16_t freq) {
 	uint16_t period;
 	uint16_t duty;
 	period =(uint16_t)(FCY/freq);
 	duty = period/2;
-	debug("%d %d",duty,period);
+	//debug("%d %d",duty,period);
 	OpenOC1(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_CURR_OC, period, duty);
 	OpenOC2(OC_SYSCLK_SRC | OC_PWM_EDGE_ALIGN,OC_SYNC_ENABLE | OC_SYNC_TRIG_IN_OC1 | OC_OUT_INVERT, period, duty);
-	__delay_ms(ms);
+}
+
+void beep_off() {
 	CloseOC1();
 	CloseOC2();
+}
+
+void beep(uint16_t freq, uint16_t ms) {
+	beep_on(freq);
+	__delay_ms(ms);
+	beep_off();
 }

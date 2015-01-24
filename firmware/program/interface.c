@@ -12,6 +12,7 @@
 #include "display.h"
 #include "power.h"
 #include "calibrate.h"
+#include "debug.h"
 
 #define delay_ms(delay) __delay_ms(delay)
 
@@ -194,6 +195,7 @@ enum ACTION get_action() {
 	
 	sensors_read_cooked(&sensors,false);
 	/* look for "flip" movements */
+	//debug("f%.2g",sensors.gyro[1]);
 	if (sensors.gyro[1]>80.0) {
 		return display_inverted? FLIP_DOWN : FLIP_UP;
 	}
@@ -296,7 +298,7 @@ bool show_menu(int16_t index, bool first_time) {
     }
     while(true) {
         delay_ms(50);
-	    show_status();
+	show_status();
         action = get_action();
         switch(action){
             case FLIP_DOWN:

@@ -147,6 +147,7 @@ void display_write_multiline(int page,const char* text, const struct FONT *font)
 		}
 		text++;
 	}
+	display_write_text(page,0,buf,font,false);
 }
 
 /* scroll a page of data onto the screen either up or down */
