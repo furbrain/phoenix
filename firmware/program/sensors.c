@@ -145,11 +145,19 @@ void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar) {
     int i;
     sensors_read_raw (&raw_sensors,lidar);
     // first convert to doubles with sensible units
-    for (i=0; i< 3; ++i) {
-        sensors->accel[i] = raw_sensors.accel[i]*(ACCEL_FULL_SCALE/32768.0);
-        sensors->gyro[i] = raw_sensors.gyro[i]*(GYRO_FULL_SCALE/32768.0);
-        sensors->mag[i] = raw_sensors.mag[i]*(MAG_FULL_SCALE/32768.0);
-    }
+	// also account for vagaries of sensor alignment
+	sensors->accel[0] = raw_sensors.accel[AX_AXIS]*AX_POLARITY*(ACCEL_FULL_SCALE/32768.0);
+	sensors->gyro[0] = raw_sensors.gyro[GX_AXIS]*GX_POLARITY*(GYRO_FULL_SCALE/32768.0);
+	sensors->mag[0] = raw_sensors.mag[MX_AXIS]*MX_POLARITY*(MAG_FULL_SCALE/32768.0);
+
+	sensors->accel[1] = raw_sensors.accel[AY_AXIS]*AY_POLARITY*(ACCEL_FULL_SCALE/32768.0);
+	sensors->gyro[1] = raw_sensors.gyro[GY_AXIS]*GY_POLARITY*(GYRO_FULL_SCALE/32768.0);
+	sensors->mag[1] = raw_sensors.mag[MY_AXIS]*MY_POLARITY*(MAG_FULL_SCALE/32768.0);
+
+	sensors->accel[2] = raw_sensors.accel[AZ_AXIS]*AZ_POLARITY*(ACCEL_FULL_SCALE/32768.0);
+	sensors->gyro[2] = raw_sensors.gyro[GZ_AXIS]*GZ_POLARITY*(GYRO_FULL_SCALE/32768.0);
+	sensors->mag[2] = raw_sensors.mag[MZ_AXIS]*MZ_POLARITY*(MAG_FULL_SCALE/32768.0);
+
     sensors->temp = (raw_sensors.temp/333.87)+21.0;
     sensors->distance = raw_sensors.distance/1000.0;
     //FIXME need to apply calibration here....

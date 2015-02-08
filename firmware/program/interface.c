@@ -28,7 +28,7 @@ struct menu_entry {
 volatile enum ACTION last_click = NONE;
 
 void measure() {
-    char result[16];
+    char result[17];
     int32_t lid;
     int i;
     laser_on(false);
@@ -36,7 +36,7 @@ void measure() {
     for(i=0;i<12;i++) {
         delay_ms(500);
         lid = sensors_read_lidar();
-        sprintf(result,"%ld     ",lid);
+        snprintf(result,17,"%ld     ",lid);
         display_write_text(2,0,result,&small_font,false);
     }
     sensors_enable_lidar(false);
@@ -119,7 +119,7 @@ void __attribute__ ((interrupt,no_auto_psv,shadow)) _T2Interrupt() {
     static uint16_t state;
     T2_Clear_Intr_Status_Bit;
     state = ((state << 1) | PORT_BUTTON) & 0x0fff;
-    if (state == 0x07ff) {
+    if (state == (INT0_ACTIVE_HIGH?0x07ff:0x0800)) {
         /* we have just transitioned to a '1' and held it for 11 T2 cycles*/
         if (IFS0bits.T3IF || (ReadTimer3()>(400*CLICKS_PER_MS))) {
             /* it's been more than a quarter second since the last press started */
@@ -130,7 +130,7 @@ void __attribute__ ((interrupt,no_auto_psv,shadow)) _T2Interrupt() {
         T3_Clear_Intr_Status_Bit;
         WriteTimer3(0);
    }
-    if (state == 0x0800) {
+    if (state == (INT0_ACTIVE_HIGH?0x0800:0x07ff)) {
         /* we have justtransitiioned to a '0' and held it for 11 T2 cycles */
          if (IFS0bits.T3IF) {
             last_click = LONG_CLICK;
@@ -210,8 +210,8 @@ enum ACTION get_action() {
 	}
 	/* check to see if display needs flipping */
 	/* use 0.5g - gives a hysteresis of about +/- 30 degrees */
-	if ((sensors.accel[0]>0.5) && display_inverted) display_flip(false);
-	if ((sensors.accel[0]<-0.5) && !display_inverted) display_flip(true);
+	if ((sensors.accel[0]<-0.5) && display_inverted) display_flip(false);
+	if ((sensors.accel[0]>0.5) && !display_inverted) display_flip(true);
 	/* search for a click */
 	if (last_click != NONE) {
 		/* momentarily disable interrupts */
@@ -276,8 +276,8 @@ void show_status(){
 	            memcpy(&footer[FOOTER_LENGTH-5],"Cart.",5);
 	            break;
 	    }
-	    sprintf(header,"%02d:%02d        ",
-		    bcdtobyte(time.f.hour),	bcdtobyte(time.f.min),bcdtobyte(time.f.sec));
+	    snprintf(header,17,"%02d:%02d        ",
+		    bcdtobyte(time.f.hour),	bcdtobyte(time.f.min));
 	    display_write_text(0,0,header,&small_font,false);
 	    display_write_text(6,0,footer,&small_font,false);
 	    render_data_to_page(0,104,bat_status,24);

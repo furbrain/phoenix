@@ -7,7 +7,20 @@
 #include "debug.h"
 
 
-void quick_cal() {}
+void quick_cal() {
+/* Brief summary of plan:
+ * First place the device flat on the ground and leave alone
+ * This allows us to calibrate zero-offsets for gyros*/
+/* Now rotate around z-axis
+ * do first magnetic calibration */
+/* read in 400 or so readings while rotating */
+/* find min/max for each of x and y  - this is the zero offset
+/* Now rotate around y-axis, keeping laser fixed on one point
+ * this allows us to first calibrate magnetics and then calculate
+ * direction of laser beam.
+ */
+ /* nor rotate around z-axis - allows calibration of y axis accelerometer */
+}
 void laser_cal() {}
 
 void align_cal() {

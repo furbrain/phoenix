@@ -6,6 +6,15 @@ ChangePinName(J1, 4, 4)
 ChangePinName(J1, 2, 2)
 ChangePinName(J1, 3, 3)
 
+# Start of element Q2
+ChangePinName(Q2, S, S)
+ChangePinName(Q2, D, D)
+ChangePinName(Q2, G, G)
+
+# Start of element R8
+ChangePinName(R8, 1, 1)
+ChangePinName(R8, 2, 2)
+
 # Start of element R9
 ChangePinName(R9, 1, 1)
 ChangePinName(R9, 2, 2)
@@ -13,10 +22,6 @@ ChangePinName(R9, 2, 2)
 # Start of element U5
 ChangePinName(U5, 2, 2)
 ChangePinName(U5, 1, 1)
-
-# Start of element R8
-ChangePinName(R8, 1, 1)
-ChangePinName(R8, 2, 2)
 
 # Start of element S1
 ChangePinName(S1, 2, 2)
@@ -44,15 +49,6 @@ ChangePinName(R6, 2, 2)
 # Start of element R5
 ChangePinName(R5, 1, 1)
 ChangePinName(R5, 2, 2)
-
-# Start of element Q2
-ChangePinName(Q2, S, S)
-ChangePinName(Q2, D, D)
-ChangePinName(Q2, G, G)
-
-# Start of element LD1
-ChangePinName(LD1, 2, K)
-ChangePinName(LD1, 1, A)
 
 # Start of element R4
 ChangePinName(R4, 1, 1)
@@ -138,13 +134,13 @@ ChangePinName(U3, 3, PGEC3/RA1)
 ChangePinName(U3, 2, PGED3/RA0)
 ChangePinName(U3, 1, \_MCLR\_)
 
+# Start of element R13
+ChangePinName(R13, 1, 1)
+ChangePinName(R13, 2, 2)
+
 # Start of element R12
 ChangePinName(R12, 1, 1)
 ChangePinName(R12, 2, 2)
-
-# Start of element C18
-ChangePinName(C18, 2, 2)
-ChangePinName(C18, 1, 1)
 
 # Start of element R11
 ChangePinName(R11, 1, 1)
@@ -180,9 +176,6 @@ ChangePinName(J4, 2, USB_D+)
 ChangePinName(R10, 1, 1)
 ChangePinName(R10, 2, 2)
 
-# Start of element U?
-ChangePinName(U?, 1, 1)
-
 # Start of element C15
 ChangePinName(C15, 2, 2)
 ChangePinName(C15, 1, 1)
@@ -215,10 +208,10 @@ ChangePinName(U6, 9, ADO)
 # Start of element J3
 ChangePinName(J3, 1, Vcc)
 ChangePinName(J3, 6, GND)
-ChangePinName(J3, 2, EN)
+ChangePinName(J3, 2, GND)
 ChangePinName(J3, 5, SDA)
 ChangePinName(J3, 4, SCL)
-ChangePinName(J3, 3, MODE)
+ChangePinName(J3, 3, LASER)
 
 # Start of element C5
 ChangePinName(C5, 2, 2)

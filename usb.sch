@@ -131,7 +131,7 @@ C 7800 52900 1 180 0 resistor-2.sym
 T 7400 52550 5 10 0 0 180 0 1
 device=RESISTOR
 T 7000 53000 5 10 1 1 0 0 1
-refdes=R?
+refdes=R13
 T 7300 52900 5 10 0 1 90 0 1
 footprint=0603
 T 7400 53000 5 10 1 1 0 0 1
