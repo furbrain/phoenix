@@ -32,7 +32,6 @@ void main(){
     //various init functions
 	peripherals_init();
 	peripherals_on(true);
-	i2c_init();
 	config_init();
 	//display_init();
 	sensors_init();
