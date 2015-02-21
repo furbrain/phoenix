@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <Rtcc.h>
+#include <math.h>
 #include "interface.h"
 #include "sensors.h"
 #include "display.h"
@@ -16,6 +17,9 @@
 
 #define delay_ms(delay) __delay_ms(delay)
 
+#define FEET_PER_METRE 3.281
+#define DEGREES_PER_RADIAN 57.296
+#define GRADS_PER_DEGREE 1.111111111
 
 struct menu_entry {
 	int16_t index;
@@ -27,18 +31,75 @@ struct menu_entry {
 
 volatile enum ACTION last_click = NONE;
 
+const char *cartesian_items[] = {"East","North","Vert","Ext"};
+const char *polar_items[] = {"Comp","Clino","Dist","Ext"};
+
+const char cartesian_format[] = "%+.2f ";
+const char *polar_format[] = {"%03.1f ","%+02.1f ","%.2f ","%.2f "};
+
+
 void measure() {
-    char result[17];
-    int32_t lid;
-    int i;
-    laser_on(false);
+	int item = 0;
+	double items[4];
+	double extension,distance;
+	int i;
+	char text[17];
+	char format[17];
+	char degree_sign;
+	char length_sign;
+	struct LEG leg;
+	length_sign = (config.length_units==IMPERIAL)?'\'':'m';
+	degree_sign = (config.display_style==GRAD)?'g':'`';
     sensors_enable_lidar(true);
-    for(i=0;i<12;i++) {
-        delay_ms(500);
-        lid = sensors_read_lidar();
-        snprintf(result,17,"%ld     ",lid);
-        display_write_text(2,0,result,&small_font,false);
-    }
+	while (true) {
+		sensors_read_leg(&leg,&distance);
+		extension = sqrt((leg.delta[0]*leg.delta[0])+(leg.delta[1]*leg.delta[1]));
+		switch (config.display_style) {
+			case CARTESIAN:
+				for (i=0; i<3; i++) {
+					items[i] = leg.delta[0];
+				}
+				items[3] = extension;
+				if (config.length_units==IMPERIAL) {
+					for(i=0;i<4;i++) {
+						items[i] = items[i]*FEET_PER_METRE;
+					}
+				}
+				break;
+			case POLAR:
+			case GRAD:
+				items[0] = atan2(leg.delta[0],leg.delta[1])*DEGREES_PER_RADIAN;
+				items[1] = atan2(extension,leg.delta[2])*DEGREES_PER_RADIAN;
+				if (config.display_style==GRAD) {
+					items[0] *= GRADS_PER_DEGREE;
+					items[1] *= GRADS_PER_DEGREE;
+				}
+				items[2] = distance;
+				items[3] = extension;
+				if (config.length_units==IMPERIAL){
+					items[2] *= FEET_PER_METRE;
+					items[3] *= FEET_PER_METRE;
+				}
+				break;
+		}
+		//we'll just do the detail display for now
+		for (i=0; i<4; i++) {
+			if (config.display_style==CARTESIAN) {
+				sprintf(format,cartesian_format,items[i]);
+				display_write_text(i*2,0,cartesian_items[i],&small_font,false);
+			} else {
+				sprintf(format,polar_format[i],items[i]);
+				display_write_text(i*2,0,polar_items[i],&small_font,false);
+			}
+			if ((i<2) && (config.display_style!=CARTESIAN)) {
+				format[strlen(format)-1] = degree_sign;
+			} else {
+				format[strlen(format)-1] = length_sign;
+			}
+			display_write_text(i*2,127,format,&small_font,true);
+		}
+		delay_ms(50);
+	}
     sensors_enable_lidar(false);
 }
 void set_date() {}
@@ -116,7 +177,7 @@ void interface_init() {
 
 /* change notification interrupt */
 void __attribute__ ((interrupt,no_auto_psv,shadow)) _T2Interrupt() {
-    static uint16_t state;
+    static uint16_t state = 0x0001;
     T2_Clear_Intr_Status_Bit;
     state = ((state << 1) | PORT_BUTTON) & 0x0fff;
     if (state == (INT0_ACTIVE_HIGH?0x07ff:0x0800)) {
@@ -341,9 +402,9 @@ bool show_menu(int16_t index, bool first_time) {
 //             case FLIP_LEFT:
 //                 if (!first_time) return false;
 //                 break;
-	    case DOUBLE_CLICK:
-		hibernate();
-		break;
+			case DOUBLE_CLICK:
+				hibernate();
+				break;
             }   
         if (action!=NONE) {
 		show_status();

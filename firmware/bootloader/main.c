@@ -209,7 +209,7 @@ static void read_prog_data(uint32_t prog_addr, uint32_t len/*words*/)
 
 
 static int8_t write_i2c(uint8_t device_address, uint8_t* buffer, uint16_t len) {
-	return write_i2c_block(device_address,buffer,len);
+	return write_i2c_block(device_address,buffer,len,I2C_STANDARD);
 }
 
 
@@ -294,7 +294,6 @@ int main(void)
 	CLKDIVbits.PLLEN = 1;
 	while(pll_startup_counter--);
 
-	i2c_init();
 	display_init();
 	display_clear_screen();
 	usb_init();
@@ -467,7 +466,7 @@ int8_t app_unknown_setup_request_callback(const struct setup_packet *setup)
 			write_address = setup->wValue;
 			if (setup->wLength > sizeof(prog_buf))
  				return -1;
-			if (read_i2c_block(setup->wValue,(uint8_t*)prog_buf,setup->wLength))
+			if (read_i2c_block(setup->wValue,(uint8_t*)prog_buf,setup->wLength,I2C_STANDARD))
 			    /* read failed */
 				return -1;
 			usb_send_data_stage((char*)prog_buf, setup->wLength, empty_cb/*TODO*/, NULL);

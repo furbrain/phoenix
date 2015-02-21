@@ -28,6 +28,8 @@
       <item>calibrate.h</item>
       <item>debug.c</item>
       <item>debug.h</item>
+      <item>maths.h</item>
+      <item>maths.c</item>
     </files>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/program/bootloader.gld</custom_linker_script>
     <description/>

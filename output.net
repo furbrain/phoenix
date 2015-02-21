@@ -1,9 +1,3 @@
 .START
 ..device	value	footprint	quantity	refdes
-CAPACITOR	0.1uF	0603	2	C13 C14
-CAPACITOR	10nF	0603	1	C12
-INPUT	unknown	unknown	1	U?
-LIDAR	unknown	SIP6	1	U5
-MPU-9250	unknown	QFN24_3	1	U6
-RESISTOR	100k	0603	1	R11
 .END

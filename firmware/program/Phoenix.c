@@ -27,8 +27,16 @@ void main(){
 		}
 	}
 	last_click = NONE;
-	CloseTimer45();
+	WriteTimer45(0);
     //make sure we get a second confirmation press...
+	while (last_click==NONE) {
+		if (ReadTimer45()>0x20000L) {
+			/* has taken too long to release the button */
+			hibernate();
+		}
+	}
+	last_click = NONE;
+	CloseTimer45();
     //various init functions
 	peripherals_init();
 	peripherals_on(true);

@@ -4,6 +4,7 @@
 #include <ports.h>
 #include <PPS.h>
 #include <timer.h>
+#include <Rtcc.h>
 #include "sensors.h"
 #include "i2c_util.h"
 /*LIDAR defines */
@@ -176,6 +177,9 @@ uint32_t sensors_read_lidar(){
     uint32_t latest_lidar = lidar_last_reading;
     latest_lidar /= lidar_average_count;
     latest_lidar /= 16; //gives result in mm
+#ifdef DEBUG
+    if (latest_lidar==0) latest_lidar = 10000; //return 10m if lidar inoperative
+#endif
     return latest_lidar;
 }
 
@@ -213,5 +217,28 @@ void sensors_enable_lidar(bool on) {
         CloseCapture12();
     }
 }
+
+void sensors_read_leg(struct LEG *leg, double *distance) {
+	struct COOKED_SENSORS sensors;
+	double east[3];
+	double north[3];
+	rtccTimeDate datetime;
+	//read current date and time
+	RtccReadTimeDate(&datetime);
+	leg->dt.year = datetime.f.year;
+	leg->dt.month = datetime.f.mon;
+	leg->dt.day = datetime.f.mday;
+	leg->dt.hour = datetime.f.hour;
+	leg->dt.minute = datetime.f.min;
+	leg->dt.second = datetime.f.sec;
+	sensors_read_cooked(&sensors,true);
+	cross_product(sensors.accel,sensors.mag,east); // east = down x mag
+	cross_product(east,sensors.accel,north);       // north= east x down
+	leg->delta[0] = east[1]*sensors.distance;
+	leg->delta[1] = north[1]*sensors.distance;
+	leg->delta[2] = sensors.accel[1]*sensors.distance;
+	*distance = sensors.distance;
+}
+
 #endif
 
