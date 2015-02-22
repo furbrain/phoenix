@@ -136,7 +136,7 @@ void sensors_read_raw(struct RAW_SENSORS *sensors, bool lidar){
     int i;
     read_i2c_data(MPU_ADDRESS, 0x3B, (uint8_t *)sensors, sizeof(*sensors),I2C_FAST);
     sensors->distance = lidar ? sensors_read_lidar() : 0; 
-    for(i=0; i< 11; ++i) {
+    for(i=0; i< 10; ++i) {
         byte_swap(&((uint16_t*)sensors)[i]);
     }
 }

@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 #define EEPROM_ADDRESS 0x50
-#define I2C_FAST (FCY/400000 - FCY/10000000 - 1)
-#define I2C_STANDARD (FCY/100000 - FCY/10000000 - 1)
+#define I2C_FAST 37
+#define I2C_STANDARD 157
 
 void i2c_init(int speed);
 

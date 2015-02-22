@@ -2,6 +2,7 @@
 #include <i2c.h>
 #include "i2c_util.h"
 #include "config.h"
+#include <libpic30.h>
 #define OpenI2C OpenI2C1
 #define IdleI2C IdleI2C1
 #define StartI2C StartI2C1
@@ -16,18 +17,23 @@
 
 #define PORT_SDA PORTBbits.RB9
 #define PORT_SCL PORTBbits.RB8
+#define LAT_SCL LATBbits.LATB9
 
 void i2c_init(int speed){
-    int count = 5;
+    int count;
     TRIS_SDA = 1;
     TRIS_SCL = 1;
-    while((PORT_SDA==0) && count-->0) {
-        //we have a deadlock
-        OpenI2C(I2C_ON,I2C_STANDARD);
-        MasterWriteI2C(0);
-		IdleI2C();
-        CloseI2C();
-    } 
+	LAT_SCL = 1;
+	CloseI2C();
+	if (PORT_SDA==0) {
+		TRIS_SCL = 0;
+		for (count=0; count<10; count++) {
+			LAT_SCL = 0;
+			__delay_us(2);
+			LAT_SCL = 1;
+			__delay_us(2);
+		}
+	}
     OpenI2C(I2C_ON,speed);
 }
 

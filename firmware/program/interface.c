@@ -34,8 +34,8 @@ volatile enum ACTION last_click = NONE;
 const char *cartesian_items[] = {"East","North","Vert","Ext"};
 const char *polar_items[] = {"Comp","Clino","Dist","Ext"};
 
-const char cartesian_format[] = " %+.2lf ";
-const char *polar_format[] = {" %03.1lf "," %+02.1lf "," %.2lf "," %.2lf "};
+const char cartesian_format[] = " %+.2f ";
+const char *polar_format[] = {" %03.1f "," %+02.1f "," %.2f "," %.2f "};
 
 
 void measure() {
@@ -69,7 +69,7 @@ void measure() {
 			case POLAR:
 			case GRAD:
 				items[0] = atan2(orientation[0],orientation[1])*DEGREES_PER_RADIAN;
-				items[1] = atan2(extension,orientation[2])*DEGREES_PER_RADIAN;
+				items[1] = atan2(orientation[2],extension)*DEGREES_PER_RADIAN;
 				if (config.display_style==GRAD) {
 					items[0] *= GRADS_PER_DEGREE;
 					items[1] *= GRADS_PER_DEGREE;
