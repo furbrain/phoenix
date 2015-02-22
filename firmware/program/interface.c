@@ -34,32 +34,32 @@ volatile enum ACTION last_click = NONE;
 const char *cartesian_items[] = {"East","North","Vert","Ext"};
 const char *polar_items[] = {"Comp","Clino","Dist","Ext"};
 
-const char cartesian_format[] = "%+.2f ";
-const char *polar_format[] = {"%03.1f ","%+02.1f ","%.2f ","%.2f "};
+const char cartesian_format[] = " %+.2lf ";
+const char *polar_format[] = {" %03.1lf "," %+02.1lf "," %.2lf "," %.2lf "};
 
 
 void measure() {
 	int item = 0;
 	double items[4];
+	double orientation[4];
 	double extension,distance;
 	int i;
 	char text[17];
 	char format[17];
 	char degree_sign;
 	char length_sign;
-	struct LEG leg;
 	length_sign = (config.length_units==IMPERIAL)?'\'':'m';
 	degree_sign = (config.display_style==GRAD)?'g':'`';
     sensors_enable_lidar(true);
 	while (true) {
-		sensors_read_leg(&leg,&distance);
-		extension = sqrt((leg.delta[0]*leg.delta[0])+(leg.delta[1]*leg.delta[1]));
+		sensors_get_orientation(orientation,&distance);
+		extension = sqrt((orientation[0]*orientation[0])+(orientation[1]*orientation[1]));
 		switch (config.display_style) {
 			case CARTESIAN:
 				for (i=0; i<3; i++) {
-					items[i] = leg.delta[0];
+					items[i] = orientation[i];
 				}
-				items[3] = extension;
+				items[3] = distance;
 				if (config.length_units==IMPERIAL) {
 					for(i=0;i<4;i++) {
 						items[i] = items[i]*FEET_PER_METRE;
@@ -68,8 +68,8 @@ void measure() {
 				break;
 			case POLAR:
 			case GRAD:
-				items[0] = atan2(leg.delta[0],leg.delta[1])*DEGREES_PER_RADIAN;
-				items[1] = atan2(extension,leg.delta[2])*DEGREES_PER_RADIAN;
+				items[0] = atan2(orientation[0],orientation[1])*DEGREES_PER_RADIAN;
+				items[1] = atan2(extension,orientation[2])*DEGREES_PER_RADIAN;
 				if (config.display_style==GRAD) {
 					items[0] *= GRADS_PER_DEGREE;
 					items[1] *= GRADS_PER_DEGREE;
@@ -97,6 +97,18 @@ void measure() {
 				format[strlen(format)-1] = length_sign;
 			}
 			display_write_text(i*2,127,format,&small_font,true);
+		}
+		switch(get_action()) {
+			case FLIP_UP:
+			case FLIP_DOWN:
+				break;
+			case SINGLE_CLICK:
+				return;
+			case LONG_CLICK:
+				break;
+			case DOUBLE_CLICK:
+				hibernate();
+				break;
 		}
 		delay_ms(50);
 	}

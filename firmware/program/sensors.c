@@ -160,7 +160,7 @@ void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar) {
 	sensors->mag[2] = raw_sensors.mag[MZ_AXIS]*MZ_POLARITY*(MAG_FULL_SCALE/32768.0);
 
     sensors->temp = (raw_sensors.temp/333.87)+21.0;
-    sensors->distance = raw_sensors.distance/1000.0;
+    sensors->distance = (double)raw_sensors.distance/1000.0;
     //FIXME need to apply calibration here....
 }
 
@@ -218,6 +218,23 @@ void sensors_enable_lidar(bool on) {
     }
 }
 
+void sensors_get_orientation(double *d, double *distance) {
+	struct COOKED_SENSORS sensors;
+	double east[3];
+	double north[3];
+	sensors_read_cooked(&sensors,true);
+	normalise(sensors.accel);
+	cross_product(sensors.accel,sensors.mag,east); // east = down x mag
+	normalise(east);
+	cross_product(east,sensors.accel,north);       // north= east x down
+	normalise(north);
+	d[0] = east[1]*sensors.distance;
+	d[1] = north[1]*sensors.distance;
+	d[2] = sensors.accel[1]*sensors.distance;
+	//normalise(d);
+	*distance = sensors.distance;
+}
+
 void sensors_read_leg(struct LEG *leg, double *distance) {
 	struct COOKED_SENSORS sensors;
 	double east[3];
@@ -232,8 +249,11 @@ void sensors_read_leg(struct LEG *leg, double *distance) {
 	leg->dt.minute = datetime.f.min;
 	leg->dt.second = datetime.f.sec;
 	sensors_read_cooked(&sensors,true);
+	normalise(sensors.accel);
 	cross_product(sensors.accel,sensors.mag,east); // east = down x mag
+	normalise(east);
 	cross_product(east,sensors.accel,north);       // north= east x down
+	normalise(north);
 	leg->delta[0] = east[1]*sensors.distance;
 	leg->delta[1] = north[1]*sensors.distance;
 	leg->delta[2] = sensors.accel[1]*sensors.distance;

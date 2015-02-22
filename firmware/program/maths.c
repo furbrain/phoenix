@@ -1,3 +1,4 @@
+#include <math.h>
 #include "maths.h"
 /* return AxB in C, where A B and C are all pointers to double[3] */
 void cross_product(double *a, double *b, double *c) {
@@ -9,4 +10,13 @@ void cross_product(double *a, double *b, double *c) {
 /* returns vector A multiplied by Matrix B in vector C, where A and B are pointers to double[3]
  * and B is a pointer to double[16] */
 void apply_matrix(double *a, double *b, double *c) {
+}
+
+void normalise(double *a) {
+	double magnitude;
+	magnitude = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+	a[0] /= magnitude;
+	a[1] /= magnitude;
+	a[2] /= magnitude;
+	
 }

@@ -7,4 +7,6 @@ void cross_product(double *a, double *b, double *c);
 /* returns vector A multiplied by Matrix B in vector C, where A and B are pointers to double[3]
  * and B is a pointer to double[16] */
 void apply_matrix(double *a, double *b, double *c);
+
+void normalise(double *a);
 #endif
