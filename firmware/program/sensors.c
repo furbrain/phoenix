@@ -8,6 +8,8 @@
 #include "sensors.h"
 #include "i2c_util.h"
 /*LIDAR defines */
+#define LIDAR_ADDRESS 0x62s
+#define LIDAR_COMMAND(command,data) write_i2c_data2(LIDAR_ADDRESS,command,data,I2C_STANDARD)
 
 #define MPU_ADDRESS 0x68
 #define MPU_COMMAND(command,data) write_i2c_data2(MPU_ADDRESS,command,data,I2C_FAST)
@@ -51,6 +53,10 @@
 #define SLV1_DO    0x11
 #define I2C_MST_DELAY_CTRL    0x83
 #define I2C_MST_DELAY    0x01
+
+#define TRIS_LIDAR_ENABLE TRISBbits.TRISB5
+#define LAT_LIDAR_ENABLE LATBbits.LATB5
+
 
 void sensors_init() {
         
@@ -217,6 +223,30 @@ void sensors_enable_lidar(bool on) {
         CloseCapture12();
     }
 }
+#else
+uint32_t sensors_read_lidar(){
+    //FIXME put lidar calibration code here
+    uint32_t latest_lidar = lidar_last_reading;
+    latest_lidar /= lidar_average_count;
+    latest_lidar /= 16; //gives result in mm
+#ifdef DEBUG
+    if (latest_lidar==0) latest_lidar = 10000; //return 10m if lidar inoperative
+#endif
+    return latest_lidar;
+}
+
+void sensors_enable_lidar(bool on) {
+    if (on) {
+		LAT_LIDAR_ENABLE = 1;
+		//wait for LIDAR to startup
+		delay_ms(100);
+		//send I2C initialisation
+	} else {
+		LAT_LIDAR_ENABLE = 0;
+	}
+}
+
+#endif
 
 void sensors_get_orientation(double *d, double *distance) {
 	struct COOKED_SENSORS sensors;
@@ -260,5 +290,4 @@ void sensors_read_leg(struct LEG *leg, double *distance) {
 	*distance = sensors.distance;
 }
 
-#endif
 

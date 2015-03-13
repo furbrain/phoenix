@@ -3,6 +3,7 @@
 #include "i2c_util.h"
 #include "config.h"
 #include <libpic30.h>
+#include "peripherals.h"
 #define OpenI2C OpenI2C1
 #define IdleI2C IdleI2C1
 #define StartI2C StartI2C1
@@ -39,6 +40,7 @@ void i2c_init(int speed){
 
 void i2c_close(){
     CloseI2C();
+	laser_set_day(false);
 }
 
 int8_t write_i2c_block(uint8_t address, const uint8_t *data, uint8_t length,int speed) {
@@ -76,7 +78,7 @@ int8_t write_i2c_command_block(uint8_t address, uint8_t command, const uint8_t *
 	MasterWriteI2C(address << 1);       //Write Slave address and set master for transmission
 	IdleI2C();
 	if(I2CSTATbits.ACKSTAT) goto fallover;
-	MasterWriteI2C(command);       //Write Slave address and set master for transmission
+	MasterWriteI2C(command);       //Write Slave command and set master for transmission
 	IdleI2C();
 	if(I2CSTATbits.ACKSTAT) goto fallover;
 	while (length) {
@@ -93,7 +95,7 @@ int8_t write_i2c_command_block(uint8_t address, uint8_t command, const uint8_t *
 
 fallover:
 	StopI2C();
-	IdleI2C();
+	__delay_us(10);
 	i2c_close();
 	return -1;
 }
@@ -107,7 +109,8 @@ int8_t read_i2c_block(uint8_t address, uint8_t *data, uint8_t length, int speed)
 	IdleI2C();
 	if (MastergetsI2C(length,data,20)){
 		StopI2C();
-		IdleI2C();
+		__delay_us(10);
+		i2c_close();
 		return -1;
 	}
 	StopI2C();              //Terminate communication protocol with stop signal
