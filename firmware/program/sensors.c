@@ -211,9 +211,10 @@ void __attribute__ ((interrupt,no_auto_psv,)) _IC1Interrupt() {
 
 void sensors_enable_lidar(bool on) {
     if (on) {
-	lidar_accumulator_count=0;
-	lidar_last_reading = lidar_accumulator = 0;
-	OpenCapture12(IC_IDLE_CON | IC_SYSCLK_SRC | IC_EVERY_EDGE | IC_INT_1CAPTURE,
+		LAT_LIDAR_ENABLE = 1;
+		lidar_accumulator_count=0;
+		lidar_last_reading = lidar_accumulator = 0;
+		OpenCapture12(IC_IDLE_CON | IC_SYSCLK_SRC | IC_EVERY_EDGE | IC_INT_1CAPTURE,
 		      IC_CASCADE_ENABLE | IC_SYNC_ENABLE | IC_SYNC_TRIG_IN_DISABLE);
 	//IC2CON2bits.ICTRIG=0;
         ConfigIntCapture1(IC_INT_ON | IC_INT_PRIOR_2);
@@ -221,6 +222,7 @@ void sensors_enable_lidar(bool on) {
     } else {
         DisableIntIC1;
         CloseCapture12();
+		LAT_LIDAR_ENABLE = 0;
     }
 }
 #else

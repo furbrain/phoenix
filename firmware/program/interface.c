@@ -31,8 +31,8 @@ struct menu_entry {
 
 volatile enum ACTION last_click = NONE;
 
-const char *cartesian_items[] = {"East","North","Vert","Ext"};
-const char *polar_items[] = {"Comp","Clino","Dist","Ext"};
+const char *cartesian_items[] = {"East:","North:","Vert:","Lg:    Ext:"};
+const char *polar_items[] = {"Comp:","Clino:","Dist:","Lg:    Ext:"};
 
 const char cartesian_format[] = " %+.2f ";
 const char *polar_format[] = {" %03.1f "," %+02.1f "," %.2f "," %.2f "};
@@ -43,16 +43,28 @@ void measure() {
 	double items[4];
 	double orientation[4];
 	double extension,distance;
-	int i;
+	int i, cycle;
 	char text[17];
 	char format[17];
 	char degree_sign;
 	char length_sign;
 	length_sign = (config.length_units==IMPERIAL)?'\'':'m';
 	degree_sign = (config.display_style==GRAD)?'g':'`';
-    sensors_enable_lidar(true);
+	cycle = 0;
+	display_clear_screen();
 	while (true) {
-		sensors_get_orientation(orientation,&distance);
+		cycle++;
+		if (cycle==10) {
+			sensors_enable_lidar(true);
+		}
+		if (cycle==20) {
+			sensors_enable_lidar(false);
+			display_clear_screen();
+			cycle = 0;
+		}
+		if (cycle==9) {
+			sensors_get_orientation(orientation,&distance);
+		}
 		extension = sqrt((orientation[0]*orientation[0])+(orientation[1]*orientation[1]));
 		switch (config.display_style) {
 			case CARTESIAN:
@@ -95,6 +107,9 @@ void measure() {
 				format[strlen(format)-1] = degree_sign;
 			} else {
 				format[strlen(format)-1] = length_sign;
+			}
+			if (i==3) {
+				display_write_text(6,26,"123",&small_font,false);
 			}
 			display_write_text(i*2,127,format,&small_font,true);
 		}
