@@ -26,8 +26,9 @@
     <output_type>executable</output_type>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/bootloader/gld/pic24fj64gb002-bootloader.gld</custom_linker_script>
     <opened_files>
-      <item>main.c</item>
       <item>gld/pic24fj64gb002-bootloader.gld</item>
+      <item>main.c</item>
+      <item>display.c</item>
       <item>i2c_util.c</item>
     </opened_files>
   </general>

@@ -35,6 +35,15 @@
     <description/>
     <version>0.1</version>
     <output_type>executable</output_type>
+    <opened_files>
+      <item>maths.c</item>
+      <item>interface.c</item>
+      <item>config.h</item>
+      <item>sensors.h</item>
+      <item>sensors.c</item>
+      <item>display.h</item>
+      <item>calibrate.c</item>
+    </opened_files>
   </general>
   <editors/>
   <compiler>

@@ -55,13 +55,11 @@ class Display(object):
     
     def send_data(self,data):
         self.buffer[self.cur_page][self.cur_column:self.cur_column+len(data)] = data
-        dataset = [data[i:i+32] for i in range(0,len(data),32)]
-        for data in dataset:
-            self.programmer.write_i2c(self.address,[0x40]+data)
+        self.programmer.write_display(self.cur_page,self.cur_column,data)
             
     def send_pages(self,data,page=0,column=0):
         for cur_page,data_line in enumerate(data):
-            real_page = (page+cur_page+self.top_page) % 8        
+            real_page = (page+cur_page+self.top_page) % 8
             self.set_page(real_page)
             self.set_column(column)
             self.send_data(data_line)
@@ -103,15 +101,12 @@ class Display(object):
 
     def set_column(self,column):
         if 0 <= column < 132:
-            self.send_command(column % 16)
-            self.send_command(16 + (column / 16))
             self.cur_column = column
         else:
             print "invalid column"
         
     def set_page(self,page):
         if 0 <= page < 8: 
-            self.send_command(0xB0+page)
             self.cur_page = page
         else:
             print "invalid page!"

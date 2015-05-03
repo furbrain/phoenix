@@ -20,6 +20,7 @@ SEND_RESET = 105
 WRITE_I2C_DATA = 110
 READ_I2C_DATA = 111
 CHECK_I2C_READY = 112
+WRITE_DISPLAY = 113
 
 
 def clean_list(buffer):
@@ -83,11 +84,18 @@ class ProgrammerError(Exception):
     pass
 class Programmer:
     def __init__(self,vID = 0xa0a0, pID = 0x0002, configuration = 0, interface = 0):
+        self.vID = vID
+        self.pID = pID
+        self.configuration = configuration
+        self.interface = interface
+        self.connect()
+        
+    def connect(self):
         for bus in usb.busses():
             for dev in bus.devices:
-                if (dev.idVendor == vID) & (dev.idProduct == pID):
+                if (dev.idVendor == self.vID) & (dev.idProduct == self.pID):
                     handle = dev.open()
-                    handle.setConfiguration(configuration)
+                    handle.setConfiguration(self.configuration)
                     #handle.claimInterface(interface)
                     self.handle = handle
                     chip_info = self.read_data(GET_CHIP_INFO,0,20)
@@ -100,7 +108,7 @@ class Programmer:
         raise ProgrammerError("Bootloader not found")
         
     def read_data(self,command,address,size,timeout=100):
-        index = 0
+        index=0
         if address > 0xFFFF:
             index = address >> 16
             address = address & 0xFFFF
@@ -110,9 +118,8 @@ class Programmer:
             raise ProgrammerError("Error reading data : only got %d bytes, expecting %d" % (len(buf),size))
         return buf
 
-    def write_data(self,command,address,data,timeout=100):
+    def write_data(self,command,address,data,index=0,timeout=100):
     #construct data package - size is 64 bits...
-        index = 0
         if address > 0xFFFF:
             index = address >> 16
             address = address & 0xFFFF
@@ -144,7 +151,15 @@ class Programmer:
             subset = hexfile.program[i:i+self.bytes_per_row]
             if subset.count(None) < self.bytes_per_row:
                 clean_list(subset)
-                pic_data = self.read_data(REQUEST_DATA,i,self.bytes_per_row)
+                count = 3
+                while count>0:
+                    try:
+                        pic_data = self.read_data(REQUEST_DATA,i,self.bytes_per_row)
+                        break
+                    except IOError:
+                        print "Glitch in communications. Trying again"
+                        self.handle.reset()
+                        count -= 1
                 for j in range(self.bytes_per_row):
                     if (pic_data[j]!=subset[j]):
                         raise ProgrammerError("Mismatch found at 0x%X (0x%x != 0x%x)" % (i+j,pic_data[j],subset[j]))
@@ -169,6 +184,9 @@ class Programmer:
 
     def check_i2c(self,address):
         return self.read_data(CHECK_I2C_READY,address,1)
+        
+    def write_display(self,page,column,data):
+        return self.write_data(WRITE_DISPLAY,address=column,index=page,data=data)
         
 if __name__=="__main__":
     import time

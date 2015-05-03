@@ -3,7 +3,6 @@
 #include "i2c_util.h"
 #include "config.h"
 #include <libpic30.h>
-#include "peripherals.h"
 #define OpenI2C OpenI2C1
 #define IdleI2C IdleI2C1
 #define StartI2C StartI2C1
@@ -40,7 +39,6 @@ void i2c_init(int speed){
 
 void i2c_close(){
     CloseI2C();
-	laser_set_day(false);
 }
 
 int8_t write_i2c_block(uint8_t address, const uint8_t *data, uint8_t length,int speed) {

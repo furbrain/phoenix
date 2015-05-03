@@ -39,6 +39,7 @@
 #include "usb_config.h"
 #include "usb_ch9.h"
 #include "battery.h"
+#include "display.h"
 
 _CONFIG1(WDTPS_PS16 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx3 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
 _CONFIG2(POSCMOD_NONE & I2C1SEL_PRI & IOL1WAY_OFF & OSCIOFNC_OFF & FCKSM_CSDCMD & FNOSC_FRCPLL & PLL96MHZ_ON & PLLDIV_NODIV & IESO_OFF)
@@ -111,6 +112,8 @@ static uint32_t CONFIG_WORDS_TOP;
 #define WRITE_I2C_DATA 110
 #define READ_I2C_DATA 111
 #define CHECK_I2C_READY 112
+#define WRITE_DISPLAY 113
+#define DISPLAY_ADDRESS 0x3C
 
 struct chip_info {
 	uint32_t user_region_base;
@@ -210,6 +213,13 @@ static void read_prog_data(uint32_t prog_addr, uint32_t len/*words*/)
 
 static int8_t write_i2c(uint8_t device_address, uint8_t* buffer, uint16_t len) {
 	return write_i2c_block(device_address,buffer,len,I2C_STANDARD);
+}
+
+static int8_t write_display(uint8_t page, uint8_t column, uint8_t* buffer, uint16_t len) {
+    write_i2c_data1(DISPLAY_ADDRESS,0xB0+page,I2C_FAST);
+    write_i2c_data1(DISPLAY_ADDRESS,column & 0x0F,I2C_FAST);
+    write_i2c_data1(DISPLAY_ADDRESS,16 + (column / 16),I2C_FAST);
+    return write_i2c_command_block(DISPLAY_ADDRESS,0x40,buffer,len,I2C_FAST);
 }
 
 
@@ -355,6 +365,15 @@ static void write_i2c_cb(bool transfer_ok, void *context)
 		write_i2c(write_address,(char*)prog_buf,write_length);
 }
 
+static void write_display_cb(bool transfer_ok, void *context)
+{
+	/* For OUT control transfers, data from the data stage of the request
+	 * is in buf[]. */
+
+	if (transfer_ok) {
+		render_data_to_page(write_address>>16,write_address&0xFF,(char*)prog_buf,write_length);
+	}
+}
 
 int8_t app_unknown_setup_request_callback(const struct setup_packet *setup)
 {
@@ -419,6 +438,16 @@ int8_t app_unknown_setup_request_callback(const struct setup_packet *setup)
 				return -1;
 			write_length = setup->wLength;
 			usb_start_receive_ep0_data_stage((char*)prog_buf, setup->wLength, &write_i2c_cb, NULL);
+		}
+		else if (setup->bRequest == WRITE_DISPLAY) {
+			write_address = setup->wValue | ((uint32_t) setup->wIndex) << 16;
+
+			/* Check length */
+			if (setup->wLength > sizeof(prog_buf))
+				return -1;
+			write_length = setup->wLength;
+			usb_start_receive_ep0_data_stage((char*)prog_buf, setup->wLength, &write_display_cb, NULL);
+            
 		}
 	}
 
