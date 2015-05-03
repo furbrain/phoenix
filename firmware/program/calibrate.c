@@ -15,6 +15,19 @@ void quick_cal() {
  * do first magnetic calibration */
 /* read in 400 or so readings while rotating */
 /* find min/max for each of x and y  - this is the zero offset
+ * offx = (minx+maxx)/2
+ * offy = (miny+maxy)/2
+ * axisx = 0
+ * axisy = 0
+ * minaxis = 0
+ * for i in readings
+	* x = readings[i].x-offx
+	* y = readings[i].y-offy
+	* hyp = x*x+y*y
+	* if hyp>minaxis
+		* axisx = x
+		* axisy = y
+		* minaxis = hyp
 /* Now rotate around y-axis, keeping laser fixed on one point
  * this allows us to first calibrate magnetics and then calculate
  * direction of laser beam.
