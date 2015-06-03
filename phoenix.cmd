@@ -170,7 +170,7 @@ ChangePinName(J4, 5, Shield)
 ChangePinName(J4, 3, USB_D-)
 ChangePinName(J4, 1, Vusb)
 ChangePinName(J4, 4, GND)
-ChangePinName(J4, 2, USB_D+)
+ChangePinName(J4, 2, USB_D-)
 
 # Start of element R10
 ChangePinName(R10, 1, 1)

@@ -85,20 +85,20 @@ device=INPUT
 T 10100 53500 5 10 1 1 0 0 1
 net=BAT_STATUS:1
 }
-C 2700 52700 1 180 0 input-1.sym
-{
-T 2700 52400 5 10 0 0 180 0 1
-device=INPUT
-T 2200 52500 5 10 1 1 0 0 1
-netname=USB-
-T 2700 52700 5 10 0 0 0 0 1
-net=USB-:1
-}
 C 2700 53000 1 180 0 input-1.sym
 {
 T 2700 52700 5 10 0 0 180 0 1
 device=INPUT
 T 2200 52800 5 10 1 1 0 0 1
+netname=USB-
+T 2700 53000 5 10 0 0 0 0 1
+net=USB-:1
+}
+C 2700 52700 1 180 0 input-1.sym
+{
+T 2700 52400 5 10 0 0 180 0 1
+device=INPUT
+T 2200 52500 5 10 1 1 0 0 1
 net=USB+:1
 }
 C 5000 51200 1 90 0 resistor-2.sym

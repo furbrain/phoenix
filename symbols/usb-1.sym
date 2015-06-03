@@ -6,7 +6,7 @@ pinnumber=2
 T 250 1050 5 8 0 0 0 0 1
 pinseq=2
 T 1350 1150 5 8 1 1 0 0 1
-pinlabel=USB_D+
+pinlabel=USB_D-
 T 250 1050 5 8 0 1 0 0 1
 pintype=pas
 }
