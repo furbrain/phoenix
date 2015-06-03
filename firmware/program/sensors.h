@@ -2,7 +2,7 @@
 #define SENSORS_H
 #include <stdint.h>
 #include <stdbool.h>
-#define LIDAR_TESTING
+//#define LIDAR_TESTING
 
 struct RAW_SENSORS {
     int16_t accel[3];

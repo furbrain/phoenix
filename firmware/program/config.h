@@ -15,7 +15,7 @@
  * z-axis is up
  * 
  * for the gyro the axis indicates the axis of rotation */
-#define TESTBED
+//#define TESTBED
 #ifdef TESTBED
 #define GX_AXIS 1
 #define GX_POLARITY +1
@@ -45,6 +45,37 @@
 
 #define AZ_AXIS 2
 #define AZ_POLARITY -1
+
+#else
+
+#define GX_AXIS 0
+#define GX_POLARITY -1
+
+#define GY_AXIS 1
+#define GY_POLARITY +1
+
+#define GZ_AXIS 2
+#define GZ_POLARITY +1
+
+
+#define MX_AXIS 1
+#define MX_POLARITY -1
+
+#define MY_AXIS 0
+#define MY_POLARITY +1
+
+#define MZ_AXIS 2
+#define MZ_POLARITY -1
+
+
+#define AX_AXIS 0
+#define AX_POLARITY -1
+
+#define AY_AXIS 1
+#define AY_POLARITY +1
+
+#define AZ_AXIS 2
+#define AZ_POLARITY +1
 #endif
 
 #include <stdint.h>

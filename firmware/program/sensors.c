@@ -1,5 +1,6 @@
 #define USE_AND_OR
 #include "config.h"
+#include <libpic30.h>
 #include <incap.h>
 #include <ports.h>
 #include <PPS.h>
@@ -8,8 +9,9 @@
 #include "sensors.h"
 #include "i2c_util.h"
 /*LIDAR defines */
-#define LIDAR_ADDRESS 0x62s
+#define LIDAR_ADDRESS 0x62
 #define LIDAR_COMMAND(command,data) write_i2c_data2(LIDAR_ADDRESS,command,data,I2C_STANDARD)
+#define LIDAR_READ(command,data,length) read_i2c_data(LIDAR_ADDRESS,command,data,length,I2C_STANDARD)
 
 #define MPU_ADDRESS 0x68
 #define MPU_COMMAND(command,data) write_i2c_data2(MPU_ADDRESS,command,data,I2C_FAST)
@@ -130,6 +132,8 @@ void sensors_init() {
 
     #else
     #endif
+	TRIS_LIDAR_ENABLE = 0;
+	LAT_LIDAR_ENABLE = 0;
 }
 
 
@@ -141,7 +145,7 @@ void byte_swap(uint16_t *word){
 void sensors_read_raw(struct RAW_SENSORS *sensors, bool lidar){
     int i;
     read_i2c_data(MPU_ADDRESS, 0x3B, (uint8_t *)sensors, sizeof(*sensors),I2C_FAST);
-    sensors->distance = lidar ? sensors_read_lidar() : 0; 
+    sensors->distance = lidar ? sensors_read_lidar() : 10; 
     for(i=0; i< 10; ++i) {
         byte_swap(&((uint16_t*)sensors)[i]);
     }
@@ -171,7 +175,6 @@ void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar) {
 }
 
 #ifdef LIDAR_TESTING
-#define LIDAR_AVERAGE_COUNT
 volatile int lidar_average_count = 32;
 volatile uint32_t lidar_accumulator;
 volatile uint32_t lidar_last_reading;
@@ -227,22 +230,31 @@ void sensors_enable_lidar(bool on) {
 }
 #else
 uint32_t sensors_read_lidar(){
-    //FIXME put lidar calibration code here
-    uint32_t latest_lidar = lidar_last_reading;
-    latest_lidar /= lidar_average_count;
-    latest_lidar /= 16; //gives result in mm
-#ifdef DEBUG
-    if (latest_lidar==0) latest_lidar = 10000; //return 10m if lidar inoperative
-#endif
-    return latest_lidar;
+	int count = 100;
+	uint8_t dist_hi = 0;
+	uint8_t dist_lo = 0;
+	LIDAR_COMMAND(0,4);
+	while (count--) {
+		if (LIDAR_READ(0xf,&dist_hi,1)==0) break;
+		__delay_ms(2);
+	}
+	if (count) {
+		LIDAR_READ(0x10,&dist_lo,1);
+		if ((dist_lo==0) && (dist_hi==0)) return count;
+		return (uint32_t)dist_hi<<8 + dist_lo;
+	} else {
+		return 1000;
+	}
 }
 
 void sensors_enable_lidar(bool on) {
     if (on) {
 		LAT_LIDAR_ENABLE = 1;
 		//wait for LIDAR to startup
-		delay_ms(100);
+			__delay_ms(50);
 		//send I2C initialisation
+			LIDAR_COMMAND(2,255); /* high accuracy */
+
 	} else {
 		LAT_LIDAR_ENABLE = 0;
 	}
@@ -250,21 +262,20 @@ void sensors_enable_lidar(bool on) {
 
 #endif
 
-void sensors_get_orientation(double *d, double *distance) {
+void sensors_get_orientation(double *d, double distance) {
 	struct COOKED_SENSORS sensors;
 	double east[3];
 	double north[3];
-	sensors_read_cooked(&sensors,true);
+	sensors_read_cooked(&sensors,false);
 	normalise(sensors.accel);
 	cross_product(sensors.accel,sensors.mag,east); // east = down x mag
 	normalise(east);
 	cross_product(east,sensors.accel,north);       // north= east x down
 	normalise(north);
-	d[0] = east[1]*sensors.distance;
-	d[1] = north[1]*sensors.distance;
-	d[2] = sensors.accel[1]*sensors.distance;
+	d[0] = east[1]*distance;
+	d[1] = north[1]*distance;
+	d[2] = sensors.accel[1]*distance;
 	//normalise(d);
-	*distance = sensors.distance;
 }
 
 void sensors_read_leg(struct LEG *leg, double *distance) {

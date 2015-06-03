@@ -5,6 +5,7 @@
 #include <ports.h>
 #include "power.h"
 #include "peripherals.h"
+#include "sensors.h"
 
 void hibernate() {
 	//swansong
@@ -17,6 +18,7 @@ void hibernate() {
 	laser_on(false);
 	//turn off peripherals
 	peripherals_on(false);
+	sensors_enable_lidar(false);
 	//enable INT0
 	__delay_ms(2000);
 	//wait a little to avoid any extra button presses etc.

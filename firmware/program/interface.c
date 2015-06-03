@@ -14,6 +14,7 @@
 #include "power.h"
 #include "calibrate.h"
 #include "debug.h"
+#include "battery.h"
 
 #define delay_ms(delay) __delay_ms(delay)
 
@@ -48,6 +49,7 @@ void measure() {
 	char format[17];
 	char degree_sign;
 	char length_sign;
+	distance = 10.0;
 	length_sign = (config.length_units==IMPERIAL)?'\'':'m';
 	degree_sign = (config.display_style==GRAD)?'g':'`';
 	cycle = 0;
@@ -56,6 +58,7 @@ void measure() {
 		cycle++;
 		if (cycle==10) {
 			sensors_enable_lidar(true);
+			distance = sensors_read_lidar()/100.0;
 		}
 		if (cycle==20) {
 			sensors_enable_lidar(false);
@@ -63,9 +66,10 @@ void measure() {
 			cycle = 0;
 		}
 		if (cycle==9) {
-			sensors_get_orientation(orientation,&distance);
+			sensors_get_orientation(orientation,distance);
 		}
 		extension = sqrt((orientation[0]*orientation[0])+(orientation[1]*orientation[1]));
+		//extension = 3.2;
 		switch (config.display_style) {
 			case CARTESIAN:
 				for (i=0; i<3; i++) {
@@ -118,6 +122,7 @@ void measure() {
 			case FLIP_DOWN:
 				break;
 			case SINGLE_CLICK:
+				sensors_enable_lidar(false);
 				return;
 			case LONG_CLICK:
 				break;
@@ -127,7 +132,6 @@ void measure() {
 		}
 		delay_ms(50);
 	}
-    sensors_enable_lidar(false);
 }
 void set_date() {}
 void set_time() {}
@@ -334,7 +338,8 @@ void show_status(){
 	/* batt icon 50% charge: 0x1f,0x20,0x2f*9,0x20*9,0x20,0x1f,0x04,0x03 */
 	/* reverse bit order for second line */
 	char bat_status[24];
-	uint8_t bat_charge = 12;
+	uint8_t bat_charge;
+	bat_charge = get_bat_charge()/(1024/19);
 	if (!day) {
 	    bat_status[0] = 0xf8;
 	    bat_status[1] = 0x04;

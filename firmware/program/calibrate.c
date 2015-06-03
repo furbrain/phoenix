@@ -40,7 +40,6 @@ void align_cal() {
 	int on = 0;
 	int32_t length;
 	bool beeping = false;
-	lidar_average_count = 8;
 	display_clear_screen();  //0123456789ABCDEF  0123456789  0123456789   0123456789ABCDEF
 	display_write_multiline(0,"FACTORY USE ONLY\n"
 				  "Align LIDAR with\n"
