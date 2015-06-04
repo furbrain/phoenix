@@ -234,7 +234,7 @@ uint32_t sensors_read_lidar(){
 	uint8_t dist_hi = 0;
 	uint8_t dist_lo = 0;
 	LIDAR_COMMAND(0,4);
-	while (count--) {
+	while (--count) {
 		if (LIDAR_READ(0xf,&dist_hi,1)==0) break;
 		__delay_ms(2);
 	}
