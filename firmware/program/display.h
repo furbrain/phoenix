@@ -9,6 +9,8 @@ void display_init();
 
 void display_close();
 
+void display_on(bool enable);
+
 void display_clear_page(uint8_t page);
 
 void display_clear_screen();
