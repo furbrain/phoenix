@@ -236,15 +236,14 @@ void sensors_enable_lidar(bool on) {
 #else
 uint32_t sensors_read_lidar(){
 	int error = 0;
-	uint8_t dist_hi = 0;
+	uint16_t dist_hi = 0;
 	uint8_t dist_lo = 0;
 	LIDAR_COMMAND(0,4);
 	__delay_ms(50);
-	error = LIDAR_READ(0x0f,&dist_hi,2);
+	error = LIDAR_READ(0x8f,&dist_hi,2);
+	byte_swap(&dist_hi);
 	if (error) return -error;
-	error = LIDAR_READ(0x0f,&dist_lo,2);
-	if (error) return -error+10;
-	return ((uint32_t)dist_hi)<<8+(dist_lo);
+	return dist_hi;
 }
 
 void sensors_enable_lidar(bool on) {

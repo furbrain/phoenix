@@ -52,7 +52,7 @@ void display_close() {
 
 void display_on(bool enable){
 	if (enable) {
-		send1(0xAF) 
+		send1(0xAF); 
 	} else {
 		send1 (0xAE);
 	}

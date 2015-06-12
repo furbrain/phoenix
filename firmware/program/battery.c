@@ -55,9 +55,8 @@ enum BAT_STATUS get_bat_status(){
 
 #ifndef BOOTLOADER
 double get_bat_charge(){
-	uint16_t ports = 0x7FFF; //enable band-gap reference
-	uint16_t scans;
-	double bat_voltage,bg;
+	uint16_t ports = 0xFFFF;
+	double bat_voltage;
 	ports ^= 1 << ADC_BAT_CHARGE; //and enable the relevant channel
 	TRIS_BAT_CHARGE = 1;
 	CloseADC10();
@@ -73,12 +72,7 @@ double get_bat_charge(){
 	ConvertADC10(); // read from voltage divider
 	while(BusySampADC1); /*wait till conversion complete*/
 	bat_voltage = ReadADC10(0);
-	__delay_ms(1);
-	ConvertADC10(); // now read band-gap reference from voltage B
-	while(BusySampADC1); /*wait till conversion complete*/
-	bg = ReadADC10(1);
 	CloseADC10();
 	return (bat_voltage*2.0*3.3/1024.0);
-	return (2.0*bat_voltage)/(bg/1.2); //multiply by two as voltage has been halved, 1.2 is bandgap voltage.
 }
 #endif

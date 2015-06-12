@@ -49,12 +49,12 @@ void measure() {
 	char format[17];
 	char degree_sign;
 	char length_sign;
-	distance = 9.9;
+	distance = 10.0;
 	length_sign = (config.length_units==IMPERIAL)?'\'':'m';
 	degree_sign = (config.display_style==GRAD)?'g':'`';
 	cycle = 0;
 	display_clear_screen();
-	laser_on(false);
+	//test stuff here...
 	while (true) {
 		cycle++;
 		if (cycle==10) {
@@ -341,13 +341,20 @@ void show_status(){
 	/* batt icon 50% charge: 0x1f,0x20,0x2f*9,0x20*9,0x20,0x1f,0x04,0x03 */
 	/* reverse bit order for second line */
 	char bat_status[24];
-	uint8_t bat_charge;
-	bat_charge = get_bat_charge()/(1024/19);
+	uint8_t charge;
+	double bat_charge;
+	bat_charge = get_bat_charge();
+	bat_charge -= 3.6; //our minimum acceptable voltage
+	bat_charge /= 0.6; //3.6+0.6 = 4.2V - ideal max voltage
+	bat_charge *= 19; //there are 19 possible status levels
+	bat_charge = bat_charge<0?0:bat_charge; //clip max and min values
+	bat_charge = bat_charge>19?19:bat_charge;
+	charge =bat_charge;
 	if (!day) {
 	    bat_status[0] = 0xf8;
 	    bat_status[1] = 0x04;
-	    memset(&bat_status[2],0xf4,bat_charge);
-	    memset(&bat_status[2+bat_charge],0x04,19-bat_charge);
+	    memset(&bat_status[2],0xf4,charge);
+	    memset(&bat_status[2+charge],0x04,19-charge);
 	    bat_status[21] = 0xf8;
 	    bat_status[22] = 0x20;
 	    bat_status[23] = 0xC0;
