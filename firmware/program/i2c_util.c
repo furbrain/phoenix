@@ -9,6 +9,7 @@
 #define MasterWriteI2C MasterWriteI2C1
 #define MastergetsI2C MastergetsI2C1
 #define I2CSTATbits I2C1STATbits
+#define RestartI2C RestartI2C1
 #define StopI2C StopI2C1
 #define CloseI2C CloseI2C1
 
@@ -132,8 +133,36 @@ int8_t write_i2c_data2(uint8_t address, uint8_t command, uint8_t data, int speed
 }
 
 int8_t read_i2c_data(uint8_t address, uint8_t command, uint8_t *data, uint8_t length, int speed) {
-	if (write_i2c_data1(address,command,speed)==-1) return -1;
-	return read_i2c_block(address,data,length,speed);
+	int result = 0;
+    i2c_init(speed);
+	IdleI2C();
+	StartI2C();
+	IdleI2C();  //Wait till Start sequence is completed
+	MasterWriteI2C(address << 1);       //Write Slave address and set master for transmission
+	IdleI2C();
+	Nop();
+	if(I2CSTATbits.ACKSTAT){
+		result = -1;
+		goto fallover;
+	}
+	MasterWriteI2C(command);        // write a byte
+	IdleI2C();
+	Nop();
+	if(I2CSTATbits.ACKSTAT){
+		result = -2;
+		goto fallover;
+	}
+	RestartI2C();
+	IdleI2C();  //Wait till Start sequence is completed
+	MasterWriteI2C(address * 2 + 1);
+	IdleI2C();
+	if (MastergetsI2C(length,data,200)) result=-3;
+
+fallover:
+	StopI2C();
+	IdleI2C();
+	i2c_close();
+	return result;
 }
 
 int8_t write_eeprom_data(uint16_t address, const uint8_t *data, uint8_t length) {

@@ -22,6 +22,8 @@ struct COOKED_SENSORS {
 
 void sensors_init();
 
+void sensors_init_compass();
+
 void sensors_read_raw(struct RAW_SENSORS *sensors, bool lidar);
 
 void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar);

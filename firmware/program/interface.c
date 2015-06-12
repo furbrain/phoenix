@@ -49,11 +49,12 @@ void measure() {
 	char format[17];
 	char degree_sign;
 	char length_sign;
-	distance = 10.0;
+	distance = 9.9;
 	length_sign = (config.length_units==IMPERIAL)?'\'':'m';
 	degree_sign = (config.display_style==GRAD)?'g':'`';
 	cycle = 0;
 	display_clear_screen();
+	laser_on(false);
 	while (true) {
 		cycle++;
 		if (cycle==10) {
@@ -63,6 +64,7 @@ void measure() {
 		if (cycle==20) {
 			sensors_enable_lidar(false);
 			display_clear_screen();
+			sensors_init_compass();
 			cycle = 0;
 		}
 		if (cycle==9) {
@@ -85,6 +87,7 @@ void measure() {
 			case POLAR:
 			case GRAD:
 				items[0] = atan2(orientation[0],orientation[1])*DEGREES_PER_RADIAN;
+				if (items[0]<0) items[0]+=360;
 				items[1] = atan2(orientation[2],extension)*DEGREES_PER_RADIAN;
 				if (config.display_style==GRAD) {
 					items[0] *= GRADS_PER_DEGREE;

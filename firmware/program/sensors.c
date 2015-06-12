@@ -63,7 +63,22 @@
 void sensors_init() {
         
         //reset FIFO, I2C, signal conditioning...
-    uint8_t temp;
+ 
+    #ifdef LIDAR_TESTING
+    /* connect IC3 to detect the rising edge of the LIDAR pulse */
+	//iPPSInput(IN_FN_PPS_IC3,IN_PIN_PPS_RP4);
+	/* connect IC12 to detect the falling edge */
+	iPPSInput(IN_FN_PPS_IC1,IN_PIN_PPS_RP4);
+
+    #else
+    #endif
+	TRIS_LIDAR_ENABLE = 0;
+	LAT_LIDAR_ENABLE = 0;
+	sensors_init_compass();
+}
+
+void sensors_init_compass() {
+   uint8_t temp;
     MPU_COMMAND(0x6A,0);
     MPU_COMMAND(0x6A,7);
 
@@ -85,7 +100,7 @@ void sensors_init() {
             
             break;
         }
-    MPU_COMMAND(0x1B,temp);
+    MPU_COMMAND(0x1B,temp<<3);
     //set accel full scale and high_pass_filter
     switch (ACCEL_FULL_SCALE){
         case 2:
@@ -102,7 +117,8 @@ void sensors_init() {
             temp=24;
             break;
         }
-    MPU_COMMAND(0x1C,temp | ACCEL_HPF);
+    MPU_COMMAND(0x1C,temp);
+	MPU_COMMAND(0x1D,DLPF_CFG);
     //set fifo enablement
     MPU_COMMAND(0x23, FIFO_SENSORS);            
         
@@ -123,17 +139,6 @@ void sensors_init() {
     MPU_COMMAND(0x6A, USER_CTRL);
         
     MPU_COMMAND(0x6B, PWR_MGMT_1);
-
-    #ifdef LIDAR_TESTING
-    /* connect IC3 to detect the rising edge of the LIDAR pulse */
-	//iPPSInput(IN_FN_PPS_IC3,IN_PIN_PPS_RP4);
-	/* connect IC12 to detect the falling edge */
-	iPPSInput(IN_FN_PPS_IC1,IN_PIN_PPS_RP4);
-
-    #else
-    #endif
-	TRIS_LIDAR_ENABLE = 0;
-	LAT_LIDAR_ENABLE = 0;
 }
 
 
@@ -230,28 +235,23 @@ void sensors_enable_lidar(bool on) {
 }
 #else
 uint32_t sensors_read_lidar(){
-	int count = 100;
-	uint8_t dist_hi = 0;
+	int count = 20;
+	uint16_t dist = 0;
 	uint8_t dist_lo = 0;
 	LIDAR_COMMAND(0,4);
-	while (--count) {
-		if (LIDAR_READ(0xf,&dist_hi,1)==0) break;
-		__delay_ms(2);
-	}
-	if (count) {
-		LIDAR_READ(0x10,&dist_lo,1);
-		if ((dist_lo==0) && (dist_hi==0)) return count;
-		return (uint32_t)dist_hi<<8 + dist_lo;
-	} else {
-		return 1000;
-	}
+	__delay_ms(50);
+	count = LIDAR_READ(0x8f,&dist,2);
+	byte_swap(&dist);
+	//LIDAR_READ(0x10,&dist_lo,1);
+    if ((dist==0)) return -count;
+	return (uint32_t)dist;
 }
 
 void sensors_enable_lidar(bool on) {
     if (on) {
 		LAT_LIDAR_ENABLE = 1;
 		//wait for LIDAR to startup
-			__delay_ms(50);
+			__delay_ms(100);
 		//send I2C initialisation
 			LIDAR_COMMAND(2,255); /* high accuracy */
 
