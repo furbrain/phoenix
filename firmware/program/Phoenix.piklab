@@ -30,6 +30,8 @@
       <item>debug.h</item>
       <item>maths.h</item>
       <item>maths.c</item>
+      <item>measure.c</item>
+      <item>measure.h</item>
     </files>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/program/bootloader.gld</custom_linker_script>
     <description/>

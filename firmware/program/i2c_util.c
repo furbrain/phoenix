@@ -156,11 +156,16 @@ int8_t read_i2c_data(uint8_t address, uint8_t command, uint8_t *data, uint8_t le
 	IdleI2C();  //Wait till Start sequence is completed
 	MasterWriteI2C(address * 2 + 1);
 	IdleI2C();
-	if (MastergetsI2C(length,data,200)) result=-3;
+	if(I2CSTATbits.ACKSTAT){
+		result = -3;
+		goto fallover;
+	}
+	if (MastergetsI2C(length,data,200)) result=-4;
 
 fallover:
 	StopI2C();
-	IdleI2C();
+	//IdleI2C();
+	__delay_us(100);
 	i2c_close();
 	return result;
 }

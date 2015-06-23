@@ -15,12 +15,7 @@
 #include "calibrate.h"
 #include "debug.h"
 #include "battery.h"
-
-#define delay_ms(delay) __delay_ms(delay)
-
-#define FEET_PER_METRE 3.281
-#define DEGREES_PER_RADIAN 57.296
-#define GRADS_PER_DEGREE 1.111111111
+#include "measure.h"
 
 struct menu_entry {
 	int16_t index;
@@ -31,111 +26,6 @@ struct menu_entry {
 
 
 volatile enum ACTION last_click = NONE;
-
-const char *cartesian_items[] = {"East:","North:","Vert:","Lg:    Ext:"};
-const char *polar_items[] = {"Comp:","Clino:","Dist:","Lg:    Ext:"};
-
-const char cartesian_format[] = " %+.2f ";
-const char *polar_format[] = {" %03.1f "," %+02.1f "," %.2f "," %.2f "};
-
-
-void measure() {
-	int item = 0;
-	double items[4];
-	double orientation[4];
-	double extension,distance;
-	int i, cycle;
-	char text[17];
-	char format[17];
-	char degree_sign;
-	char length_sign;
-	distance = 10.0;
-	length_sign = (config.length_units==IMPERIAL)?'\'':'m';
-	degree_sign = (config.display_style==GRAD)?'g':'`';
-	cycle = 0;
-	display_clear_screen();
-	//test stuff here...
-	while (true) {
-		cycle++;
-		if (cycle==10) {
-			sensors_enable_lidar(true);
-			distance = sensors_read_lidar()/100.0;
-		}
-		if (cycle==20) {
-			sensors_enable_lidar(false);
-			display_clear_screen();
-			sensors_init_compass();
-			cycle = 0;
-		}
-		if (cycle==9) {
-			sensors_get_orientation(orientation,distance);
-		}
-		extension = sqrt((orientation[0]*orientation[0])+(orientation[1]*orientation[1]));
-		//extension = 3.2;
-		switch (config.display_style) {
-			case CARTESIAN:
-				for (i=0; i<3; i++) {
-					items[i] = orientation[i];
-				}
-				items[3] = distance;
-				if (config.length_units==IMPERIAL) {
-					for(i=0;i<4;i++) {
-						items[i] = items[i]*FEET_PER_METRE;
-					}
-				}
-				break;
-			case POLAR:
-			case GRAD:
-				items[0] = atan2(orientation[0],orientation[1])*DEGREES_PER_RADIAN;
-				if (items[0]<0) items[0]+=360;
-				items[1] = atan2(orientation[2],extension)*DEGREES_PER_RADIAN;
-				if (config.display_style==GRAD) {
-					items[0] *= GRADS_PER_DEGREE;
-					items[1] *= GRADS_PER_DEGREE;
-				}
-				items[2] = distance;
-				items[3] = extension;
-				if (config.length_units==IMPERIAL){
-					items[2] *= FEET_PER_METRE;
-					items[3] *= FEET_PER_METRE;
-				}
-				break;
-		}
-		//we'll just do the detail display for now
-		for (i=0; i<4; i++) {
-			if (config.display_style==CARTESIAN) {
-				sprintf(format,cartesian_format,items[i]);
-				display_write_text(i*2,0,cartesian_items[i],&small_font,false);
-			} else {
-				sprintf(format,polar_format[i],items[i]);
-				display_write_text(i*2,0,polar_items[i],&small_font,false);
-			}
-			if ((i<2) && (config.display_style!=CARTESIAN)) {
-				format[strlen(format)-1] = degree_sign;
-			} else {
-				format[strlen(format)-1] = length_sign;
-			}
-			if (i==3) {
-				display_write_text(6,26,"123",&small_font,false);
-			}
-			display_write_text(i*2,127,format,&small_font,true);
-		}
-		switch(get_action()) {
-			case FLIP_UP:
-			case FLIP_DOWN:
-				break;
-			case SINGLE_CLICK:
-				sensors_enable_lidar(false);
-				return;
-			case LONG_CLICK:
-				break;
-			case DOUBLE_CLICK:
-				hibernate();
-				break;
-		}
-		delay_ms(50);
-	}
-}
 void set_date() {}
 void set_time() {}
 

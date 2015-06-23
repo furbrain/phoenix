@@ -16,6 +16,7 @@
 
 
 void main(){
+	setup_pins();
 	TRIS_BUTTON = 1;
 	OpenTimer45(T45_ON | T45_IDLE_CON | T45_PS_1_256 | T4_32BIT_MODE_ON,0xFFFFFFFFL);
 	WriteTimer45(0);

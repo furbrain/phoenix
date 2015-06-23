@@ -37,7 +37,7 @@
 
 uint8_t laser_brightness = LASER_NIGHT_BRIGHTNESS;
 
-void peripherals_init() {
+void setup_pins() {
 	//set TRIS settings
 	TRIS_PERIPHERALS  = 0;
 	TRIS_LASER = 0;
@@ -48,6 +48,9 @@ void peripherals_init() {
 	TRIS_NC_1 = 0;
 	TRIS_NC_2 = 1;
 	TRIS_NC_3 = 0;
+}
+
+void peripherals_init() {
 	//connect peripherals
 	iPPSOutput(RP_LASER,OUT_FN_PPS_OC3);
 	iPPSOutput(RP_BUZZER_A,OUT_FN_PPS_OC1);

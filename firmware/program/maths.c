@@ -20,3 +20,19 @@ void normalise(double *a) {
 	a[2] /= magnitude;
 	
 }
+
+int16_t find_median(int16_t array[],int16_t len) {
+	int16_t swap;
+	int c,d;
+	for (c = 0 ; c < ( len - 1 ); c++) {
+		for (d = 0 ; d < len - c - 1; d++) {
+			if (array[d] > array[d+1]) {
+				swap       = array[d];
+				array[d]   = array[d+1];
+				array[d+1] = swap;
+			}
+		}
+	}
+	return array[len/2];
+}
+

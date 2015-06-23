@@ -3,6 +3,8 @@
 #define USE_AND_OR
 #define FCY 16000000L
 #define FCY_PER_MS 16000L //this is useful where working with 16-bit numbers
+#include <libpic30.h>
+#define delay_ms(delay) __delay_ms(delay)
 
 #define FIRMWARE_VERSION 1
 
@@ -18,7 +20,7 @@
 //#define TESTBED
 #ifdef TESTBED
 #define GX_AXIS 1
-#define GX_POLARITY +1
+#define GX_POLARITY -1
 
 #define GY_AXIS 0
 #define GY_POLARITY +1
@@ -38,7 +40,7 @@
 
 
 #define AX_AXIS 1
-#define AX_POLARITY +1
+#define AX_POLARITY -1
 
 #define AY_AXIS 0
 #define AY_POLARITY +1
@@ -72,7 +74,7 @@
 #define AX_POLARITY -1
 
 #define AY_AXIS 1
-#define AY_POLARITY +1
+#define AY_POLARITY -1
 
 #define AZ_AXIS 2
 #define AZ_POLARITY +1

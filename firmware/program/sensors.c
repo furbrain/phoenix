@@ -18,7 +18,7 @@
 
 /* MPU configuration macros */
 #define DLPF_CFG 2                             //set 84HZ low pass filter
-#define SAMPLE_RATE 20
+#define SAMPLE_RATE 100
 #if DLPF_CFG==7 || DLPF_CFG==0
     #define CLOCK 8000
 #else
@@ -48,7 +48,7 @@
 #define I2C_MST_CTRL    0x40
 #define SLV0_ADDR    0x8C
 #define SLV0_REG    0x03
-#define SLV0_CTRL    0xD6
+#define SLV0_CTRL    0xD7
 #define SLV1_ADDR    0x0C
 #define SLV1_REG    0x0A
 #define SLV1_CTRL    0x81
@@ -160,24 +160,29 @@ void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar) {
     struct RAW_SENSORS raw_sensors;
     int i;
     sensors_read_raw (&raw_sensors,lidar);
+	sensors_raw_to_cooked(sensors,&raw_sensors);
+}
+
+void sensors_raw_to_cooked(struct COOKED_SENSORS *cooked, struct RAW_SENSORS *raw){
     // first convert to doubles with sensible units
 	// also account for vagaries of sensor alignment
-	sensors->accel[0] = raw_sensors.accel[AX_AXIS]*AX_POLARITY*(ACCEL_FULL_SCALE/32768.0);
-	sensors->gyro[0] = raw_sensors.gyro[GX_AXIS]*GX_POLARITY*(GYRO_FULL_SCALE/32768.0);
-	sensors->mag[0] = raw_sensors.mag[MX_AXIS]*MX_POLARITY*(MAG_FULL_SCALE/32768.0);
+	cooked->accel[0] = raw->accel[AX_AXIS]*AX_POLARITY*(ACCEL_FULL_SCALE/32768.0);
+	cooked->gyro[0] = raw->gyro[GX_AXIS]*GX_POLARITY*(GYRO_FULL_SCALE/32768.0);
+	cooked->mag[0] = raw->mag[MX_AXIS]*MX_POLARITY*(MAG_FULL_SCALE/32768.0);
 
-	sensors->accel[1] = raw_sensors.accel[AY_AXIS]*AY_POLARITY*(ACCEL_FULL_SCALE/32768.0);
-	sensors->gyro[1] = raw_sensors.gyro[GY_AXIS]*GY_POLARITY*(GYRO_FULL_SCALE/32768.0);
-	sensors->mag[1] = raw_sensors.mag[MY_AXIS]*MY_POLARITY*(MAG_FULL_SCALE/32768.0);
+	cooked->accel[1] = raw->accel[AY_AXIS]*AY_POLARITY*(ACCEL_FULL_SCALE/32768.0);
+	cooked->gyro[1] = raw->gyro[GY_AXIS]*GY_POLARITY*(GYRO_FULL_SCALE/32768.0);
+	cooked->mag[1] = raw->mag[MY_AXIS]*MY_POLARITY*(MAG_FULL_SCALE/32768.0);
 
-	sensors->accel[2] = raw_sensors.accel[AZ_AXIS]*AZ_POLARITY*(ACCEL_FULL_SCALE/32768.0);
-	sensors->gyro[2] = raw_sensors.gyro[GZ_AXIS]*GZ_POLARITY*(GYRO_FULL_SCALE/32768.0);
-	sensors->mag[2] = raw_sensors.mag[MZ_AXIS]*MZ_POLARITY*(MAG_FULL_SCALE/32768.0);
+	cooked->accel[2] = raw->accel[AZ_AXIS]*AZ_POLARITY*(ACCEL_FULL_SCALE/32768.0);
+	cooked->gyro[2] = raw->gyro[GZ_AXIS]*GZ_POLARITY*(GYRO_FULL_SCALE/32768.0);
+	cooked->mag[2] = raw->mag[MZ_AXIS]*MZ_POLARITY*(MAG_FULL_SCALE/32768.0);
 
-    sensors->temp = (raw_sensors.temp/333.87)+21.0;
-    sensors->distance = (double)raw_sensors.distance/1000.0;
+    cooked->temp = (raw->temp/333.87)+21.0;
+    cooked->distance = (double)raw->distance/1000.0;
     //FIXME need to apply calibration here....
 }
+
 
 #ifdef LIDAR_TESTING
 volatile int lidar_average_count = 32;
@@ -234,15 +239,33 @@ void sensors_enable_lidar(bool on) {
     }
 }
 #else
-uint32_t sensors_read_lidar(){
+int32_t sensors_read_lidar(){
 	int error = 0;
+	int count;
 	uint16_t dist_hi = 0;
 	uint8_t dist_lo = 0;
-	LIDAR_COMMAND(0,4);
-	__delay_ms(50);
-	error = LIDAR_READ(0x8f,&dist_hi,2);
+	for(count=0;count<30;count++) {
+		if (LIDAR_COMMAND(0,4)==0) break;
+		delay_ms(2);
+	}
+	if (count>=30) return -32;
+ 	for(count=0;count<30;count++) {
+ 		error = LIDAR_READ(0x01,(uint8_t*) &dist_lo,1);
+ 		if (error==0) break;
+ 		delay_ms(2);
+ 	}
+ 	if (count>=30) return -16;
+	if (dist_lo!=6) {
+		if ((dist_lo & 1)==0) return -dist_lo;
+		if (dist_lo & 0x88) return -dist_lo;
+	}
+	for(count=0;count<30;count++) {
+		error = LIDAR_READ(0x8f,(uint8_t*) &dist_hi,2);
+		if (error==0) break;
+		delay_ms(2);
+	}
+	if (count>=30) return error;
 	byte_swap(&dist_hi);
-	if (error) return -error;
 	return dist_hi;
 }
 
@@ -252,7 +275,9 @@ void sensors_enable_lidar(bool on) {
 		//wait for LIDAR to startup
 			__delay_ms(100);
 		//send I2C initialisation
-			LIDAR_COMMAND(2,255); /* high accuracy */
+			LIDAR_COMMAND(0,0);
+			__delay_ms(10);
+			LIDAR_COMMAND(2,128); /* high accuracy */
 
 	} else {
 		LAT_LIDAR_ENABLE = 0;
@@ -261,20 +286,18 @@ void sensors_enable_lidar(bool on) {
 
 #endif
 
-void sensors_get_orientation(double *d, double distance) {
-	struct COOKED_SENSORS sensors;
+void sensors_get_orientation(struct COOKED_SENSORS *sensors, double *d) {
 	double east[3];
 	double north[3];
-	sensors_read_cooked(&sensors,false);
-	normalise(sensors.accel);
-	cross_product(sensors.accel,sensors.mag,east); // east = down x mag
+	normalise(sensors->accel);
+	cross_product(sensors->accel,sensors->mag,east); // east = down x mag
 	normalise(east);
-	cross_product(east,sensors.accel,north);       // north= east x down
+	cross_product(east,sensors->accel,north);       // north= east x down
 	normalise(north);
-	d[0] = east[1]*distance;
-	d[1] = north[1]*distance;
-	d[2] = sensors.accel[1]*distance;
-	//normalise(d);
+	d[0] = east[1];
+	d[1] = north[1];
+	d[2] = sensors->accel[1];
+	normalise(d);
 }
 
 void sensors_read_leg(struct LEG *leg, double *distance) {

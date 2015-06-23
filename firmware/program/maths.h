@@ -1,6 +1,6 @@
 #ifndef MATHS_H
 #define MATHS_H
-
+#include <stdint.h>
 /* return AxB in C, where A B and C are all pointers to double[3] */
 void cross_product(double *a, double *b, double *c);
 
@@ -9,4 +9,6 @@ void cross_product(double *a, double *b, double *c);
 void apply_matrix(double *a, double *b, double *c);
 
 void normalise(double *a);
+
+int16_t find_median(int16_t array[],int16_t len);
 #endif

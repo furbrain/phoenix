@@ -27,8 +27,14 @@ void sensors_init_compass();
 void sensors_read_raw(struct RAW_SENSORS *sensors, bool lidar);
 
 void sensors_read_cooked(struct COOKED_SENSORS *sensors, bool lidar);
+
+void sensors_raw_to_cooked(struct COOKED_SENSORS *cooked, struct RAW_SENSORS *raw);
+
+void sensors_get_orientation(struct COOKED_SENSORS *sensors,double *d);
+
 extern volatile int lidar_average_count;
-uint32_t sensors_read_lidar();
+
+int32_t sensors_read_lidar();
 
 void sensors_read_leg(struct LEG *leg, double *distance);
 

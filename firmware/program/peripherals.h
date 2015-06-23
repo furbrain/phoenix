@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+void setup_pins();
+
 void peripherals_init();
 
 void peripherals_on(bool on);
