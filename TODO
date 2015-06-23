@@ -1,0 +1,26 @@
+Items marked * need to be done prior to production order
+
+Re-route power away from magnetometer *
+Fix bootloader so all pins initialised correctly - power issue *
+Sort out full calibration routine *
+Sort out laser calibration routine *
+Get measurement setting working fully *
+ - get leg recording to eeprom working
+ - get multiple display modes working
+update fonts to include up, down, left, right arrows < > ^ v - ?maybe???
+update font utils to allow inverse printing
+Date/time entry routines
+
+e.g   ^^ ^^
+    < 88:88
+      vv vv
+      
+or    ^^ ^^ ^^
+    < 31/01/15
+      vv vv vv
+      
+Date time update via bootloader - needs readtime and writetime algorithm; probably just use provided c structures...
+Develop PC side software to interface nicely
+
+Write manual...
+
