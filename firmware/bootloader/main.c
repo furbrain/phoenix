@@ -35,6 +35,7 @@
 #include <libpic30.h>
 #include <dpslp.h>
 #include <stdint.h>
+#include <Rtcc.h>
 #include "i2c_util.h"
 #include "usb_config.h"
 #include "usb_ch9.h"
@@ -114,6 +115,9 @@ static uint32_t CONFIG_WORDS_TOP;
 #define CHECK_I2C_READY 112
 #define WRITE_DISPLAY 113
 #define DISPLAY_ADDRESS 0x3C
+/*datetime commands*/
+#define WRITE_DATETIME 120
+#define READ_DATETIME 121
 
 struct chip_info {
 	uint32_t user_region_base;
@@ -295,15 +299,11 @@ int main(void)
 	ReleaseDeepSleep();
 	/* setup ports */
 	/* enable peripherals */
-	TRISBbits.TRISB14 = 0;
-	LATBbits.LATB14 = 0;
-	TRISBbits.TRISB1 = 0;
-	LATBbits.LATB1 = 0;
-
+	setup_pins();
 	/* first look to see if we should be running bootloader at all... */
 	CLKDIVbits.PLLEN = 1;
 	while(pll_startup_counter--);
-
+	peripherals_on(true);
 	display_init();
 	display_clear_screen();
 	usb_init();
@@ -374,6 +374,13 @@ static void write_display_cb(bool transfer_ok, void *context)
 		render_data_to_page(write_address>>16,write_address&0xFF,(char*)prog_buf,write_length);
 	}
 }
+
+static void write_datetime_cb(bool transfer_ok, void *context) {
+	if (transfer_ok) {
+		RtccWriteTimeDate((rtccTimeDate*)prog_buf,false);
+	}
+}
+
 
 int8_t app_unknown_setup_request_callback(const struct setup_packet *setup)
 {
@@ -449,6 +456,11 @@ int8_t app_unknown_setup_request_callback(const struct setup_packet *setup)
 			usb_start_receive_ep0_data_stage((char*)prog_buf, setup->wLength, &write_display_cb, NULL);
             
 		}
+		else if (setup->bRequest == WRITE_DATETIME) {
+			if (setup->wLength != sizeof(rtccTimeDate))
+				return -1;
+			usb_start_receive_ep0_data_stage((char*)prog_buf, setup->wLength, &write_datetime_cb, NULL);			
+		}
 	}
 
 	if (setup->REQUEST.destination == DEST_OTHER_ELEMENT &&
@@ -510,6 +522,12 @@ int8_t app_unknown_setup_request_callback(const struct setup_packet *setup)
 				prog_buf[0]=1;
 			}
 			usb_send_data_stage((char*)prog_buf, setup->wLength, empty_cb/*TODO*/, NULL);			
+		}
+		else if (setup->bRequest == READ_DATETIME) {
+			if (setup->wLength != sizeof(rtccTimeDate))
+				return -1;
+			RtccReadTimeDate((rtccTimeDate*)prog_buf);
+			usb_send_data_stage((char*)prog_buf, setup->wLength, empty_cb/*TODO*/,NULL);
 		}
 	}
 

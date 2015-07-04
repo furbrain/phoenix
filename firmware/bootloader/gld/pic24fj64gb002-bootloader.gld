@@ -20,7 +20,7 @@ CRT1_STARTUP(crt1_standard.o)
 #define CHIP_FLASH_TOP_ADDR 0xac00
 #define IVT_MAP_SIZE 0x100
 
-#define FLASH_BLOCK_SIZE 0x400
+#define FLASH_BLOCK_SIZE 0x200
 
 #define IVT_BASE 0x4
 #define ALT_IVT_BASE 0x104
@@ -37,7 +37,7 @@ CRT1_STARTUP(crt1_standard.o)
 #define DATA_BASE 0x800
 #define DATA_TOP 0x2800
 
-#define BOOTLOADER_SIZE 0x1200
+#define BOOTLOADER_SIZE 0x1400
 
 __NO_HANDLES = 1;
 

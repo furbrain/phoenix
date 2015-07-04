@@ -8,6 +8,8 @@
 #include <Rtcc.h>
 #include "sensors.h"
 #include "i2c_util.h"
+#include "peripherals.h"
+
 /*LIDAR defines */
 #define LIDAR_ADDRESS 0x62
 #define LIDAR_COMMAND(command,data) write_i2c_data2(LIDAR_ADDRESS,command,data,I2C_STANDARD)
@@ -56,8 +58,6 @@
 #define I2C_MST_DELAY_CTRL    0x83
 #define I2C_MST_DELAY    0x01
 
-#define TRIS_LIDAR_ENABLE TRISBbits.TRISB5
-#define LAT_LIDAR_ENABLE LATBbits.LATB5
 
 
 void sensors_init() {
@@ -72,8 +72,6 @@ void sensors_init() {
 
     #else
     #endif
-	TRIS_LIDAR_ENABLE = 0;
-	LAT_LIDAR_ENABLE = 0;
 	sensors_init_compass();
 }
 

@@ -7,30 +7,6 @@
 #include <Rtcc.h>
 #include <stdio.h>
 #include "peripherals.h"
-#include "font.h"
-#include "debug.h"
-#define TRIS_PERIPHERALS TRISBbits.TRISB14
-#define LAT_PERIPHERALS LATBbits.LATB14
-
-#define TRIS_LASER TRISBbits.TRISB0
-#define LAT_LASER LATBbits.LATB0
-#define RP_LASER OUT_PIN_PPS_RP0
-#define PWM_LASER OUT_FN_PPS_OC3
-
-#define TRIS_BUZZER_A TRISBbits.TRISB1
-#define RP_BUZZER_A OUT_PIN_PPS_RP1
-#define PWM_BUZZER_A OUT_FN_PPS_OC1
-
-#define TRIS_BUZZER_B TRISBbits.TRISB3
-#define RP_BUZZER_B OUT_PIN_PPS_RP3
-#define PWM_BUZZER_B OUT_FN_PPS_OC2
-
-#define TRIS_BAT_STATUS TRISBbits.TRISB5
-#define PORT_BAT_STATUS PORTBbits.RB5
-
-#define TRIS_NC_1 TRISBbits.TRISB2
-#define TRIS_NC_2 TRISBbits.TRISB4
-#define TRIS_NC_3 TRISAbits.TRISA4
 
 #define LASER_DAY_BRIGHTNESS 0xff
 #define LASER_NIGHT_BRIGHTNESS 0x30
@@ -39,7 +15,10 @@ uint8_t laser_brightness = LASER_NIGHT_BRIGHTNESS;
 
 void setup_pins() {
 	//set TRIS settings
+	TRIS_LIDAR_ENABLE = 0;
+	LAT_LIDAR_ENABLE = 0;	
 	TRIS_PERIPHERALS  = 0;
+	LAT_PERIPHERALS = 0;
 	TRIS_LASER = 0;
 	LAT_LASER = 0;
 	TRIS_BUZZER_A = 0;
@@ -50,6 +29,10 @@ void setup_pins() {
 	TRIS_NC_3 = 0;
 }
 
+void peripherals_on(bool on) {
+	LAT_PERIPHERALS = !on;
+}
+#ifndef BOOTLOADER
 void peripherals_init() {
 	//connect peripherals
 	iPPSOutput(RP_LASER,OUT_FN_PPS_OC3);
@@ -63,10 +46,6 @@ void peripherals_init() {
 	
 	laser_on(true);
 
-}
-
-void peripherals_on(bool on) {
-	LAT_PERIPHERALS = !on;
 }
 
 void laser_on(bool on) {
@@ -107,3 +86,4 @@ void beep(uint16_t freq, uint16_t ms) {
 	__delay_ms(ms);
 	beep_off();
 }
+#endif

@@ -22,6 +22,10 @@ READ_I2C_DATA = 111
 CHECK_I2C_READY = 112
 WRITE_DISPLAY = 113
 
+# RTCC commands
+WRITE_DATETIME 120
+READ_DATETIME 121
+
 
 def clean_list(buffer):
     for i in range(0,len(buffer)):
@@ -187,6 +191,16 @@ class Programmer:
         
     def write_display(self,page,column,data):
         return self.write_data(WRITE_DISPLAY,address=column,index=page,data=data)
+        
+    def read_datetime(self):
+        code = self.read_data(READ_DATETIME,0,8)
+        text = ''.join("%04x" % f for f in struct.unpack("<4h",code))
+        return datetime.datetime.strptime(text[2:],"%y%m%d0%w%H%M%S")
+        
+    def write_datetime(self,dt):
+        text = dt.strftime("20%y%m%d0%w%H%M%S")
+        word_list = [int(text[a:a+4],16) for a in range(0,16,4)]
+        return self.write_data(WRITE_DATETIME,0,struct.pack("<4h",*word_list))
         
 if __name__=="__main__":
     import time
