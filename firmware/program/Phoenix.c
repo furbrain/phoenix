@@ -17,7 +17,7 @@
 
 void main(){
 	setup_pins();
-	TRIS_BUTTON = 1;
+	LAT_LASER = 0;
 	OpenTimer45(T45_ON | T45_IDLE_CON | T45_PS_1_256 | T4_32BIT_MODE_ON,0xFFFFFFFFL);
 	WriteTimer45(0);
 	interface_init();
@@ -45,12 +45,12 @@ void main(){
 	//display_init();
 	sensors_init();
 	interface_init();
-	display_clear_screen();
-	//hello
 	beep(1000,50);
 	beep(2000,50);
 	beep(3000,50);
 	beep(4000,50);
+	display_clear_screen();
+	//hello
 	
 	while(true) show_menu(FIRST_MENU_ITEM,true);
 }

@@ -271,11 +271,13 @@ void sensors_enable_lidar(bool on) {
     if (on) {
 		LAT_LIDAR_ENABLE = 1;
 		//wait for LIDAR to startup
-			__delay_ms(100);
+			__delay_ms(20);
 		//send I2C initialisation
 			LIDAR_COMMAND(0,0);
-			__delay_ms(10);
-			LIDAR_COMMAND(2,128); /* high accuracy */
+			LIDAR_COMMAND(0x65,0x0E);
+			LIDAR_COMMAND(0x04,0x0D);
+			//__delay_ms(10);
+			//LIDAR_COMMAND(2,128); /* high accuracy */
 
 	} else {
 		LAT_LIDAR_ENABLE = 0;

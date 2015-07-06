@@ -20,13 +20,14 @@ void setup_pins() {
 	TRIS_PERIPHERALS  = 0;
 	LAT_PERIPHERALS = 0;
 	TRIS_LASER = 0;
-	LAT_LASER = 0;
+	LAT_LASER = 1;
 	TRIS_BUZZER_A = 0;
 	TRIS_BUZZER_B = 0;
 	TRIS_BAT_STATUS = 1;
+	TRIS_BAT_CHARGE = 1;
+	TRIS_BUTTON = 1;
 	TRIS_NC_1 = 0;
 	TRIS_NC_2 = 1;
-	TRIS_NC_3 = 0;
 }
 
 void peripherals_on(bool on) {

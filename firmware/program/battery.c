@@ -1,14 +1,10 @@
 #define USE_AND_OR
 #define FCY 16000000
 #include <libpic30.h>
+#include "peripherals.h"
 #include "battery.h"
 #include <adc.h>
 #include <stdint.h>
-#define TRIS_BAT_STATUS TRISAbits.TRISA4
-#define LAT_BAT_STATUS LATAbits.LATA4
-#define PORT_BAT_STATUS PORTAbits.RA4
-
-#define TRIS_BAT_CHARGE TRISBbits.TRISB13
 #define ADC_BAT_CHARGE 11
 #define ADC_BAT_CHANNEL ADC_CH0_POS_SAMPLEA_AN11
 
