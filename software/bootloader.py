@@ -4,6 +4,8 @@ import re
 import operator
 import usb
 import struct
+import datetime
+import time
 
 # plans...
 # load in hex file - possibly munged to separate out the flash bits etc...
@@ -23,8 +25,8 @@ CHECK_I2C_READY = 112
 WRITE_DISPLAY = 113
 
 # RTCC commands
-WRITE_DATETIME 120
-READ_DATETIME 121
+WRITE_DATETIME = 120
+READ_DATETIME = 121
 
 
 def clean_list(buffer):
@@ -193,8 +195,10 @@ class Programmer:
         return self.write_data(WRITE_DISPLAY,address=column,index=page,data=data)
         
     def read_datetime(self):
-        code = self.read_data(READ_DATETIME,0,8)
+        code = struct.pack('8b',*self.read_data(READ_DATETIME,0,8))
+        print code
         text = ''.join("%04x" % f for f in struct.unpack("<4h",code))
+        print text
         return datetime.datetime.strptime(text[2:],"%y%m%d0%w%H%M%S")
         
     def write_datetime(self,dt):
@@ -208,11 +212,8 @@ if __name__=="__main__":
     MPU = 0x68
     LIDAR = 0x62
     p = Programmer()
-    print p.check_i2c(MPU)
-    print p.check_i2c(LIDAR)
-    print p.check_i2c(EEPROM)
-    p.write_i2c(EEPROM,[0x00,0x00])
-    buff = p.read_i2c(EEPROM,80)
-    buff = struct.pack('80B',*buff)
-    print struct.unpack('<H9f9f1fBB',buff)
+    p.write_datetime(datetime.datetime.now());
+    print p.read_datetime();
+    time.sleep(6);
+    print p.read_datetime();
     
