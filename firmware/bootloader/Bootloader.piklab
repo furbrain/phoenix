@@ -23,10 +23,20 @@
       <item>peripherals.c</item>
       <item>peripherals.h</item>
     </files>
-    <description></description>
+    <description/>
     <version>0.1</version>
     <output_type>executable</output_type>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/bootloader/gld/pic24fj64gb002-bootloader.gld</custom_linker_script>
+    <opened_files>
+      <item>gld/pic24fj64gb002-bootloader.gld</item>
+      <item>main.c</item>
+      <item>display.c</item>
+      <item>usb_hal.h</item>
+      <item>peripherals.c</item>
+      <item>peripherals.h</item>
+      <item>usb.c</item>
+      <item>battery.c</item>
+    </opened_files>
   </general>
   <compiler>
     <has_custom_arguments>false</has_custom_arguments>

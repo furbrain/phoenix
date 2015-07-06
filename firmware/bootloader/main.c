@@ -319,7 +319,6 @@ int main(void)
 		}
 		usb_service();
 	}
-	LATBbits.LATB1 = 1; //turn laser on to indicate startup...
 	/* set up a reset that will fire when USB connected... */
 	U1OTGIEbits.SESVDIE = 1;
 	IEC5bits.USB1IE = 1;
