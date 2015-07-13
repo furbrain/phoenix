@@ -242,6 +242,8 @@ int32_t sensors_read_lidar(){
 	int count;
 	uint16_t dist_hi = 0;
 	uint8_t dist_lo = 0;
+	LIDAR_COMMAND(1,0);
+	delay_ms(15);
 	for(count=0;count<30;count++) {
 		if (LIDAR_COMMAND(0,4)==0) break;
 		delay_ms(2);
