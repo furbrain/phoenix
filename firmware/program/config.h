@@ -51,7 +51,7 @@
 #else
 
 #define GX_AXIS 0
-#define GX_POLARITY -1
+#define GX_POLARITY +1
 
 #define GY_AXIS 1
 #define GY_POLARITY +1

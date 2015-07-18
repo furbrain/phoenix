@@ -26,7 +26,47 @@ struct menu_entry {
 
 
 volatile enum ACTION last_click = NONE;
-void set_date() {}
+void set_date() {
+		/* first display date */
+	char text[18];
+	int pos = 0;
+	int pos_arr[] = {0,1,3,4,6,7,9,10,12,13,15};
+	int done = false;
+	rtccTimeDate dt;
+	RtccReadTimeDate(&dt);
+	display_clear_screen();
+	while (true) {
+		strcpy(text,"                ");
+		text[pos_arr[pos]] = 'v';
+		display_write_text(1,0,text,&small_font,false);
+		text[pos_arr[pos]] = '^';
+		display_write_text(5,0,text,&small_font,false);
+		//sprintf(text,"%02X/%02X/%02X %02X:%02X X",1,2,3,4,5);
+		sprintf(text,"%02d/%02d/%02d %02d:%02d X",dt.f.mday,dt.f.mon,dt.f.year,dt.f.hour,dt.f.min);
+		display_write_text(3,0,text,&small_font,false);
+		switch (get_action()) {
+			case FLIP_LEFT:
+				beep(3600,20);   
+				pos = (pos+11-1)%11;
+				delay_ms(600);
+				break;
+			case FLIP_RIGHT:
+				beep(3600,20);   
+				pos = (pos+1)%11;
+				delay_ms(600);
+				break;
+			case FLIP_UP:
+			case FLIP_DOWN:
+				beep(3600,20);   
+				break;
+			case SINGLE_CLICK:
+			case DOUBLE_CLICK:
+				beep(3600,20);   
+				return;
+		}
+		delay_ms(50);
+	}
+}
 void set_time() {}
 
 /* a null-terminated list of menu_entries */
