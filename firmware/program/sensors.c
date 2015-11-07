@@ -40,8 +40,11 @@
                                                // 0x08    accelerometer
                                                // 0x04,0x02,x01    slaves 2,1,0 respectively
                                  
-#define INT_CFG    0x20                        //active high(0), push-pull(0), latched(1),cleared on readof status(0),
+#define INT_CFG    0x30                        //active high(0), push-pull(0), latched(1),cleared on any read(1),
                                                //FSYNC interrupt disables(00),i2c bypass disabled(0), clock output disabled(0)
+#define INT_EN     0x01                        //Interrupt high on data ready (0x10 for interrupt on fifo overflow)
+                                            
+                                               
 #define USER_CTRL    0x64                      //enable FIFO and I2C and also reset it
         
 #define PWR_MGMT_1    0x0                      //PLL with X-axis gyro as clock. 0x08 disables temp sensor
@@ -56,7 +59,7 @@
 #define SLV1_CTRL    0x81
 #define SLV1_DO    0x11
 #define I2C_MST_DELAY_CTRL    0x83
-#define I2C_MST_DELAY    0x01
+#define I2C_MST_DELAY    0x00
 
 
 
@@ -131,6 +134,8 @@ void sensors_init_compass() {
     MPU_COMMAND(0x64, SLV1_DO);
     MPU_COMMAND(0x34, I2C_MST_DELAY);
     MPU_COMMAND(0x67, I2C_MST_DELAY_CTRL);
+	MPU_COMMAND(0x37, INT_CFG);
+	MPU_COMMAND(0x38, INT_EN);
         
         //enable fifo
 

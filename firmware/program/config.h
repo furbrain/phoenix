@@ -140,5 +140,7 @@ void set_grad();
 void set_day();
 void set_night();
 
+void write_eeprom(unsigned int address, void *buffer, unsigned int len);
+
 #endif
 #endif

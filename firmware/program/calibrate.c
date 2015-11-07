@@ -1,10 +1,14 @@
 #include "config.h"
 #include <libpic30.h>
+#include <string.h>
 #include "display.h"
 #include "font.h"
 #include "interface.h"
 #include "sensors.h"
 #include "debug.h"
+#include "i2c_util.h"
+#include "peripherals.h"
+
 
 
 void quick_cal() {
@@ -69,4 +73,64 @@ void align_cal() {
 	sensors_enable_lidar(false);
 }
 
-void full_cal() {}
+void full_cal() {
+	struct RAW_SENSORS sensors;
+	struct COOKED_SENSORS cooked;
+	float degrees=0.0;
+	float deg_cal=0.0;
+	float deg_limit_p = 1.0;
+	float deg_limit_m = -1.0;
+	float nearest = 100000.0;
+	float distance;
+	
+	double mag_buffers[400][3];
+	int count, len;
+	int complete = 0;
+	//wait 2 seconds
+	__delay_ms(2000);
+	//beep
+	//average gyro readings over 1s
+	for (count=0;count<100;count++) {
+		sensors_read_cooked(&cooked,false);
+		deg_cal += cooked.gyro[1];
+		while (!PORT_SENSOR_INT) __delay_ms(1);
+	}
+	deg_cal /= 100.0;
+	beep_on(4000);
+	__delay_ms(200);
+	beep_off();
+	//record 400 readings 
+	count=0;
+	while (count < 400) {
+		sensors_read_cooked(&cooked,false);
+		degrees += (cooked.gyro[1]-deg_cal)/100.0;
+		if ((degrees>deg_limit_p)||(degrees<deg_limit_m)) {
+			deg_limit_p += 1.0;
+			deg_limit_m -= 1.0;
+			memcpy(mag_buffers[count],sensors.mag,6);
+			count +=1;
+		}
+		while (!PORT_SENSOR_INT) __delay_ms(1);
+	}
+	// find closest point
+	for (count=320;count<400;count++) {
+		distance = (mag_buffers[count][0]-mag_buffers[0][0])*(mag_buffers[count][0]-mag_buffers[0][0]) +
+				   (mag_buffers[count][1]-mag_buffers[0][1])*(mag_buffers[count][1]-mag_buffers[0][1]) +
+				   (mag_buffers[count][2]-mag_buffers[0][2])*(mag_buffers[count][2]-mag_buffers[0][2]);
+		if (distance < nearest) {
+			len = count;
+			nearest = distance;
+		}
+	}
+	// do pca...
+	//beep again
+	beep_on(4000);
+	__delay_ms(200);
+	beep_off();
+	//copy data to EEPROM
+	write_eeprom(0x200,mag_buffers,2160);
+	__delay_ms(100);
+	beep_on(4000);
+	__delay_ms(200);
+	beep_off();
+}

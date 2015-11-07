@@ -114,6 +114,7 @@ static uint32_t CONFIG_WORDS_TOP;
 #define READ_I2C_DATA 111
 #define CHECK_I2C_READY 112
 #define WRITE_DISPLAY 113
+#define READ_EEPROM_DATA 114
 #define DISPLAY_ADDRESS 0x3C
 /*datetime commands*/
 #define WRITE_DATETIME 120
@@ -506,9 +507,7 @@ int8_t app_unknown_setup_request_callback(const struct setup_packet *setup)
 			write_address = setup->wValue;
 			if (setup->wLength > sizeof(prog_buf))
  				return -1;
-			if (read_i2c_block(setup->wValue,(uint8_t*)prog_buf,setup->wLength,I2C_STANDARD))
-			    /* read failed */
-				return -1;
+			read_i2c_block(setup->wValue,(uint8_t*)prog_buf,setup->wLength,I2C_STANDARD);
 			usb_send_data_stage((char*)prog_buf, setup->wLength, empty_cb/*TODO*/, NULL);
 		}
 		else if (setup->bRequest == CHECK_I2C_READY) {
@@ -521,6 +520,12 @@ int8_t app_unknown_setup_request_callback(const struct setup_packet *setup)
 				prog_buf[0]=1;
 			}
 			usb_send_data_stage((char*)prog_buf, setup->wLength, empty_cb/*TODO*/, NULL);			
+		}
+		else if (setup->bRequest == READ_EEPROM_DATA) {
+			if (setup->wLength > sizeof(prog_buf))
+ 				return -1;
+			read_eeprom_data(setup->wValue,(uint8_t*)prog_buf,setup->wLength);
+			usb_send_data_stage((char*)prog_buf, setup->wLength, empty_cb/*TODO*/, NULL);
 		}
 		else if (setup->bRequest == READ_DATETIME) {
 			if (setup->wLength != sizeof(rtccTimeDate))

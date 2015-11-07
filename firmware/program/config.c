@@ -49,26 +49,29 @@ void __read_external(unsigned int address, unsigned int memory_space, void *buff
 }
 
 void __write_external(unsigned int address,unsigned int memory_space,void *buffer,unsigned int len) {
-    unsigned int page_boundary;
-    unsigned int write_count;
     if (memory_space==eeprom) {
-        while (len>0) {
-            page_boundary = (address & 0xffc0)+0x40;
-            /* is last address in same page as current address */
-            if ((address+len) > page_boundary) {
-                write_count = page_boundary-address;
-            } else {
-                write_count = len;
-            }
-            write_eeprom_data(address,buffer,(write_count));
-            __delay_ms(5);
-            len -= write_count;
-            address += write_count;
-            buffer += write_count;
-        }
+		write_eeprom(address,buffer,len);
     }
 }
 
+void write_eeprom(unsigned int address, void *buffer, unsigned int len){
+    unsigned int page_boundary;
+    unsigned int write_count;
+	while (len>0) {
+		page_boundary = (address & 0xffc0)+0x40;
+		/* is last address in same page as current address */
+		if ((address+len) > page_boundary) {
+			write_count = page_boundary-address;
+		} else {
+			write_count = len;
+		}
+		write_eeprom_data(address,buffer,(write_count));
+		__delay_ms(5);
+		len -= write_count;
+		address += write_count;
+		buffer += write_count;
+	}
+}
 void config_init(){
     /* check firmware version  and update if appropriate */
     uint16_t firmware;

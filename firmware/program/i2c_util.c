@@ -108,7 +108,7 @@ int8_t read_i2c_block(uint8_t address, uint8_t *data, uint8_t length, int speed)
 	IdleI2C();  //Wait till Start sequence is completed
 	MasterWriteI2C(address * 2 + 1);
 	IdleI2C();
-	if (MastergetsI2C(length,data,20)){
+	if (MastergetsI2C(length,data,200)){
 		StopI2C();
 		__delay_us(10);
 		i2c_close();
@@ -120,17 +120,25 @@ int8_t read_i2c_block(uint8_t address, uint8_t *data, uint8_t length, int speed)
 	return 0;
 }
 
-#ifndef BOOTLOADER
-int8_t write_i2c_data1(uint8_t address, uint8_t command, int speed) {
-	return write_i2c_block(address, &command, 1, speed);
-}
-
 int8_t write_i2c_data2(uint8_t address, uint8_t command, uint8_t data, int speed) {
 	uint8_t data_list[2];
 	data_list[0] = command;
 	data_list[1] = data;
 	return write_i2c_block(address,data_list,2,speed);
 }
+
+
+int8_t read_eeprom_data(uint16_t address, uint8_t *data, uint8_t length) {
+	if (write_i2c_data2(EEPROM_ADDRESS,(uint8_t)(address >> 8),(uint8_t)(address&0xff),I2C_FAST)) return -1;
+	return read_i2c_block(EEPROM_ADDRESS,data,length,I2C_FAST);
+}
+
+
+#ifndef BOOTLOADER
+int8_t write_i2c_data1(uint8_t address, uint8_t command, int speed) {
+	return write_i2c_block(address, &command, 1, speed);
+}
+
 
 int8_t read_i2c_data(uint8_t address, uint8_t command, uint8_t *data, uint8_t length, int speed) {
 	int result = 0;
@@ -203,8 +211,4 @@ int8_t write_eeprom_data(uint16_t address, const uint8_t *data, uint8_t length) 
 	return 0;
 }
 
-int8_t read_eeprom_data(uint16_t address, uint8_t *data, uint8_t length) {
-	if (write_i2c_data2(EEPROM_ADDRESS,(uint8_t)(address >> 8),(uint8_t)(address&0xff),I2C_FAST)) return -1;
-	return read_i2c_block(EEPROM_ADDRESS,data,length,I2C_FAST);
-}
 #endif

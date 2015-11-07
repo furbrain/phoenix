@@ -1,7 +1,6 @@
 #define USE_AND_OR
 #include "config.h"
 #include <outcompare.h>
-#include <ports.h>
 #include <PPS.h>
 #include <libpic30.h>
 #include <Rtcc.h>
@@ -28,6 +27,7 @@ void setup_pins() {
 	TRIS_BUTTON = 1;
 	TRIS_NC_1 = 0;
 	TRIS_NC_2 = 1;
+	TRIS_SENSOR_INT = 1;
 }
 
 void peripherals_on(bool on) {

@@ -2,6 +2,7 @@
 #define PERIPHERALS_H
 #include <stdbool.h>
 #include <stdint.h>
+#include <ports.h>
 
 #define TRIS_LIDAR_ENABLE TRISBbits.TRISB5
 #define LAT_LIDAR_ENABLE LATBbits.LATB5
@@ -27,6 +28,9 @@
 #define PORT_BAT_STATUS PORTAbits.RA4
 
 #define TRIS_BAT_CHARGE TRISBbits.TRISB13
+
+#define TRIS_SENSOR_INT TRISBbits.TRISB15
+#define PORT_SENSOR_INT PORTBbits.RB15
 
 #define TRIS_NC_1 TRISBbits.TRISB2
 #define TRIS_NC_2 TRISBbits.TRISB4

@@ -30,12 +30,8 @@
     <opened_files>
       <item>gld/pic24fj64gb002-bootloader.gld</item>
       <item>main.c</item>
-      <item>display.c</item>
-      <item>usb_hal.h</item>
-      <item>peripherals.c</item>
-      <item>peripherals.h</item>
-      <item>usb.c</item>
-      <item>battery.c</item>
+      <item>i2c_util.c</item>
+      <item>i2c_util.h</item>
     </opened_files>
   </general>
   <compiler>

@@ -23,6 +23,7 @@ WRITE_I2C_DATA = 110
 READ_I2C_DATA = 111
 CHECK_I2C_READY = 112
 WRITE_DISPLAY = 113
+READ_EEPROM_DATA = 114
 
 # RTCC commands
 WRITE_DATETIME = 120
@@ -113,7 +114,7 @@ class Programmer:
                     return None
         raise ProgrammerError("Bootloader not found")
         
-    def read_data(self,command,address,size,timeout=100):
+    def read_data(self,command,address,size,timeout=10000):
         index=0
         if address > 0xFFFF:
             index = address >> 16
@@ -190,6 +191,9 @@ class Programmer:
 
     def check_i2c(self,address):
         return self.read_data(CHECK_I2C_READY,address,1)
+        
+    def read_eeprom_data(self,address,length):
+        return self.read_data(READ_EEPROM_DATA,address,length)
         
     def write_display(self,page,column,data):
         return self.write_data(WRITE_DISPLAY,address=column,index=page,data=data)

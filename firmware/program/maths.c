@@ -36,3 +36,23 @@ int16_t find_median(int16_t array[],int16_t len) {
 	return array[len/2];
 }
 
+void pca(double data[2][], int16_t len, struct EIGEN *eig){
+	double varX,varY,covar;
+	double T,D,L1,L2,magnitude;
+	int count;
+	varX = varY = covar = 0;
+	for (count=0; count< len; count++) {
+		varX  += data[0][count]*data[0][count];
+		varY  += data[1][count]*data[1][count];
+		covar += data[0][count]*data[1][count];
+	}
+	T = varX+VarY;
+	D = varX*varY-covar*covar;
+	L1 = (T/2) + sqrt(T*T/4-D);
+	L2 = (T/2) - sqrt(T*T/4-D);
+	eig->scalar = sqrt(L1)/sqrt(L2);
+	magnitude = sqrt((L1-varY)*(L1-varY)+covar*covar);
+	eig->vector[0] = (L1-varY)/magnitude;
+	eig->vector[1] = covar/magnitude;
+}
+

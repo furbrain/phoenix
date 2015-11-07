@@ -134,7 +134,11 @@ class mpu9250(object):
             self.write_byte(0x6A,self.user_ctl & 0b10111011)
 def main():
     #logging.basicConfig(level=logging.DEBUG)
-    mpu = mpu9250()
+    import bootloader
+    print "Connecting to device"
+    prog = bootloader.Programmer()
+    print "Device found"
+    mpu = mpu9250(prog)
     mpu.configure()
     output = ""
     print("aX\taY\taZ\ttemp\tgX\tgY\tgZ\tmX\tmY\tmZ")
