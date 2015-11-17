@@ -25,6 +25,8 @@ void display_write_text(int page, int column, const char* text, const struct FON
 
 void display_write_multiline(int page,const char* text, const struct FONT *font);
 
+void display_rle_image(const char image[]);
+
 int render_text_to_page(uint8_t *buffer, int page, int column, const char *text, const struct FONT *font);
 
 void display_scroll_page(uint8_t *data, bool up);

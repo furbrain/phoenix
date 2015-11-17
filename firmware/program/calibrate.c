@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "i2c_util.h"
 #include "peripherals.h"
+#include "images.h"
 
 
 
@@ -38,7 +39,10 @@ void quick_cal() {
  */
  /* nor rotate around z-axis - allows calibration of y axis accelerometer */
 }
-void laser_cal() {}
+void laser_cal() {
+	display_rle_image(image_rotate);
+	__delay_ms(5000);
+}
 
 void align_cal() {
 	int on = 0;

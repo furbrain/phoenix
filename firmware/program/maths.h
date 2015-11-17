@@ -16,5 +16,5 @@ void normalise(double *a);
 
 int16_t find_median(int16_t array[],int16_t len);
 
-void pca(double data[2][], int16_t len, struct EIGEN *eig);
+void pca(double data[][2], int16_t len, struct EIGEN *eig);
 #endif

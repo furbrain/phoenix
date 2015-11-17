@@ -32,6 +32,10 @@
       <item>maths.c</item>
       <item>measure.c</item>
       <item>measure.h</item>
+      <item>images.c</item>
+      <item>images.h</item>
+      <item>pca3.c</item>
+      <item>pca3.h</item>
     </files>
     <custom_linker_script>/home/phil/Projects/phoenix/firmware/program/bootloader.gld</custom_linker_script>
     <description/>

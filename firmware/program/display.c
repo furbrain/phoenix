@@ -158,6 +158,48 @@ void display_write_multiline(int page,const char* text, const struct FONT *font)
 	display_write_text(page,0,buf,font,false);
 }
 
+/* display an rle encoded image */
+/* each line starts with a blank pixel */
+void display_rle_image(const char* image) {
+	int page = 0;
+	int row = 0;
+	int image_counter,real_page;
+	int row_counter = 0;
+	int colour = 1;
+	while (page<8) {
+		image_counter = *image;
+		image++;
+		colour ^= 1;
+		while (image_counter--) {
+			real_page = (page+top_page)%8;
+			if (colour) {
+				buffer[real_page][row_counter] |= 1<<row;
+			} else {
+				buffer[real_page][row_counter] &= ~(1<<row);
+			}
+			row_counter++;
+			if (row_counter>=128) {
+				row_counter = 0;
+				row++;
+				colour = 1;
+				if (row>=8) {
+					page++;
+					row=0;
+				}
+				break;
+			}
+		}
+	}
+	for (page=0; page<8; ++page) {
+	    set_column(0);
+	    set_page(page);
+	    display_send_data(buffer[page],128);
+	}
+
+	
+}
+
+
 /* scroll a page of data onto the screen either up or down */
 void display_scroll_page(uint8_t *data,  bool up){
 	int i,j;
