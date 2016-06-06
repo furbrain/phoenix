@@ -1,6 +1,8 @@
 #include "config.h"
 #include <libpic30.h>
 #include <string.h>
+#include <stdio.h>
+#include <math.h>
 #include "display.h"
 #include "font.h"
 #include "interface.h"
@@ -40,8 +42,48 @@ void quick_cal() {
  /* nor rotate around z-axis - allows calibration of y axis accelerometer */
 }
 void laser_cal() {
-	display_rle_image(image_rotate);
-	__delay_ms(5000);
+	int count,x,y;
+	struct RAW_SENSORS raw;
+	short int mag_buffers[400][3];
+	//first get 400 data points with display offx
+	display_on(false);
+	laser_on(false);
+	__delay_ms(1000);
+	count=0;
+	for (count=0; count<100; ++count) {
+		sensors_read_raw(&raw,false);
+		memcpy(mag_buffers[count],raw.mag,6);
+		while (!PORT_SENSOR_INT) __delay_ms(1);
+	}
+	display_on(false);
+	laser_on(true);
+	__delay_ms(1000);
+	count=0;
+	for (count=100; count<200; ++count) {
+		sensors_read_raw(&raw,false);
+		memcpy(mag_buffers[count],raw.mag,6);
+		while (!PORT_SENSOR_INT) __delay_ms(1);
+	}
+	display_on(true);
+	laser_on(false);
+	__delay_ms(1000);
+	count=0;
+	for (count=200; count<300; ++count) {
+		sensors_read_raw(&raw,false);
+		memcpy(mag_buffers[count],raw.mag,6);
+		while (!PORT_SENSOR_INT) __delay_ms(1);
+	}
+	display_on(true);
+	laser_on(true);
+	__delay_ms(1000);
+	count=0;
+	for (count=300; count<400; ++count) {
+		sensors_read_raw(&raw,false);
+		memcpy(mag_buffers[count],raw.mag,6);
+		while (!PORT_SENSOR_INT) __delay_ms(1);
+	}
+	write_eeprom(0x200,mag_buffers,2400);
+
 }
 
 void align_cal() {
